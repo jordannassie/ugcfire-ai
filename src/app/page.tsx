@@ -205,7 +205,7 @@ const PLANS = [
   },
   {
     key: "enterprise",
-    name: "Enterprise",
+    name: "Custom / Agencies",
     monthlyPrice: null,
     yearlyMonthlyPrice: null,
     tagline: "For brands that need higher volume, custom workflows, and priority support.",
@@ -1677,7 +1677,7 @@ export default function Home() {
                 <div style={{ marginBottom: 4 }}>
                   {plan.salesOnly ? (
                     <span style={{ fontFamily: "var(--font-bebas)", fontSize: 36, color: "#fff", letterSpacing: "0.02em", lineHeight: 1 }}>
-                      Custom
+                      Custom / Agencies
                     </span>
                   ) : (
                     <>
