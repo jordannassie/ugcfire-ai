@@ -1062,7 +1062,7 @@ export default function Home() {
               {[
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/16-167642_amazon-logo-amazon-logo-white-text.png", alt: "Amazon", h: 28 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Printify.png", alt: "Printify", h: 32 },
-                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/shopify-partner-wt-customparadigm-icons2x.png", alt: "Shopify", h: 30 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/267-2675724_magento-to-shopify-migration-service-shopify-logo-white.png", alt: "Shopify", h: 30 },
               ].map(brand => (
                 <img
                   key={`${pass}-${brand.alt}`}
