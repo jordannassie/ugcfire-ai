@@ -1168,20 +1168,26 @@ export default function Home() {
             <h2 style={{ fontFamily: "var(--font-bebas)", fontSize: "clamp(48px, 5vw, 80px)", letterSpacing: "0.02em", color: "#111", lineHeight: 1, margin: 0 }}>
               Content <span style={fireStyle}>Process.</span>
             </h2>
+            <p style={{ fontSize: 16, color: "#555", marginTop: 14, maxWidth: 600, margin: "14px auto 0", lineHeight: 1.6 }}>
+              Upload your brand assets, product images, and goals — we turn them into ready-to-post product content and UGC videos.
+            </p>
           </div>
 
           {/* Step labels row */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 12 }}>
             {[
-              { label: "Your Products", Icon: Wand2 },
-              { label: "Product Images", Icon: ImageIcon },
-              { label: "UGC Videos", Icon: User },
-            ].map(({ label, Icon }, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#FF3B1A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Icon size={14} color="#fff" strokeWidth={2.5} />
+              { label: "Your Products", desc: "Upload your product photos, logo, website, and creative direction.", Icon: Wand2 },
+              { label: "Product Images", desc: "We create clean, branded visuals that make your offer stand out.", Icon: ImageIcon },
+              { label: "UGC Videos", desc: "You get ready-to-post videos built for social, ads, and growth.", Icon: User },
+            ].map(({ label, desc, Icon }, i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, textAlign: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#FF3B1A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <Icon size={14} color="#fff" strokeWidth={2.5} />
+                  </div>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#111", letterSpacing: "0.01em" }}>{label}</span>
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 700, color: "#111", letterSpacing: "0.01em" }}>{label}</span>
+                <p style={{ fontSize: 12, color: "#666", margin: 0, lineHeight: 1.5, maxWidth: 220 }}>{desc}</p>
               </div>
             ))}
           </div>
