@@ -527,6 +527,33 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     }
   }
 
+  // ── Download individual file via Supabase blob ────────────────────────────
+  const [fileDownloading, setFileDownloading] = useState<string | null>(null)
+
+  async function handleDownloadFile(file: StudioFile) {
+    if (fileDownloading === file.id) return
+    setFileDownloading(file.id)
+    try {
+      const sb = createClient()
+      const { data, error } = await sb.storage
+        .from(file.storage_bucket || 'studio-assets')
+        .download(file.storage_path)
+      if (error || !data) throw new Error(error?.message ?? 'Download failed')
+      const objectUrl = URL.createObjectURL(data)
+      const a = document.createElement('a')
+      a.href = objectUrl
+      a.download = file.name || 'download'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(objectUrl)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Download failed. Please try again.')
+    } finally {
+      setFileDownloading(null)
+    }
+  }
+
   // ── Download folder as ZIP ────────────────────────────────────────────────
   async function handleDownloadFolder(folder: StudioFolder) {
     setFolderDownloading(folder.id)
@@ -852,7 +879,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                   </div>
                   <ItemMenu items={[
                     { label: 'Open',     icon: <Eye size={13} />,       onClick: () => setSelectedFile(file) },
-                    { label: 'Download', icon: <Download size={13} />,  onClick: () => file.file_url && window.open(file.file_url, '_blank') },
+                    { label: fileDownloading === file.id ? 'Downloading…' : 'Download', icon: <Download size={13} />, onClick: () => handleDownloadFile(file) },
                     { label: 'Rename',   icon: <Pencil size={13} />,    onClick: () => { setTargetFile(file); setModalInput(file.name); openModal('rename-file') } },
                     { label: 'Move',     icon: <MoveRight size={13} />, onClick: () => { setTargetFile(file); setMoveDest('ROOT'); loadAllFolders(); openModal('move-file') } },
                     { label: 'Delete',   icon: <Trash2 size={13} />, danger: true, onClick: () => { setTargetFile(file); openModal('delete-file') } },
@@ -879,11 +906,14 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                 <StatusChip status={selectedFile.status as FileStatus} />
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                {selectedFile.file_url && (
-                  <a href={selectedFile.file_url} download target="_blank" rel="noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/6 hover:bg-white/10 text-white/60 hover:text-white rounded-lg text-xs transition">
-                    <Download size={13} /> Download
-                  </a>
+                {selectedFile.storage_path && (
+                  <button
+                    onClick={() => handleDownloadFile(selectedFile)}
+                    disabled={fileDownloading === selectedFile.id}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/6 hover:bg-white/10 text-white/60 hover:text-white rounded-lg text-xs transition disabled:opacity-50"
+                  >
+                    <Download size={13} /> {fileDownloading === selectedFile.id ? 'Downloading…' : 'Download'}
+                  </button>
                 )}
                 {/* Delete from modal header */}
                 <button
@@ -910,6 +940,15 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                   <div className="flex flex-col items-center gap-3 text-center">
                     <FileIcon mime={selectedFile.mime_type} size={56} />
                     <p className="text-white/40 text-sm">{selectedFile.name}</p>
+                    {selectedFile.storage_path && (
+                      <button
+                        onClick={() => handleDownloadFile(selectedFile)}
+                        disabled={fileDownloading === selectedFile.id}
+                        className="flex items-center gap-2 px-4 py-2 bg-[#FF3B1A] text-white text-sm rounded-lg hover:bg-[#e02e10] transition disabled:opacity-50"
+                      >
+                        <Download size={14} /> {fileDownloading === selectedFile.id ? 'Downloading…' : 'Download File'}
+                      </button>
+                    )}
                     {selectedFile.file_url && (
                       <a href={selectedFile.file_url} target="_blank" rel="noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-[#FF3B1A] text-white text-sm rounded-lg hover:bg-[#e02e10] transition">
