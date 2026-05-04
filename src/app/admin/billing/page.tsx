@@ -8,7 +8,7 @@ import { isDemoMode, DEMO_BILLING_RECORDS, DEMO_PLANS } from '@/lib/demoData'
 const BILLING_STATUSES: BillingStatus[] = ['inactive', 'active_mock', 'past_due_mock', 'canceled_mock']
 
 const BILLING_STATUS_LABELS: Record<BillingStatus, string> = {
-  inactive: 'Inactive',
+  inactive: 'No Billing',
   active_mock: 'Active',
   past_due_mock: 'Past Due',
   canceled_mock: 'Canceled',

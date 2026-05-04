@@ -154,7 +154,7 @@ export default function AdminOverviewPage() {
               <span className="bg-[#FF3B1A] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{stats.openRevisions}</span>
             )}
           </Link>
-          <Link href="/admin/messages"
+          <Link href="/admin/support"
             className="flex items-center gap-2 border border-white/10 text-white/70 px-4 py-2 rounded-lg hover:border-[#FF3B1A] hover:text-white transition text-sm">
             <MessageSquare size={14} />
             View Messages

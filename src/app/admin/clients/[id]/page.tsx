@@ -20,7 +20,7 @@ const CONTENT_STATUSES: ContentStatus[] = ['in_production', 'ready_for_review', 
 const BILLING_STATUSES: BillingStatus[] = ['inactive', 'active_mock', 'past_due_mock', 'canceled_mock']
 
 const BILLING_STATUS_LABELS: Record<BillingStatus, string> = {
-  inactive: 'Inactive',
+  inactive: 'No Billing',
   active_mock: 'Active',
   past_due_mock: 'Past Due',
   canceled_mock: 'Canceled',
@@ -235,7 +235,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-white">{company.name}</h1>
-            <span className={`text-xs px-2 py-1 rounded-full ${statusColor(company.billing_status)}`}>{company.billing_status}</span>
+            <span className={`text-xs px-2 py-1 rounded-full ${statusColor(company.billing_status)}`}>{BILLING_STATUS_LABELS[company.billing_status as BillingStatus] ?? company.billing_status}</span>
           </div>
           <p className="text-white/40 text-sm mt-1">{profile?.email ?? 'No email on record'}</p>
         </div>
