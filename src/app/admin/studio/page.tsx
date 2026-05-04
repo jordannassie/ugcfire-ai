@@ -10,14 +10,6 @@ interface ClientCard {
   id: string
   name: string
   owner_email: string
-  billing_status: string
-}
-
-const STATUS_COLOR: Record<string, string> = {
-  active_mock: 'bg-green-500/20 text-green-300',
-  inactive:    'bg-white/8 text-white/35',
-  past_due_mock: 'bg-orange-500/20 text-orange-300',
-  canceled_mock: 'bg-red-500/20 text-red-300',
 }
 
 export default function AdminStudioPage() {
@@ -31,13 +23,12 @@ export default function AdminStudioPage() {
         id: c.id,
         name: c.name,
         owner_email: c.owner_email,
-        billing_status: c.billing_status,
       })))
       setLoading(false)
       return
     }
     const supabase = createClient()
-    supabase.from('companies').select('id, name, billing_status').order('name').then(({ data }) => {
+    supabase.from('companies').select('id, name').order('name').then(({ data }) => {
       if (data) setClients(data as ClientCard[])
       setLoading(false)
     })
@@ -73,7 +64,7 @@ export default function AdminStudioPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {clients.map(client => (
-            <div key={client.id} className="bg-[#111] border border-white/8 rounded-xl p-5 flex flex-col gap-3 hover:border-white/18 transition">
+              <div key={client.id} className="bg-[#111] border border-white/8 rounded-xl p-5 flex flex-col gap-3 hover:border-white/18 transition">
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-lg bg-[#FF3B1A]/15 flex items-center justify-center shrink-0">
                   <Users size={16} className="text-[#FF3B1A]" />
@@ -84,9 +75,6 @@ export default function AdminStudioPage() {
                     <p className="text-white/35 text-xs mt-0.5 truncate">{client.owner_email}</p>
                   )}
                 </div>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${STATUS_COLOR[client.billing_status] ?? 'bg-white/8 text-white/35'}`}>
-                  {client.billing_status === 'active_mock' ? 'Active' : client.billing_status}
-                </span>
               </div>
               <button
                 onClick={() => router.push(`/admin/clients/${client.id}/studio`)}
