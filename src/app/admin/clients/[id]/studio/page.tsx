@@ -27,10 +27,28 @@ function AdminClientStudio({ companyId }: { companyId: string }) {
   const [fcProfile,   setFcProfile]   = useState<FireCreatorProfile>(DEFAULT_FC)
 
   useEffect(() => {
+    // Seed from localStorage immediately so the UI is not blank while fetching
     try {
       const stored = localStorage.getItem(PROFILE_KEY)
       if (stored) setFcProfile({ ...DEFAULT_FC, ...JSON.parse(stored) })
     } catch {}
+
+    // Fetch real profile from Supabase via the admin API
+    fetch('/api/admin/profile')
+      .then(r => r.ok ? r.json() : null)
+      .then((data: { display_name?: string; title?: string; bio?: string; avatar_url?: string } | null) => {
+        if (!data) return
+        const profile: FireCreatorProfile = {
+          displayName: data.display_name || DEFAULT_FC.displayName,
+          title:       data.title        || DEFAULT_FC.title,
+          bio:         data.bio          || DEFAULT_FC.bio,
+          avatarUrl:   data.avatar_url   || undefined,
+        }
+        setFcProfile(profile)
+        // Keep localStorage in sync for instant reads next visit
+        try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)) } catch {}
+      })
+      .catch(() => {})
 
     const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => setAdminId(user?.id ?? null))

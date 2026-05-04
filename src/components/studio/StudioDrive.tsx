@@ -1061,9 +1061,19 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                   )}
                   {comments.map(c => (
                     <div key={c.id} className={`flex gap-2.5 ${c.sender_role === 'admin' ? 'flex-row' : 'flex-row-reverse'}`}>
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 ${c.sender_role === 'admin' ? 'bg-[#FF3B1A]/20 text-[#FF3B1A]' : 'bg-white/10 text-white/60'}`}>
-                        {(c.sender_name?.[0] ?? '?').toUpperCase()}
-                      </div>
+                      {/* Avatar */}
+                      {c.sender_role === 'admin' && fireCreatorProfile?.avatarUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={fireCreatorProfile.avatarUrl}
+                          alt={fireCreatorProfile.displayName}
+                          className="w-6 h-6 rounded-full object-cover border border-[#FF3B1A]/40 shrink-0 mt-0.5"
+                        />
+                      ) : (
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 ${c.sender_role === 'admin' ? 'bg-[#FF3B1A]/20 text-[#FF3B1A]' : 'bg-white/10 text-white/60'}`}>
+                          {(c.sender_name?.[0] ?? '?').toUpperCase()}
+                        </div>
+                      )}
                       <div className={`max-w-[80%] ${c.sender_role === 'admin' ? '' : 'items-end flex flex-col'}`}>
                         <div className={`px-3 py-2 rounded-xl text-xs leading-relaxed ${c.sender_role === 'admin' ? 'bg-[#FF3B1A]/10 text-white/80 rounded-tl-sm' : 'bg-white/8 text-white/70 rounded-tr-sm'}`}>
                           {c.message}
