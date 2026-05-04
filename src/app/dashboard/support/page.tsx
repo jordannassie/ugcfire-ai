@@ -21,15 +21,36 @@ function formatTime(ts: string) {
   return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
+function Avatar({ src, name, size = 7, ring = '' }: { src?: string | null; name: string; size?: number; ring?: string }) {
+  const px = size * 4
+  if (src) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={src} alt={name} className={`rounded-full object-cover shrink-0 mt-0.5 ${ring}`} style={{ width: px, height: px }} />
+    )
+  }
+  return (
+    <div
+      className={`rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 bg-white/10 text-white/60 ${ring}`}
+      style={{ width: px, height: px }}
+    >
+      {name?.[0]?.toUpperCase() ?? '?'}
+    </div>
+  )
+}
+
 export default function ClientSupportPage() {
-  const [messages,    setMessages]    = useState<ChatMessage[]>([])
-  const [input,       setInput]       = useState('')
-  const [sending,     setSending]     = useState(false)
-  const [loading,     setLoading]     = useState(true)
-  const [companyId,   setCompanyId]   = useState<string | null>(null)
-  const [userId,      setUserId]      = useState<string | null>(null)
-  const [userName,    setUserName]    = useState('Client')
-  const [error,       setError]       = useState<string | null>(null)
+  const [messages,      setMessages]      = useState<ChatMessage[]>([])
+  const [input,         setInput]         = useState('')
+  const [sending,       setSending]       = useState(false)
+  const [loading,       setLoading]       = useState(true)
+  const [companyId,     setCompanyId]     = useState<string | null>(null)
+  const [userId,        setUserId]        = useState<string | null>(null)
+  const [userName,      setUserName]      = useState('Client')
+  const [clientAvatar,  setClientAvatar]  = useState<string | null>(null)
+  const [adminName,     setAdminName]     = useState('UGC Fire Team')
+  const [adminAvatar,   setAdminAvatar]   = useState<string | null>(null)
+  const [error,         setError]         = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const pollRef   = useRef<NodeJS.Timeout | null>(null)
 
@@ -62,12 +83,34 @@ export default function ClientSupportPage() {
       if (!user) { setError('Not signed in'); setLoading(false); return }
       setUserId(user.id)
 
-      const { data: profile } = await sb.from('profiles').select('full_name').eq('id', user.id).maybeSingle()
-      setUserName((profile as { full_name?: string | null } | null)?.full_name || user.email?.split('@')[0] || 'Client')
+      // Client profile
+      const { data: profile } = await sb.from('profiles').select('full_name, avatar_url').eq('id', user.id).maybeSingle()
+      const p = profile as { full_name?: string | null; avatar_url?: string | null } | null
+      const displayName = p?.full_name || user.email?.split('@')[0] || 'Client'
+      setUserName(displayName)
+      if (p?.avatar_url) setClientAvatar(p.avatar_url)
 
+      // Brand logo (overrides profile avatar if present)
       const company = await getMyCompany()
       if (!company) { setError('No company found for your account.'); setLoading(false); return }
       setCompanyId(company.id)
+
+      const { data: brief } = await sb.from('brand_briefs').select('notes').eq('company_id', company.id).maybeSingle()
+      if (brief?.notes) {
+        try {
+          const notes = JSON.parse(brief.notes as string)
+          if (notes.logo_url) setClientAvatar(notes.logo_url)
+        } catch {}
+      }
+
+      // Admin / Fire Creator profile
+      const res = await fetch('/api/admin/profile').catch(() => null)
+      if (res?.ok) {
+        const ap = await res.json()
+        if (ap?.display_name) setAdminName(ap.display_name)
+        if (ap?.avatar_url)   setAdminAvatar(ap.avatar_url)
+      }
+
       await loadMessages(company.id)
       setLoading(false)
     }
@@ -135,11 +178,9 @@ export default function ClientSupportPage() {
       <div className="flex flex-col flex-1 min-h-0 bg-[#111] border border-white/8 rounded-2xl overflow-hidden">
         {/* Thread header */}
         <div className="px-5 py-3.5 border-b border-white/8 flex items-center gap-3 shrink-0">
-          <div className="w-8 h-8 rounded-full bg-[#FF3B1A]/20 border border-[#FF3B1A]/30 flex items-center justify-center shrink-0">
-            <span className="text-[#FF3B1A] text-xs font-bold">🔥</span>
-          </div>
+          <Avatar src={adminAvatar} name={adminName} size={8} ring="border border-[#FF3B1A]/40" />
           <div>
-            <p className="text-white text-sm font-semibold">UGC Fire Team</p>
+            <p className="text-white text-sm font-semibold">{adminName}</p>
             <p className="text-white/30 text-xs">Support · hello@ugcfire.com</p>
           </div>
         </div>
@@ -159,17 +200,17 @@ export default function ClientSupportPage() {
             const isClient = msg.sender_role === 'client'
             return (
               <div key={msg.id} className={`flex gap-2.5 ${isClient ? 'flex-row-reverse' : 'flex-row'}`}>
-                {/* Avatar */}
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${isClient ? 'bg-blue-500/20 text-blue-300' : 'bg-[#FF3B1A]/20 text-[#FF3B1A]'}`}>
-                  {isClient ? (userName[0] ?? 'C').toUpperCase() : '🔥'}
-                </div>
-                {/* Bubble */}
+                <Avatar
+                  src={isClient ? clientAvatar : adminAvatar}
+                  name={isClient ? userName : adminName}
+                  size={7}
+                />
                 <div className={`max-w-[78%] flex flex-col ${isClient ? 'items-end' : 'items-start'}`}>
                   <div className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${isClient ? 'bg-[#FF3B1A] text-white rounded-tr-sm' : 'bg-white/8 text-white/85 rounded-tl-sm'}`}>
                     {msg.message}
                   </div>
                   <p className="text-white/20 text-[10px] mt-1 px-1">
-                    {isClient ? 'You' : (msg.sender_name || 'UGC Fire Team')} · {formatTime(msg.created_at)}
+                    {isClient ? 'You' : (msg.sender_name || adminName)} · {formatTime(msg.created_at)}
                   </p>
                 </div>
               </div>
