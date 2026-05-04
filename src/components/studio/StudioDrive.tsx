@@ -174,7 +174,6 @@ export interface StudioDriveProps {
 }
 
 export default function StudioDrive({ companyId, actorId, actorRole, fireCreatorProfile }: StudioDriveProps) {
-  const supabase = createClient()
 
   // ── Navigation ────────────────────────────────────────────────────────────
   const [crumbs, setCrumbs] = useState<Crumb[]>([{ id: null, name: 'Studio' }])
@@ -221,25 +220,42 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     setLoading(true)
     setDbError(null)
     try {
-      const fq = supabase
-        .from('studio_folders')
-        .select('id, company_id, name, parent_folder_id, created_at')
-        .eq('company_id', companyId)
-        .is('deleted_at', null)
-        .order('name')
-      if (currentFolderId === null) fq.is('parent_folder_id', null)
-      else fq.eq('parent_folder_id', currentFolderId)
+      const sb = createClient()
 
-      const fiq = supabase
-        .from('studio_files')
-        .select('id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, created_at')
-        .eq('company_id', companyId)
-        .is('deleted_at', null)
-        .order('created_at', { ascending: false })
-      if (currentFolderId === null) fiq.is('folder_id', null)
-      else fiq.eq('folder_id', currentFolderId)
+      // Always capture the return value of each filter so the query is built correctly
+      const folderQ = currentFolderId === null
+        ? sb
+            .from('studio_folders')
+            .select('id, company_id, name, parent_folder_id, created_at')
+            .eq('company_id', companyId)
+            .is('deleted_at', null)
+            .is('parent_folder_id', null)
+            .order('name')
+        : sb
+            .from('studio_folders')
+            .select('id, company_id, name, parent_folder_id, created_at')
+            .eq('company_id', companyId)
+            .is('deleted_at', null)
+            .eq('parent_folder_id', currentFolderId)
+            .order('name')
 
-      const [{ data: fData, error: fErr }, { data: fiData, error: fiErr }] = await Promise.all([fq, fiq])
+      const fileQ = currentFolderId === null
+        ? sb
+            .from('studio_files')
+            .select('id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, created_at')
+            .eq('company_id', companyId)
+            .is('deleted_at', null)
+            .is('folder_id', null)
+            .order('created_at', { ascending: false })
+        : sb
+            .from('studio_files')
+            .select('id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, created_at')
+            .eq('company_id', companyId)
+            .is('deleted_at', null)
+            .eq('folder_id', currentFolderId)
+            .order('created_at', { ascending: false })
+
+      const [{ data: fData, error: fErr }, { data: fiData, error: fiErr }] = await Promise.all([folderQ, fileQ])
 
       if (fErr?.code === '42P01' || fiErr?.code === '42P01') {
         setDbError('Studio tables not set up. Please run supabase/migrations/013_studio_drive.sql in your Supabase SQL Editor.')
@@ -262,7 +278,8 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   // ── Load comments for selected file ───────────────────────────────────────
   const loadComments = useCallback(async (fileId: string) => {
     setCommentsLoading(true)
-    const { data } = await supabase
+    const sb = createClient()
+    const { data } = await sb
       .from('studio_comments')
       .select('id, file_id, sender_role, sender_name, message, created_at')
       .eq('file_id', fileId)
@@ -278,7 +295,8 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
 
   // ── Load all folders for move modal ───────────────────────────────────────
   async function loadAllFolders() {
-    const { data } = await supabase
+    const sb = createClient()
+    const { data } = await sb
       .from('studio_folders')
       .select('id, name, parent_folder_id, company_id, created_at')
       .eq('company_id', companyId)
@@ -301,7 +319,8 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     const folderName = (name ?? modalInput).trim()
     if (!folderName) return
     setModalWorking(true); setModalError('')
-    const { error } = await supabase.from('studio_folders').insert({
+    const sb = createClient()
+    const { error } = await sb.from('studio_folders').insert({
       company_id:       companyId,
       parent_folder_id: currentFolderId,
       name:             folderName,
@@ -316,7 +335,8 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleRenameFolder() {
     if (!modalInput.trim() || !targetFolder) return
     setModalWorking(true); setModalError('')
-    const { error } = await supabase.from('studio_folders')
+    const sb = createClient()
+    const { error } = await sb.from('studio_folders')
       .update({ name: modalInput.trim(), updated_at: new Date().toISOString() })
       .eq('id', targetFolder.id)
     setModalWorking(false)
@@ -328,15 +348,15 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleDeleteFolder() {
     if (!targetFolder) return
     setModalWorking(true); setModalError('')
+    const sb = createClient()
     const now = new Date().toISOString()
-    // Check for non-deleted contents
-    const { data: childF } = await supabase.from('studio_folders').select('id').eq('parent_folder_id', targetFolder.id).is('deleted_at', null).limit(1)
-    const { data: childFi } = await supabase.from('studio_files').select('id').eq('folder_id', targetFolder.id).is('deleted_at', null).limit(1)
+    const { data: childF }  = await sb.from('studio_folders').select('id').eq('parent_folder_id', targetFolder.id).is('deleted_at', null).limit(1)
+    const { data: childFi } = await sb.from('studio_files').select('id').eq('folder_id', targetFolder.id).is('deleted_at', null).limit(1)
     if ((childF?.length ?? 0) > 0 || (childFi?.length ?? 0) > 0) {
       setModalError('Move or delete the items inside this folder first.')
       setModalWorking(false); return
     }
-    const { error } = await supabase.from('studio_folders').update({ deleted_at: now }).eq('id', targetFolder.id)
+    const { error } = await sb.from('studio_folders').update({ deleted_at: now }).eq('id', targetFolder.id)
     setModalWorking(false)
     if (error) { setModalError(error.message); return }
     closeModal(); load()
@@ -346,12 +366,12 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleRenameFile() {
     if (!modalInput.trim() || !targetFile) return
     setModalWorking(true); setModalError('')
-    const { error } = await supabase.from('studio_files')
+    const sb = createClient()
+    const { error } = await sb.from('studio_files')
       .update({ name: modalInput.trim(), updated_at: new Date().toISOString() })
       .eq('id', targetFile.id)
     setModalWorking(false)
     if (error) { setModalError(error.message); return }
-    // Refresh selected file name if it's open
     if (selectedFile?.id === targetFile.id) setSelectedFile(f => f ? { ...f, name: modalInput.trim() } : null)
     closeModal(); load()
   }
@@ -360,7 +380,8 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleDeleteFile() {
     if (!targetFile) return
     setModalWorking(true); setModalError('')
-    const { error } = await supabase.from('studio_files')
+    const sb = createClient()
+    const { error } = await sb.from('studio_files')
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', targetFile.id)
     setModalWorking(false)
@@ -373,8 +394,9 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleMoveFolder() {
     if (!targetFolder) return
     setModalWorking(true); setModalError('')
+    const sb = createClient()
     const destId = moveDest === 'ROOT' ? null : moveDest
-    const { error } = await supabase.from('studio_folders')
+    const { error } = await sb.from('studio_folders')
       .update({ parent_folder_id: destId, updated_at: new Date().toISOString() })
       .eq('id', targetFolder.id)
     setModalWorking(false)
@@ -386,8 +408,9 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleMoveFile() {
     if (!targetFile) return
     setModalWorking(true); setModalError('')
+    const sb = createClient()
     const destId = moveDest === 'ROOT' ? null : moveDest
-    const { error } = await supabase.from('studio_files')
+    const { error } = await sb.from('studio_files')
       .update({ folder_id: destId, updated_at: new Date().toISOString() })
       .eq('id', targetFile.id)
     setModalWorking(false)
@@ -404,6 +427,8 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     uploadFileList.forEach(f => { prog[f.name] = 'pending' })
     setUploadProgress({ ...prog })
 
+    const sb = createClient()
+
     for (const file of uploadFileList) {
       prog[file.name] = 'uploading'
       setUploadProgress({ ...prog })
@@ -413,17 +438,19 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
         const folderSegment = currentFolderId ?? 'root'
         const path = `${companyId}/${folderSegment}/${ts}-${sn}`
 
-        const { error: storageErr } = await supabase.storage
+        const { error: storageErr } = await sb.storage
           .from('studio-assets')
           .upload(path, file, { upsert: false, cacheControl: '3600' })
-        if (storageErr) throw storageErr
+        if (storageErr) throw new Error(`Storage: ${storageErr.message}`)
 
-        const { data: { publicUrl } } = supabase.storage.from('studio-assets').getPublicUrl(path)
+        const { data: urlData } = sb.storage.from('studio-assets').getPublicUrl(path)
+        const publicUrl = urlData?.publicUrl
+        if (!publicUrl) throw new Error('Could not get public URL after upload')
 
         // Admin uploads default to ready_for_review, clients to uploaded
         const defaultStatus: FileStatus = actorRole === 'admin' ? 'ready_for_review' : 'uploaded'
 
-        const { error: dbErr } = await supabase.from('studio_files').insert({
+        const { error: dbErr } = await sb.from('studio_files').insert({
           company_id:   companyId,
           folder_id:    currentFolderId,
           name:         file.name,
@@ -434,7 +461,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
           status:       defaultStatus,
           uploaded_by:  actorId,
         })
-        if (dbErr) throw dbErr
+        if (dbErr) throw new Error(`Database: ${dbErr.message}`)
 
         prog[file.name] = 'done'
       } catch (err) {
@@ -449,16 +476,17 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     const anyDone = Object.values(prog).some(v => v === 'done')
     if (anyDone) load()
 
-    // Auto-close if all succeeded
+    // Auto-close only if all succeeded
     if (!Object.values(prog).some(v => v === 'error')) {
-      setTimeout(closeModal, 600)
+      setTimeout(closeModal, 800)
     }
   }
 
   // ── Update file status ────────────────────────────────────────────────────
   async function handleUpdateStatus(file: StudioFile, status: FileStatus) {
     setStatusUpdating(true)
-    const { error } = await supabase.from('studio_files')
+    const sb = createClient()
+    const { error } = await sb.from('studio_files')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', file.id)
     setStatusUpdating(false)
@@ -472,10 +500,11 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   async function handleAddComment() {
     if (!newComment.trim() || !selectedFile) return
     setSendingComment(true)
+    const sb = createClient()
     const senderName = actorRole === 'admin'
       ? (fireCreatorProfile?.displayName ?? 'UGC Fire Team')
       : 'Client'
-    const { data, error } = await supabase.from('studio_comments').insert({
+    const { data, error } = await sb.from('studio_comments').insert({
       company_id:     companyId,
       file_id:        selectedFile.id,
       sender_user_id: actorId,
