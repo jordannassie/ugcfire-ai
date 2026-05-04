@@ -8,7 +8,7 @@ import {
   Pencil, MoveRight, Download, File, Image as ImageIcon, Video,
   FileText, ChevronRight, Home, X, Check, Loader2, AlertCircle,
   Search, ArrowUpDown, Send, MessageCircle, CheckCircle2, RotateCcw,
-  Truck, Archive, Eye, Plus,
+  Truck, Archive, Eye, Plus, ThumbsUp, ThumbsDown,
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -20,6 +20,8 @@ export type FileStatus =
   | 'revision_requested'
   | 'delivered'
   | 'archived'
+
+type Reaction = 'liked' | 'disliked' | null
 
 interface StudioFolder {
   id: string
@@ -39,6 +41,9 @@ interface StudioFile {
   mime_type: string | null
   file_size: number | null
   status: FileStatus
+  client_reaction: Reaction
+  client_reaction_by: string | null
+  client_reaction_at: string | null
   created_at: string
 }
 
@@ -178,6 +183,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   // ── Navigation ────────────────────────────────────────────────────────────
   const [crumbs, setCrumbs] = useState<Crumb[]>([{ id: null, name: 'Studio' }])
   const currentFolderId = crumbs[crumbs.length - 1].id
+  const currentFolderName = crumbs[crumbs.length - 1].name
 
   // ── Data ──────────────────────────────────────────────────────────────────
   const [folders, setFolders] = useState<StudioFolder[]>([])
@@ -192,6 +198,11 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   const [newComment,       setNewComment]       = useState('')
   const [sendingComment,   setSendingComment]   = useState(false)
   const [statusUpdating,   setStatusUpdating]   = useState(false)
+  const [reactionUpdating, setReactionUpdating] = useState(false)
+
+  // ── Folder download ───────────────────────────────────────────────────────
+  const [folderDownloading, setFolderDownloading] = useState<string | null>(null)
+  const [folderDownloadMsg, setFolderDownloadMsg] = useState<string | null>(null)
 
   // ── Search / sort ─────────────────────────────────────────────────────────
   const [search,  setSearch]  = useState('')
@@ -216,44 +227,21 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // ── Load studio ───────────────────────────────────────────────────────────
+  const FILE_SELECT = 'id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, client_reaction, client_reaction_by, client_reaction_at, created_at'
+
   const load = useCallback(async () => {
     setLoading(true)
     setDbError(null)
     try {
       const sb = createClient()
 
-      // Always capture the return value of each filter so the query is built correctly
       const folderQ = currentFolderId === null
-        ? sb
-            .from('studio_folders')
-            .select('id, company_id, name, parent_folder_id, created_at')
-            .eq('company_id', companyId)
-            .is('deleted_at', null)
-            .is('parent_folder_id', null)
-            .order('name')
-        : sb
-            .from('studio_folders')
-            .select('id, company_id, name, parent_folder_id, created_at')
-            .eq('company_id', companyId)
-            .is('deleted_at', null)
-            .eq('parent_folder_id', currentFolderId)
-            .order('name')
+        ? sb.from('studio_folders').select('id, company_id, name, parent_folder_id, created_at').eq('company_id', companyId).is('deleted_at', null).is('parent_folder_id', null).order('name')
+        : sb.from('studio_folders').select('id, company_id, name, parent_folder_id, created_at').eq('company_id', companyId).is('deleted_at', null).eq('parent_folder_id', currentFolderId).order('name')
 
       const fileQ = currentFolderId === null
-        ? sb
-            .from('studio_files')
-            .select('id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, created_at')
-            .eq('company_id', companyId)
-            .is('deleted_at', null)
-            .is('folder_id', null)
-            .order('created_at', { ascending: false })
-        : sb
-            .from('studio_files')
-            .select('id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, created_at')
-            .eq('company_id', companyId)
-            .is('deleted_at', null)
-            .eq('folder_id', currentFolderId)
-            .order('created_at', { ascending: false })
+        ? sb.from('studio_files').select(FILE_SELECT).eq('company_id', companyId).is('deleted_at', null).is('folder_id', null).order('created_at', { ascending: false })
+        : sb.from('studio_files').select(FILE_SELECT).eq('company_id', companyId).is('deleted_at', null).eq('folder_id', currentFolderId).order('created_at', { ascending: false })
 
       const [{ data: fData, error: fErr }, { data: fiData, error: fiErr }] = await Promise.all([folderQ, fileQ])
 
@@ -271,7 +259,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     } finally {
       setLoading(false)
     }
-  }, [companyId, currentFolderId])
+  }, [companyId, currentFolderId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { load() }, [load])
 
@@ -447,7 +435,6 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
         const publicUrl = urlData?.publicUrl
         if (!publicUrl) throw new Error('Could not get public URL after upload')
 
-        // Admin uploads default to ready_for_review, clients to uploaded
         const defaultStatus: FileStatus = actorRole === 'admin' ? 'ready_for_review' : 'uploaded'
 
         const { error: dbErr } = await sb.from('studio_files').insert({
@@ -476,7 +463,6 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     const anyDone = Object.values(prog).some(v => v === 'done')
     if (anyDone) load()
 
-    // Auto-close only if all succeeded
     if (!Object.values(prog).some(v => v === 'error')) {
       setTimeout(closeModal, 800)
     }
@@ -493,6 +479,93 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
     if (!error) {
       setSelectedFile(f => f ? { ...f, status } : null)
       setFiles(prev => prev.map(fi => fi.id === file.id ? { ...fi, status } : fi))
+    }
+  }
+
+  // ── Set reaction (toggle: same reaction clears it) ────────────────────────
+  async function handleSetReaction(file: StudioFile, reaction: 'liked' | 'disliked') {
+    const newReaction: Reaction = file.client_reaction === reaction ? null : reaction
+    setReactionUpdating(true)
+    const sb = createClient()
+    const now = new Date().toISOString()
+    const { error } = await sb.from('studio_files').update({
+      client_reaction:    newReaction,
+      client_reaction_by: newReaction ? actorId : null,
+      client_reaction_at: newReaction ? now : null,
+      updated_at:         now,
+    }).eq('id', file.id)
+    setReactionUpdating(false)
+    if (!error) {
+      const updated: StudioFile = {
+        ...file,
+        client_reaction:    newReaction,
+        client_reaction_by: newReaction ? actorId : null,
+        client_reaction_at: newReaction ? now : null,
+      }
+      setSelectedFile(f => f?.id === file.id ? updated : f)
+      setFiles(prev => prev.map(fi => fi.id === file.id ? updated : fi))
+    }
+  }
+
+  // ── Download folder as ZIP ────────────────────────────────────────────────
+  async function handleDownloadFolder(folder: StudioFolder) {
+    setFolderDownloading(folder.id)
+    setFolderDownloadMsg(null)
+    try {
+      const JSZip = (await import('jszip')).default
+      const sb = createClient()
+
+      // Recursively collect { url, zipPath } for all files in this folder tree
+      type FileEntry = { url: string; zipPath: string }
+      async function collectFiles(folderId: string, prefix: string): Promise<FileEntry[]> {
+        const [{ data: subFolders }, { data: folderFiles }] = await Promise.all([
+          sb.from('studio_folders').select('id, name').eq('company_id', companyId).eq('parent_folder_id', folderId).is('deleted_at', null),
+          sb.from('studio_files').select('name, file_url').eq('company_id', companyId).eq('folder_id', folderId).is('deleted_at', null),
+        ])
+        const entries: FileEntry[] = []
+        for (const f of (folderFiles ?? [])) {
+          if (f.file_url) entries.push({ url: f.file_url, zipPath: `${prefix}${f.name}` })
+        }
+        for (const sf of (subFolders ?? [])) {
+          const nested = await collectFiles(sf.id, `${prefix}${sf.name}/`)
+          entries.push(...nested)
+        }
+        return entries
+      }
+
+      const allFiles = await collectFiles(folder.id, '')
+
+      if (allFiles.length === 0) {
+        setFolderDownloadMsg('This folder has no files to download.')
+        setTimeout(() => setFolderDownloadMsg(null), 3500)
+        setFolderDownloading(null)
+        return
+      }
+
+      const zip = new JSZip()
+      await Promise.all(
+        allFiles.map(async ({ url, zipPath }) => {
+          try {
+            const res = await fetch(url)
+            if (!res.ok) return
+            zip.file(zipPath, await res.blob())
+          } catch { /* skip individual failures */ }
+        })
+      )
+
+      const content = await zip.generateAsync({ type: 'blob' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(content)
+      link.download = `${safeName(folder.name)}.zip`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      URL.revokeObjectURL(link.href)
+    } catch (err) {
+      setFolderDownloadMsg(err instanceof Error ? err.message : 'Download failed.')
+      setTimeout(() => setFolderDownloadMsg(null), 3500)
+    } finally {
+      setFolderDownloading(null)
     }
   }
 
@@ -542,6 +615,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
 
   const isEmpty = !loading && !dbError && filteredFolders.length === 0 && filteredFiles.length === 0
   const isRootEmpty = !loading && !dbError && crumbs.length === 1 && folders.length === 0 && files.length === 0
+  const isInsideFolder = crumbs.length > 1 && currentFolderId !== null
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -554,6 +628,28 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
           <p className="text-white/40 text-sm mt-0.5">Upload, organise, review, and deliver your content.</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {/* Download Folder button — visible when inside a folder */}
+          {isInsideFolder && (
+            <button
+              onClick={() => {
+                const folder: StudioFolder = {
+                  id: currentFolderId!,
+                  name: currentFolderName,
+                  company_id: companyId,
+                  parent_folder_id: crumbs.length > 2 ? crumbs[crumbs.length - 2].id : null,
+                  created_at: '',
+                }
+                handleDownloadFolder(folder)
+              }}
+              disabled={folderDownloading === currentFolderId}
+              className="flex items-center gap-2 px-3.5 py-2 bg-white/6 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white rounded-lg text-sm transition disabled:opacity-50"
+            >
+              {folderDownloading === currentFolderId
+                ? <Loader2 size={15} className="animate-spin" />
+                : <Download size={15} />}
+              Download Folder
+            </button>
+          )}
           <button
             onClick={() => openModal('new-folder')}
             className="flex items-center gap-2 px-3.5 py-2 bg-white/6 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white rounded-lg text-sm transition"
@@ -568,6 +664,14 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
           </button>
         </div>
       </div>
+
+      {/* Folder download message */}
+      {folderDownloadMsg && (
+        <div className="flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 py-3">
+          <AlertCircle size={14} className="text-orange-400 shrink-0" />
+          <p className="text-orange-300 text-sm">{folderDownloadMsg}</p>
+        </div>
+      )}
 
       {/* Search + sort */}
       <div className="flex flex-wrap gap-2">
@@ -668,10 +772,12 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
               >
                 <Folder size={20} className="text-[#FF3B1A] shrink-0" />
                 <p className="text-white/80 text-sm font-medium truncate flex-1">{folder.name}</p>
+                {folderDownloading === folder.id && <Loader2 size={13} className="animate-spin text-white/30 shrink-0" />}
                 <ItemMenu items={[
-                  { label: 'Rename', icon: <Pencil size={13} />, onClick: () => { setTargetFolder(folder); setModalInput(folder.name); openModal('rename-folder') } },
-                  { label: 'Move',   icon: <MoveRight size={13} />, onClick: () => { setTargetFolder(folder); setMoveDest('ROOT'); loadAllFolders(); openModal('move-folder') } },
-                  { label: 'Delete', icon: <Trash2 size={13} />, danger: true, onClick: () => { setTargetFolder(folder); openModal('delete-folder') } },
+                  { label: 'Rename',          icon: <Pencil size={13} />,   onClick: () => { setTargetFolder(folder); setModalInput(folder.name); openModal('rename-folder') } },
+                  { label: 'Download Folder', icon: <Download size={13} />, onClick: () => handleDownloadFolder(folder) },
+                  { label: 'Move',            icon: <MoveRight size={13} />, onClick: () => { setTargetFolder(folder); setMoveDest('ROOT'); loadAllFolders(); openModal('move-folder') } },
+                  { label: 'Delete',          icon: <Trash2 size={13} />, danger: true, onClick: () => { setTargetFolder(folder); openModal('delete-folder') } },
                 ]} />
               </div>
             ))}
@@ -700,12 +806,28 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                   ) : (
                     <FileIcon mime={file.mime_type} size={32} />
                   )}
+                  {/* Reaction badge overlay */}
+                  {file.client_reaction && (
+                    <div className={`absolute top-1.5 left-1.5 w-5 h-5 rounded-full flex items-center justify-center shadow ${file.client_reaction === 'liked' ? 'bg-green-500' : 'bg-red-500'}`}>
+                      {file.client_reaction === 'liked'
+                        ? <ThumbsUp size={10} className="text-white" />
+                        : <ThumbsDown size={10} className="text-white" />}
+                    </div>
+                  )}
                 </div>
                 {/* Meta */}
                 <div className="px-3 py-2 flex items-start justify-between gap-2">
                   <div className="min-w-0 space-y-1">
                     <p className="text-white/80 text-xs font-medium truncate">{file.name}</p>
-                    <StatusChip status={file.status as FileStatus} />
+                    {/* Status + reaction indicators */}
+                    <div className="flex flex-wrap gap-1 items-center">
+                      <StatusChip status={file.status as FileStatus} />
+                      {(file.status === 'approved' || file.status === 'revision_requested') && (
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${file.status === 'approved' ? 'text-green-400 bg-green-500/10 border-green-500/20' : 'text-orange-400 bg-orange-500/10 border-orange-500/20'}`}>
+                          {file.status === 'approved' ? '✓' : '↺'}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-white/25 text-[10px]">{formatDate(file.created_at)}</p>
                   </div>
                   <ItemMenu items={[
@@ -743,6 +865,13 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                     <Download size={13} /> Download
                   </a>
                 )}
+                {/* Delete from modal header */}
+                <button
+                  onClick={() => { setTargetFile(selectedFile); openModal('delete-file') }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-lg text-xs transition border border-red-500/20"
+                >
+                  <Trash2 size={13} /> Delete
+                </button>
                 <button onClick={() => setSelectedFile(null)} className="text-white/30 hover:text-white transition p-1">
                   <X size={16} />
                 </button>
@@ -771,7 +900,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                 )}
               </div>
 
-              {/* Right: info + status + comments */}
+              {/* Right: info + status + feedback + comments */}
               <div className="lg:w-1/2 flex flex-col overflow-hidden border-t lg:border-t-0 lg:border-l border-white/8">
                 {/* File info */}
                 <div className="px-5 py-4 space-y-1 border-b border-white/6 shrink-0">
@@ -781,7 +910,7 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
 
                 {/* Status actions */}
                 <div className="px-5 py-4 border-b border-white/6 shrink-0 space-y-2.5">
-                  <p className="text-white/30 text-xs font-semibold uppercase tracking-wider">Status</p>
+                  <p className="text-white/30 text-xs font-semibold uppercase tracking-wider">Approval</p>
                   <div className="flex flex-wrap gap-2">
                     {actorRole === 'client' && (
                       <>
@@ -822,6 +951,44 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
                     )}
                     {statusUpdating && <Loader2 size={14} className="animate-spin text-white/30 self-center" />}
                   </div>
+                </div>
+
+                {/* Reaction: thumbs up / thumbs down */}
+                <div className="px-5 py-4 border-b border-white/6 shrink-0 space-y-2.5">
+                  <p className="text-white/30 text-xs font-semibold uppercase tracking-wider">Your Feedback</p>
+                  <div className="flex gap-2">
+                    <button
+                      disabled={reactionUpdating}
+                      onClick={() => handleSetReaction(selectedFile, 'liked')}
+                      className={`flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg border transition disabled:opacity-40 ${
+                        selectedFile.client_reaction === 'liked'
+                          ? 'bg-green-500/20 text-green-300 border-green-500/40'
+                          : 'bg-white/5 text-white/45 border-white/10 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/25'
+                      }`}
+                    >
+                      <ThumbsUp size={13} />
+                      Favorite
+                    </button>
+                    <button
+                      disabled={reactionUpdating}
+                      onClick={() => handleSetReaction(selectedFile, 'disliked')}
+                      className={`flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg border transition disabled:opacity-40 ${
+                        selectedFile.client_reaction === 'disliked'
+                          ? 'bg-red-500/20 text-red-300 border-red-500/40'
+                          : 'bg-white/5 text-white/45 border-white/10 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/25'
+                      }`}
+                    >
+                      <ThumbsDown size={13} />
+                      Not For Me
+                    </button>
+                    {reactionUpdating && <Loader2 size={14} className="animate-spin text-white/30 self-center" />}
+                  </div>
+                  {selectedFile.client_reaction && (
+                    <p className="text-white/20 text-[10px]">
+                      {selectedFile.client_reaction === 'liked' ? '👍 Marked as Favourite' : '👎 Marked as Not For Me'}
+                      {' · Tap again to clear'}
+                    </p>
+                  )}
                 </div>
 
                 {/* Comments */}
@@ -994,16 +1161,17 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
 
       {/* Delete File */}
       {modal === 'delete-file' && (
-        <Modal title="Delete File?" onClose={closeModal}>
-          <p className="text-white/55 text-sm mb-5">
-            Are you sure you want to delete <span className="text-white font-semibold">{targetFile?.name}</span>?
+        <Modal title="Delete this file?" onClose={closeModal}>
+          <p className="text-white/55 text-sm mb-1">
+            <span className="text-white font-semibold">{targetFile?.name}</span>
           </p>
+          <p className="text-white/35 text-sm mb-5">This will remove it from the Studio.</p>
           {modalError && <p className="text-red-400 text-xs mb-3">{modalError}</p>}
           <div className="flex gap-2 justify-end">
             <button onClick={closeModal} className="px-4 py-2 text-sm text-white/45 hover:text-white">Cancel</button>
             <button onClick={handleDeleteFile} disabled={modalWorking}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 disabled:opacity-50">
-              {modalWorking ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />} Delete
+              {modalWorking ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />} Delete File
             </button>
           </div>
         </Modal>
