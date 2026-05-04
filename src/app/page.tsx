@@ -545,6 +545,7 @@ function StarRating() {
 }
 
 export default function Home() {
+  const [pageReady, setPageReady] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [heroVideo, setHeroVideo] = useState(0);
@@ -581,6 +582,11 @@ export default function Home() {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setPageReady(true), 400);
+    return () => clearTimeout(t);
   }, []);
 
   // Auto-rotate hero video every 8 seconds
@@ -643,6 +649,28 @@ export default function Home() {
 
   return (
     <>
+      {/* Page load overlay — fades out once mounted */}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 9999,
+        background: "#0a0a0a",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        transition: "opacity 0.5s ease, visibility 0.5s ease",
+        opacity: pageReady ? 0 : 1,
+        visibility: pageReady ? "hidden" : "visible",
+        pointerEvents: "none",
+      }}>
+        <div style={{ position: "relative", width: 96, height: 96 }}>
+          <svg width="96" height="96" viewBox="0 0 96 96" style={{ position: "absolute", inset: 0, animation: "ugcfire-spin 1.1s linear infinite" }}>
+            <style>{`@keyframes ugcfire-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+            <circle cx="48" cy="48" r="44" fill="none" stroke="#FF3B1A" strokeWidth="4" strokeLinecap="round" strokeDasharray="207" strokeDashoffset="138" />
+          </svg>
+          <div style={{ position: "absolute", inset: 10, borderRadius: "50%", background: "#111", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="https://phhczohqidgrvcmszets.supabase.co/storage/v1/object/public/UGC%20Fire/images/UGCfirelog.png" alt="UGC Fire" style={{ width: 64, height: 56, objectFit: "contain" }} />
+          </div>
+        </div>
+      </div>
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
         :root {
