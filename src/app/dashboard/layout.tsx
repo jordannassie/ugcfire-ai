@@ -15,9 +15,9 @@ const THEME_KEY = 'ugcfire_dashboard_theme'
 
 export const dynamic = 'force-dynamic'
 
+// Strategy AI hidden for now — preserved at /dashboard/strategy-ai if needed later
 const NAV = [
   { label: 'Your Brand',  href: '/dashboard/your-brand',    icon: Target },
-  { label: 'Strategy AI', href: '/dashboard/strategy-ai',   icon: Sparkles },
   { label: 'Studio',      href: '/dashboard/studio',        icon: Clapperboard },
   { label: 'Profile',     href: '/dashboard/profile',       icon: User },
   { label: 'Plans',       href: '/dashboard/plans',         icon: LayoutGrid },
@@ -240,12 +240,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="text-center">
                 <p className="text-base font-bold leading-tight truncate max-w-[180px]"
                    style={{ color: isLight ? '#0f172a' : '#ffffff' }}>{company.name}</p>
-                <span className={`text-xs px-2 py-0.5 rounded-full mt-1 inline-block ${
-                  company.billing_status === 'active_mock'
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-white/10 text-white/40'
-                }`}>
-                  {company.billing_status === 'active_mock' ? 'Active' : 'Inactive'}
+                <span className="text-xs px-2 py-0.5 rounded-full mt-1 inline-block bg-white/8 text-white/40">
+                  Brand Profile
                 </span>
               </div>
             )}

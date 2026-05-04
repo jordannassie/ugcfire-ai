@@ -4,94 +4,46 @@ import { use, useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { isDemoMode, DEMO_COMPANIES } from '@/lib/demoData'
-import StudioWorkspace, { type FireCreatorProfile } from '@/components/studio/StudioWorkspace'
-import { ArrowLeft, Flame, ChevronDown } from 'lucide-react'
-
-const PROFILE_KEY = 'ugcfire_fc_profile'
-
-const DEFAULT_FC: FireCreatorProfile = {
-  displayName: 'UGC Fire Team',
-  title: 'Fire Creator',
-  bio: 'Your UGC Fire creator helping produce and deliver your monthly content.',
-}
-
-function fcInitials(name: string) {
-  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-}
+import StudioDrive from '@/components/studio/StudioDrive'
+import { ArrowLeft, ChevronDown } from 'lucide-react'
 
 function ClientStudioDrive({ clientId }: { clientId: string }) {
   const router = useRouter()
-  const [clientName, setClientName] = useState<string>('')
+  const [adminId, setAdminId]     = useState<string | null>(null)
+  const [clientName, setClientName] = useState('')
   const [allClients, setAllClients] = useState<{ id: string; name: string }[]>([])
   const [switchOpen, setSwitchOpen] = useState(false)
-  const [fcProfile, setFcProfile] = useState<FireCreatorProfile>(DEFAULT_FC)
-  const [demoMode, setDemoMode] = useState(false)
 
   useEffect(() => {
-    // Load Fire Creator profile from localStorage
-    try {
-      const stored = localStorage.getItem(PROFILE_KEY)
-      if (stored) setFcProfile({ ...DEFAULT_FC, ...JSON.parse(stored) })
-    } catch {}
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => setAdminId(user?.id ?? null))
 
-    // Load client list
     const isDemo = isDemoMode()
-    setDemoMode(isDemo)
-
     if (isDemo) {
       const match = DEMO_COMPANIES.find(c => c.id === clientId)
       setClientName(match?.name ?? 'Client')
       setAllClients(DEMO_COMPANIES.map(c => ({ id: c.id, name: c.name })))
       return
     }
-    const supabase = createClient()
     supabase.from('companies').select('id, name').order('name').then(({ data }) => {
       if (data) {
-        setAllClients(data)
-        const match = data.find((c: { id: string }) => c.id === clientId)
-        if (match) setClientName((match as { id: string; name: string }).name)
+        setAllClients(data as { id: string; name: string }[])
+        const match = (data as { id: string; name: string }[]).find(c => c.id === clientId)
+        if (match) setClientName(match.name)
       }
     })
   }, [clientId])
 
-  const initials = fcInitials(fcProfile.displayName || 'UGC Fire Team')
-
   return (
     <div>
-      {/* Fire Creator context bar */}
+      {/* Admin context bar */}
       <div className="flex flex-wrap items-center gap-3 bg-[#FF3B1A]/8 border border-[#FF3B1A]/20 rounded-xl px-4 py-3 mb-5">
-        {/* FC Avatar + identity */}
-        <div className="flex items-center gap-2.5">
-          {fcProfile.avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={fcProfile.avatarUrl} alt={fcProfile.displayName} className="w-7 h-7 rounded-full object-cover border border-[#FF3B1A]/40" />
-          ) : (
-            <div className="w-7 h-7 rounded-full bg-[#FF3B1A]/20 border border-[#FF3B1A]/30 flex items-center justify-center shrink-0">
-              <span className="text-[#FF3B1A] text-[10px] font-bold">{initials}</span>
-            </div>
-          )}
-          <div>
-            <div className="flex items-center gap-1.5">
-              <Flame size={11} className="text-[#FF3B1A]" />
-              <span className="text-[#FF3B1A] text-[10px] font-bold uppercase tracking-wide">Fire Creator Mode</span>
-            </div>
-            <p className="text-white/50 text-xs leading-none mt-0.5">
-              {fcProfile.displayName}
-            </p>
-          </div>
-        </div>
-
+        <span className="text-[#FF3B1A] text-xs font-bold uppercase tracking-wide">Admin Mode</span>
         <span className="text-white/25 text-xs hidden sm:block">·</span>
-
         <span className="text-white/60 text-sm">
-          Working inside{' '}
-          <span className="text-white font-semibold">{clientName || '...'}</span>
-          {'\'s Studio Drive'}
+          Managing <span className="text-white font-semibold">{clientName || '...'}</span>&apos;s Studio
         </span>
-
         <div className="flex-1" />
-
-        {/* Client switcher */}
         {allClients.length > 1 && (
           <div className="relative">
             <button
@@ -118,22 +70,21 @@ function ClientStudioDrive({ clientId }: { clientId: string }) {
             )}
           </div>
         )}
-
         <button
-          onClick={() => router.push('/admin/studio')}
+          onClick={() => router.push('/admin/studios')}
           className="flex items-center gap-1.5 bg-white/5 hover:bg-white/8 text-white/50 hover:text-white text-xs px-3 py-1.5 rounded-lg transition"
         >
-          <ArrowLeft size={11} /> Back to Admin
+          <ArrowLeft size={11} /> All Studios
         </button>
       </div>
 
-      {/* Shared Studio Drive — same component the client uses */}
-      <StudioWorkspace
-        role="admin"
-        initialClientId={clientId}
-        fireCreatorProfile={fcProfile}
-        demoMode={demoMode}
-      />
+      {adminId && (
+        <StudioDrive
+          userId={clientId}
+          actorId={adminId}
+          isAdmin
+        />
+      )}
     </div>
   )
 }
@@ -143,8 +94,8 @@ export default function AdminClientStudioPage({ params }: { params: Promise<{ id
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-2xl font-bold text-white">Studio Drive</h1>
-        <p className="text-white/40 text-sm mt-1">Upload, review, approve, and deliver content as Fire Creator.</p>
+        <h1 className="text-2xl font-bold text-white">Client Studio</h1>
+        <p className="text-white/40 text-sm mt-1">Manage content for this client&apos;s workspace.</p>
       </div>
       <Suspense>
         <ClientStudioDrive clientId={id} />
