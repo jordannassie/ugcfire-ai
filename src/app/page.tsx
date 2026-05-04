@@ -1065,7 +1065,7 @@ export default function Home() {
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/home-banner-hyperx-logo.png", alt: "HyperX", h: 28 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Dell_Logo.png", alt: "Dell", h: 28 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Ricoh-2009-new-Logo-Vector.svg-.png", alt: "Ricoh", h: 28 },
-                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/5eb3c6a2c8c4590004435145.png", alt: "Orangetheory", h: 28 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Mono_B_Logo_MONO_BLACK_1.png", alt: "Mono B", h: 28 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/267-2675724_magento-to-shopify-migration-service-shopify-logo-white.png", alt: "Shopify", h: 30 },
               ].map(brand => (
                 <img
