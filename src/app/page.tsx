@@ -1297,6 +1297,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Dashboard Preview ── */}
+      <section style={{ background: "#f2f1ee", padding: "0 2rem 64px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{
+            borderRadius: 20,
+            overflow: "hidden",
+            boxShadow: "0 16px 64px rgba(0,0,0,0.18)",
+            border: "1px solid rgba(0,0,0,0.06)",
+          }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/DASH.png"
+              alt="UGC Fire Studio Dashboard"
+              style={{ width: "100%", display: "block" }}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ── HOW IT WORKS (merged) ── */}
       <section id="how-it-works" className="sec sec-v" style={{
         padding: "100px 3rem",
