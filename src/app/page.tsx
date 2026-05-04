@@ -1046,7 +1046,37 @@ export default function Home() {
         </div>
       </section>
 
-
+      {/* ── Brand ticker ── */}
+      <div style={{ background: "#0d0d0d", borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", padding: "20px 0" }}>
+        <style>{`
+          @keyframes ticker-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .brand-ticker { display: flex; align-items: center; gap: 72px; animation: ticker-scroll 22s linear infinite; width: max-content; }
+          .brand-ticker:hover { animation-play-state: paused; }
+        `}</style>
+        <div className="brand-ticker">
+          {[...Array(2)].map((_, pass) => (
+            <React.Fragment key={pass}>
+              {[
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/16-167642_amazon-logo-amazon-logo-white-text.png", alt: "Amazon", h: 28 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Printify.png", alt: "Printify", h: 32 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/shopify-partner-wt-customparadigm-icons2x.png", alt: "Shopify", h: 30 },
+              ].map(brand => (
+                <img
+                  key={`${pass}-${brand.alt}`}
+                  src={brand.src}
+                  alt={brand.alt}
+                  height={brand.h}
+                  style={{ height: brand.h, width: "auto", objectFit: "contain", opacity: 0.65, filter: "brightness(0) invert(1)" }}
+                  loading="lazy"
+                />
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
 
       <section id="results" className="sec-v" style={{ padding: "100px 0", overflow: "hidden" }}>
         <div className="sec" style={{ textAlign: "center", marginBottom: 56, padding: "0 3rem" }}>
