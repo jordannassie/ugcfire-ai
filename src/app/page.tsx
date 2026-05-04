@@ -1136,7 +1136,7 @@ export default function Home() {
       </section>
 
       {/* ── 3-Column Showcase ── */}
-      <section style={{ background: "#f2f1ee", padding: "48px 2rem" }}>
+      <section style={{ background: "#f2f1ee", padding: "64px 2rem" }}>
         <style>{`
           .showcase-grid {
             display: grid;
@@ -1160,6 +1160,16 @@ export default function Home() {
 
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
 
+          {/* Section heading */}
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <div style={{ fontSize: 12, letterSpacing: "0.14em", color: "#FF3B1A", textTransform: "uppercase", fontWeight: 600, marginBottom: 10 }}>
+              How It Works
+            </div>
+            <h2 style={{ fontFamily: "var(--font-bebas)", fontSize: "clamp(48px, 5vw, 80px)", letterSpacing: "0.02em", color: "#111", lineHeight: 1, margin: 0 }}>
+              Content <span style={fireStyle}>Process.</span>
+            </h2>
+          </div>
+
           {/* Step labels row */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 12 }}>
             {[
@@ -1182,7 +1192,7 @@ export default function Home() {
               {/* Col 1 — Your Products: rotating images */}
               {(() => {
                 const COL1 = [
-                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/e285ae04-724a-43a6-9cc7-759f8fa80ac3.png",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/be7f70f4-139f-4cb1-bcaa-964d79dc6a9e.png",
                   "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/a9a7a9fd-e332-4750-bdd9-859ab5f45948.png",
                   "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/19780ec9-301d-41b4-b893-5e30df793635.png",
                 ];
