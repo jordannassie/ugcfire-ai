@@ -1299,7 +1299,7 @@ export default function Home() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={sectionHead}>
             <div style={{ fontSize: 12, letterSpacing: "0.14em", color: "#FF3B1A", textTransform: "uppercase", fontWeight: 600, marginBottom: 12 }}>
-              How It Works
+              Next Steps
             </div>
             <h2 style={{ fontFamily: "var(--font-bebas)", fontSize: "clamp(48px, 5vw, 72px)", letterSpacing: "0.02em", color: "#fff", lineHeight: 1 }}>
               Everything in <span style={fireStyle}>one place.</span>
