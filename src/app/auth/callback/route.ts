@@ -103,6 +103,11 @@ export async function GET(request: NextRequest) {
     return redirectWithAuthCookies(redirectTo)
   }
 
+  // User is authenticated — build a safe dashboard fallback in case sync fails
+  const dashboardFallback = new URL(requestUrl)
+  dashboardFallback.pathname = '/dashboard'
+  dashboardFallback.search = ''
+
   try {
     const role = await syncAuthenticatedUser(user)
     console.log('[auth/callback] syncAuthenticatedUser returned role:', role)
@@ -114,11 +119,8 @@ export async function GET(request: NextRequest) {
     console.log('[auth/callback] Final destination:', destination.pathname)
     return redirectWithAuthCookies(destination)
   } catch (error) {
-    console.log('[auth/callback] syncAuthenticatedUser threw:', error instanceof Error ? error.message : error)
-    redirectTo.searchParams.set(
-      'error',
-      error instanceof Error ? error.message : 'Could not sync your account.'
-    )
-    return redirectWithAuthCookies(redirectTo)
+    // Sync failed but user IS authenticated — send to /dashboard, not /signup
+    console.log('[auth/callback] syncAuthenticatedUser threw (falling back to /dashboard):', error instanceof Error ? error.message : error)
+    return redirectWithAuthCookies(dashboardFallback)
   }
 }

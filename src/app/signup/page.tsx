@@ -18,6 +18,15 @@ export default function SignupPage() {
     setError(new URLSearchParams(window.location.search).get('error') ?? '')
   }, [])
 
+  // Redirect already-authenticated users straight to their dashboard
+  useEffect(() => {
+    const supabase = createClient()
+    if (!supabase) return
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.replace('/dashboard')
+    })
+  }, [])
+
   function getConfiguredClient() {
     if (!hasSupabaseConfig()) {
       setError('Supabase is not configured yet. Create .env.local from .env.local.example and add your project URL and publishable key.')
