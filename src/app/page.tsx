@@ -1061,7 +1061,7 @@ export default function Home() {
             <React.Fragment key={pass}>
               {[
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/16-167642_amazon-logo-amazon-logo-white-text.png", alt: "Amazon", h: 28 },
-                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Printify.png", alt: "Printify", h: 32 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/95e2f3f9bfa4f9ac5b61fa7f4f8ef0d1.png", alt: "Printify", h: 32 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/267-2675724_magento-to-shopify-migration-service-shopify-logo-white.png", alt: "Shopify", h: 30 },
               ].map(brand => (
                 <img
