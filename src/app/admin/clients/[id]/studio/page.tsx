@@ -36,13 +36,17 @@ function AdminClientStudio({ companyId }: { companyId: string }) {
     // Fetch real profile from Supabase via the admin API
     fetch('/api/admin/profile')
       .then(r => r.ok ? r.json() : null)
-      .then((data: { display_name?: string; title?: string; bio?: string; avatar_url?: string } | null) => {
-        if (!data) return
+      .then((data: { success?: boolean; profile?: { display_name?: string; title?: string; bio?: string; avatar_url?: string; updated_at?: string } } | null) => {
+        const p = data?.profile
+        if (!p) return
+        const avatarUrl = p.avatar_url
+          ? `${p.avatar_url}${p.updated_at ? `?v=${new Date(p.updated_at).getTime()}` : ''}`
+          : undefined
         const profile: FireCreatorProfile = {
-          displayName: data.display_name || DEFAULT_FC.displayName,
-          title:       data.title        || DEFAULT_FC.title,
-          bio:         data.bio          || DEFAULT_FC.bio,
-          avatarUrl:   data.avatar_url   || undefined,
+          displayName: p.display_name || DEFAULT_FC.displayName,
+          title:       p.title        || DEFAULT_FC.title,
+          bio:         p.bio          || DEFAULT_FC.bio,
+          avatarUrl,
         }
         setFcProfile(profile)
         // Keep localStorage in sync for instant reads next visit

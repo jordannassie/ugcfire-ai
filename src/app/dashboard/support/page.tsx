@@ -107,8 +107,12 @@ export default function ClientSupportPage() {
       const res = await fetch('/api/admin/profile').catch(() => null)
       if (res?.ok) {
         const ap = await res.json()
-        if (ap?.display_name) setAdminName(ap.display_name)
-        if (ap?.avatar_url)   setAdminAvatar(ap.avatar_url)
+        const prof = ap?.profile
+        if (prof?.display_name) setAdminName(prof.display_name)
+        if (prof?.avatar_url) {
+          const bust = prof.updated_at ? `?v=${new Date(prof.updated_at).getTime()}` : ''
+          setAdminAvatar(`${prof.avatar_url}${bust}`)
+        }
       }
 
       await loadMessages(company.id)

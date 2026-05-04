@@ -158,8 +158,12 @@ export default function AdminSupportPage() {
       const res = await fetch('/api/admin/profile').catch(() => null)
       if (res?.ok) {
         const ap = await res.json()
-        if (ap?.display_name) setFcName(ap.display_name)
-        if (ap?.avatar_url)   setFcAvatar(ap.avatar_url)
+        const prof = ap?.profile
+        if (prof?.display_name) setFcName(prof.display_name)
+        if (prof?.avatar_url) {
+          const bust = prof.updated_at ? `?v=${new Date(prof.updated_at).getTime()}` : ''
+          setFcAvatar(`${prof.avatar_url}${bust}`)
+        }
       }
 
       await loadConvos()
