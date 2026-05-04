@@ -23,7 +23,7 @@ export default function SignupPage() {
     const supabase = createClient()
     if (!supabase) return
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) window.location.replace('/dashboard')
+      if (session) window.location.replace('/dashboard/studio')
     })
   }, [])
 

@@ -124,5 +124,5 @@ export async function syncAuthenticatedUser(user: User): Promise<UserRole> {
 }
 
 export function destinationForRole(role: UserRole) {
-  return role === 'admin' ? '/admin' : '/dashboard'
+  return role === 'admin' ? '/admin' : '/dashboard/studio'
 }
