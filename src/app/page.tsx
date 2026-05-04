@@ -548,6 +548,9 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [heroVideo, setHeroVideo] = useState(0);
+  const [showcaseCol1, setShowcaseCol1] = useState(0);
+  const [showcaseCol2, setShowcaseCol2] = useState(0);
+  const [showcaseCol3, setShowcaseCol3] = useState(0);
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
 
   // Calendar booking state
@@ -584,6 +587,14 @@ export default function Home() {
   useEffect(() => {
     const timer = setInterval(() => setHeroVideo((v) => (v + 1) % 2), 8000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Auto-rotate showcase columns
+  useEffect(() => {
+    const t1 = setInterval(() => setShowcaseCol1(v => (v + 1) % 3), 3500);
+    const t2 = setInterval(() => setShowcaseCol2(v => (v + 1) % 4), 4000);
+    const t3 = setInterval(() => setShowcaseCol3(v => (v + 1) % 2), 5000);
+    return () => { clearInterval(t1); clearInterval(t2); clearInterval(t3); };
   }, []);
 
   // Fetch real slots from Edge Function for a given date string (YYYY-MM-DD)
@@ -884,8 +895,8 @@ export default function Home() {
       }}>
         {/* Rotating hero videos */}
         {[
-          "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/hf_20260423_175314_87422d76-6d45-43ac-838b-1f9fc7175cdd.mp4",
-          "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/hf_20260423_181257_b777a1c9-586e-4548-8c89-0dd1db1f3887.mp4",
+          "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/Videos/hf_20260429_020651_1d9ae862-a0c1-498e-9296-651fb43dc88c%20(1).mp4",
+          "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/Videos/hf_20260504_162546_98fa6dc2-bf22-4a86-9bff-5ee8c96948ed.mp4",
         ].map((src, i) => (
           <video
             key={src}
@@ -1141,79 +1152,135 @@ export default function Home() {
             position: relative;
             min-height: 540px;
           }
+          .showcase-fade {
+            position: absolute; inset: 0;
+            transition: opacity 0.7s ease;
+          }
         `}</style>
 
-        <div style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          background: "#fff",
-          borderRadius: 28,
-          padding: 14,
-          boxShadow: "0 8px 48px rgba(0,0,0,0.10)",
-        }}>
-          <div className="showcase-grid">
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
 
-            {/* Col 1 — Person with Products photo */}
-            <div className="showcase-card" style={{ background: "#f7f5f2" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/e285ae04-724a-43a6-9cc7-759f8fa80ac3.png"
-                alt="UGC Fire products in action"
-                style={{ width: "100%", height: "100%", minHeight: 540, objectFit: "cover", objectPosition: "center top", display: "block" }}
-              />
-              {/* Product circle 1 */}
-              <div style={{ position: "absolute", bottom: 24, left: 18, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.6)" }} />
-                  <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#fff" }} />
+          {/* Step labels row */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 12 }}>
+            {["Step 1 — Your Products", "Step 2 — Product Images", "Step 3 — UGC Videos"].map((label, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#FF3B1A", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#fff" }}>{i + 1}</span>
                 </div>
-                <div style={{ width: 88, height: 88, borderRadius: "50%", background: "#fff", boxShadow: "0 6px 24px rgba(0,0,0,0.22)", border: "3px solid #fff", overflow: "hidden" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/3c6a9dc3-024e-4fa3-9760-4be5f53ac0ec.png" alt="Product 1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-                <div style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", borderRadius: 999, padding: "3px 10px", fontSize: 9, fontWeight: 700, color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase" }}>Product 1</div>
+                <span style={{ fontSize: 13, fontWeight: 700, color: "#111", letterSpacing: "0.01em" }}>{label.split(" — ")[1]}</span>
               </div>
-              {/* Product circle 2 */}
-              <div style={{ position: "absolute", bottom: 24, right: 18, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.6)" }} />
-                  <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#fff" }} />
-                </div>
-                <div style={{ width: 88, height: 88, borderRadius: "50%", background: "#fff", boxShadow: "0 6px 24px rgba(0,0,0,0.22)", border: "3px solid #fff", overflow: "hidden" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/fcf24658-8edb-45a6-ad4f-29a2c1e46c6a.png" alt="Product 2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-                <div style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", borderRadius: 999, padding: "3px 10px", fontSize: 9, fontWeight: 700, color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase" }}>Product 2</div>
-              </div>
+            ))}
+          </div>
+
+          <div style={{ background: "#fff", borderRadius: 28, padding: 14, boxShadow: "0 8px 48px rgba(0,0,0,0.10)" }}>
+            <div className="showcase-grid">
+
+              {/* Col 1 — Your Products: rotating images */}
+              {(() => {
+                const COL1 = [
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/e285ae04-724a-43a6-9cc7-759f8fa80ac3.png",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/fcf24658-8edb-45a6-ad4f-29a2c1e46c6a.png",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/3c6a9dc3-024e-4fa3-9760-4be5f53ac0ec.png",
+                ];
+                return (
+                  <div className="showcase-card" style={{ background: "#f7f5f2" }}>
+                    {COL1.map((src, i) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img key={src} src={src} alt={`Product ${i + 1}`}
+                        className="showcase-fade"
+                        style={{ objectFit: "cover", objectPosition: "center top", opacity: showcaseCol1 === i ? 1 : 0 }}
+                      />
+                    ))}
+                    {/* Dot indicators */}
+                    <div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5, zIndex: 10 }}>
+                      {COL1.map((_, i) => (
+                        <div key={i} style={{ width: showcaseCol1 === i ? 18 : 6, height: 6, borderRadius: 999, background: showcaseCol1 === i ? "#FF3B1A" : "rgba(255,255,255,0.5)", transition: "all 0.3s ease" }} />
+                      ))}
+                    </div>
+                    {/* Product circles (only on first slide) */}
+                    {showcaseCol1 === 0 && (
+                      <>
+                        <div style={{ position: "absolute", bottom: 40, left: 18, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                          <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.6)" }} /><div style={{ width: 5, height: 5, borderRadius: "50%", background: "#fff" }} />
+                          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#fff", boxShadow: "0 6px 24px rgba(0,0,0,0.22)", border: "3px solid #fff", overflow: "hidden" }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/3c6a9dc3-024e-4fa3-9760-4be5f53ac0ec.png" alt="P1" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          </div>
+                          <div style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", borderRadius: 999, padding: "3px 10px", fontSize: 9, fontWeight: 700, color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase" }}>Product 1</div>
+                        </div>
+                        <div style={{ position: "absolute", bottom: 40, right: 18, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                          <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.6)" }} /><div style={{ width: 5, height: 5, borderRadius: "50%", background: "#fff" }} />
+                          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#fff", boxShadow: "0 6px 24px rgba(0,0,0,0.22)", border: "3px solid #fff", overflow: "hidden" }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Makeup%201/fcf24658-8edb-45a6-ad4f-29a2c1e46c6a.png" alt="P2" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          </div>
+                          <div style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", borderRadius: 999, padding: "3px 10px", fontSize: 9, fontWeight: 700, color: "#fff", letterSpacing: "0.08em", textTransform: "uppercase" }}>Product 2</div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Col 2 — Product Images: rotating */}
+              {(() => {
+                const COL2 = [
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/Site%20reels/images/097881dc-4c18-4c17-8bf4-b106b302d197.png",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/5e1cf241-a837-4b51-a46c-f0fb5d643f1f.png",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/d0702dbc-8d8e-4f40-b4e7-7aa4d7b98cbc.png",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/2df5032e-be6e-46a9-9957-728c7177ad6b.png",
+                ];
+                return (
+                  <div className="showcase-card" style={{ background: "#0a0a0a" }}>
+                    <div style={{ position: "absolute", top: 12, left: 12, zIndex: 10, background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 12px", display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF3B1A", display: "inline-block" }} />
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#fff", textTransform: "uppercase" }}>Photo Reel</span>
+                    </div>
+                    {COL2.map((src, i) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img key={src} src={src} alt={`Photo ${i + 1}`}
+                        className="showcase-fade"
+                        style={{ objectFit: "cover", objectPosition: "center top", opacity: showcaseCol2 === i ? 1 : 0 }}
+                      />
+                    ))}
+                    <div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5, zIndex: 10 }}>
+                      {COL2.map((_, i) => (
+                        <div key={i} style={{ width: showcaseCol2 === i ? 18 : 6, height: 6, borderRadius: 999, background: showcaseCol2 === i ? "#FF3B1A" : "rgba(255,255,255,0.5)", transition: "all 0.3s ease" }} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Col 3 — UGC Videos: rotating */}
+              {(() => {
+                const COL3 = [
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/Site%20reels/hf_20260504_161208_b8ca7e84-576a-4ad6-af16-c541ca6083a8.mp4",
+                  "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/Videos/hf_20260504_161728_1fe36f3f-a863-4d66-907b-b38d04c80ee8.mp4",
+                ];
+                return (
+                  <div className="showcase-card" style={{ background: "#0a0a0a" }}>
+                    <div style={{ position: "absolute", top: 12, left: 12, zIndex: 10, background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 12px", display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF3B1A", display: "inline-block" }} />
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#fff", textTransform: "uppercase" }}>Video Reel</span>
+                    </div>
+                    {COL3.map((src, i) => (
+                      <video key={src} autoPlay muted loop playsInline
+                        className="showcase-fade"
+                        style={{ objectFit: "cover", opacity: showcaseCol3 === i ? 1 : 0 }}
+                        src={src}
+                      />
+                    ))}
+                    <div style={{ position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5, zIndex: 10 }}>
+                      {COL3.map((_, i) => (
+                        <div key={i} style={{ width: showcaseCol3 === i ? 18 : 6, height: 6, borderRadius: 999, background: showcaseCol3 === i ? "#FF3B1A" : "rgba(255,255,255,0.5)", transition: "all 0.3s ease" }} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
             </div>
-
-            {/* Col 2 — 9×16 Image reel */}
-            <div className="showcase-card" style={{ background: "#0a0a0a" }}>
-              <div style={{ position: "absolute", top: 12, left: 12, zIndex: 10, background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 12px", display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF3B1A", display: "inline-block" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#fff", textTransform: "uppercase" }}>Photo Reel</span>
-              </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/Site%20reels/images/097881dc-4c18-4c17-8bf4-b106b302d197.png"
-                alt="UGC Fire photo reel"
-                style={{ width: "100%", height: "100%", minHeight: 540, objectFit: "cover", objectPosition: "center top", display: "block" }}
-              />
-            </div>
-
-            {/* Col 3 — 9×16 Video reel */}
-            <div className="showcase-card" style={{ background: "#0a0a0a" }}>
-              <div style={{ position: "absolute", top: 12, left: 12, zIndex: 10, background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 999, padding: "5px 12px", display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#FF3B1A", display: "inline-block" }} />
-                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: "#fff", textTransform: "uppercase" }}>Video Reel</span>
-              </div>
-              <video
-                autoPlay muted loop playsInline
-                style={{ width: "100%", height: "100%", minHeight: 540, objectFit: "cover", display: "block" }}
-                src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/Site%20reels/hf_20260504_161208_b8ca7e84-576a-4ad6-af16-c541ca6083a8.mp4"
-              />
-            </div>
-
           </div>
         </div>
       </section>
