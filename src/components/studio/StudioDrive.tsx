@@ -227,7 +227,11 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // ── Load studio ───────────────────────────────────────────────────────────
-  const FILE_SELECT = 'id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, client_reaction, client_reaction_by, client_reaction_at, created_at'
+  // Full select includes reaction columns (migration 015).
+  // If those columns are missing, we fall back to the base select so the
+  // rest of Studio keeps working regardless of migration state.
+  const FILE_SELECT_FULL = 'id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, client_reaction, client_reaction_by, client_reaction_at, created_at'
+  const FILE_SELECT_BASE = 'id, company_id, folder_id, name, storage_path, file_url, mime_type, file_size, status, created_at'
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -239,22 +243,37 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
         ? sb.from('studio_folders').select('id, company_id, name, parent_folder_id, created_at').eq('company_id', companyId).is('deleted_at', null).is('parent_folder_id', null).order('name')
         : sb.from('studio_folders').select('id, company_id, name, parent_folder_id, created_at').eq('company_id', companyId).is('deleted_at', null).eq('parent_folder_id', currentFolderId).order('name')
 
-      const fileQ = currentFolderId === null
-        ? sb.from('studio_files').select(FILE_SELECT).eq('company_id', companyId).is('deleted_at', null).is('folder_id', null).order('created_at', { ascending: false })
-        : sb.from('studio_files').select(FILE_SELECT).eq('company_id', companyId).is('deleted_at', null).eq('folder_id', currentFolderId).order('created_at', { ascending: false })
+      const buildFileQ = (sel: string) => currentFolderId === null
+        ? sb.from('studio_files').select(sel).eq('company_id', companyId).is('deleted_at', null).is('folder_id', null).order('created_at', { ascending: false })
+        : sb.from('studio_files').select(sel).eq('company_id', companyId).is('deleted_at', null).eq('folder_id', currentFolderId).order('created_at', { ascending: false })
 
-      const [{ data: fData, error: fErr }, { data: fiData, error: fiErr }] = await Promise.all([folderQ, fileQ])
+      const [{ data: fData, error: fErr }, firstFileResult] = await Promise.all([
+        folderQ,
+        buildFileQ(FILE_SELECT_FULL),
+      ])
+
+      let fiData = firstFileResult.data
+      let fiErr  = firstFileResult.error
+
+      // 42703 = column does not exist — reaction columns not migrated yet; retry without them
+      if (fiErr?.code === '42703') {
+        console.warn('[Studio] Reaction columns missing, falling back to base select. Run migration 015_studio_file_reactions.sql to enable reactions.')
+        const fallback = await buildFileQ(FILE_SELECT_BASE)
+        fiData = fallback.data
+        fiErr  = fallback.error
+      }
 
       if (fErr?.code === '42P01' || fiErr?.code === '42P01') {
         setDbError('Studio tables not set up. Please run supabase/migrations/013_studio_drive.sql in your Supabase SQL Editor.')
         return
       }
-      if (fErr) throw fErr
-      if (fiErr) throw fiErr
+      if (fErr)  { console.error('[Studio] Folders query error:', fErr);  throw fErr }
+      if (fiErr) { console.error('[Studio] Files query error:',   fiErr); throw fiErr }
 
-      setFolders((fData ?? []) as StudioFolder[])
-      setFiles((fiData ?? []) as StudioFile[])
+      setFolders((fData  ?? []) as StudioFolder[])
+      setFiles(  (fiData ?? []) as StudioFile[])
     } catch (err) {
+      console.error('[Studio] load() threw:', err)
       setDbError(err instanceof Error ? err.message : 'Failed to load studio')
     } finally {
       setLoading(false)
@@ -267,11 +286,12 @@ export default function StudioDrive({ companyId, actorId, actorRole, fireCreator
   const loadComments = useCallback(async (fileId: string) => {
     setCommentsLoading(true)
     const sb = createClient()
-    const { data } = await sb
+    const { data, error } = await sb
       .from('studio_comments')
       .select('id, file_id, sender_role, sender_name, message, created_at')
       .eq('file_id', fileId)
       .order('created_at')
+    if (error) console.error('[Studio] Comments query error:', error)
     setComments((data ?? []) as StudioComment[])
     setCommentsLoading(false)
   }, [])
