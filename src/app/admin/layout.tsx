@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic'
 const NAV = [
   { label: 'Command Center', href: '/admin',             icon: LayoutDashboard },
   { label: 'Leads',          href: '/admin/leads',        icon: Target },
-  { label: 'Studios',        href: '/admin/studios',      icon: Clapperboard },
+  { label: 'Studio',         href: '/admin/studio',       icon: Clapperboard },
   { label: 'Clients',        href: '/admin/clients',      icon: Users },
   { label: 'Billing',        href: '/admin/billing',      icon: CreditCard },
   { label: 'Agreements',     href: '/admin/agreements',   icon: FileText },
