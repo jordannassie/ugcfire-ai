@@ -1308,7 +1308,7 @@ export default function Home() {
           }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/DASH.png"
+              src="https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/Brandastic.png"
               alt="UGC Fire Studio Dashboard"
               style={{ width: "100%", display: "block" }}
             />
