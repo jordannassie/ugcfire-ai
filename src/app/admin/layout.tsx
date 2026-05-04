@@ -6,21 +6,22 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { isDemoMode, getDemoRole, exitDemoMode, DEMO_EMAIL_KEY } from '@/lib/demoData'
 import {
-  LayoutDashboard, Clapperboard, Users, CreditCard, FileText, Activity, Menu, LogOut, UserCircle, Target, Eye, Sparkles,
+  LayoutDashboard, Clapperboard, Users, CreditCard, FileText, Activity, Menu, LogOut, UserCircle, Target, Eye, Sparkles, Inbox,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 const NAV = [
-  { label: 'Command Center', href: '/admin',             icon: LayoutDashboard },
-  { label: 'Leads',          href: '/admin/leads',        icon: Target },
-  { label: 'Studio',         href: '/admin/studio',       icon: Clapperboard },
-  { label: 'Clients',        href: '/admin/clients',      icon: Users },
-  { label: 'Billing',        href: '/admin/billing',      icon: CreditCard },
-  { label: 'Agreements',     href: '/admin/agreements',   icon: FileText },
-  { label: 'Activity',       href: '/admin/activity',     icon: Activity },
-  { label: 'Create',         href: '/admin/create',       icon: Sparkles },
-  { label: 'Profile',        href: '/admin/profile',      icon: UserCircle },
+  { label: 'Command Center',  href: '/admin',              icon: LayoutDashboard },
+  { label: 'Leads',           href: '/admin/leads',         icon: Target },
+  { label: 'Studio',          href: '/admin/studio',        icon: Clapperboard },
+  { label: 'Clients',         href: '/admin/clients',       icon: Users },
+  { label: 'Support Inbox',   href: '/admin/support',       icon: Inbox },
+  { label: 'Billing',         href: '/admin/billing',       icon: CreditCard },
+  { label: 'Agreements',      href: '/admin/agreements',    icon: FileText },
+  { label: 'Activity',        href: '/admin/activity',      icon: Activity },
+  { label: 'Create',          href: '/admin/create',        icon: Sparkles },
+  { label: 'Profile',         href: '/admin/profile',       icon: UserCircle },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

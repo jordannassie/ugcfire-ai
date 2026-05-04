@@ -3,6 +3,6 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 export default function Page() {
   const router = useRouter()
-  useEffect(() => { router.replace('/dashboard/studio?panel=chat') }, [router])
+  useEffect(() => { router.replace('/dashboard/support') }, [router])
   return null
 }

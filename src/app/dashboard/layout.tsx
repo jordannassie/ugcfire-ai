@@ -8,7 +8,7 @@ import { getMyCompany } from '@/lib/data'
 import { isDemoMode, getDemoRole, exitDemoMode, DEMO_EMAIL_KEY, DEMO_COMPANY } from '@/lib/demoData'
 import type { Company } from '@/lib/types'
 import {
-  Clapperboard, Target, User, Wallet, FileCheck, Menu, LogOut, Camera, Sparkles, Sun, Moon, LayoutGrid, Mail,
+  Clapperboard, Target, User, Wallet, FileCheck, Menu, LogOut, Camera, Sparkles, Sun, Moon, LayoutGrid, Mail, MessageCircle,
 } from 'lucide-react'
 
 const THEME_KEY = 'ugcfire_dashboard_theme'
@@ -19,6 +19,7 @@ export const dynamic = 'force-dynamic'
 const NAV = [
   { label: 'Your Brand',  href: '/dashboard/your-brand',    icon: Target },
   { label: 'Studio',      href: '/dashboard/studio',        icon: Clapperboard },
+  { label: 'Support',     href: '/dashboard/support',       icon: MessageCircle },
   { label: 'Profile',     href: '/dashboard/profile',       icon: User },
   { label: 'Plans',       href: '/dashboard/plans',         icon: LayoutGrid },
   { label: 'Billing',     href: '/dashboard/billing',       icon: Wallet },
