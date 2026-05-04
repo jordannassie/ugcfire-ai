@@ -84,9 +84,10 @@ export default function SignupPage() {
     setLoading(true); setError(''); setNotice('')
     const supabase = getConfiguredClient()
     if (!supabase) return
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${siteUrl}/auth/callback` },
     })
     if (err) { setError(err.message); setLoading(false) }
   }
