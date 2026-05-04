@@ -1057,7 +1057,7 @@ export default function Home() {
           .brand-ticker:hover { animation-play-state: paused; }
         `}</style>
         <div className="brand-ticker">
-          {[...Array(2)].map((_, pass) => (
+          {[...Array(6)].map((_, pass) => (
             <React.Fragment key={pass}>
               {[
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/16-167642_amazon-logo-amazon-logo-white-text.png", alt: "Amazon", h: 28 },
