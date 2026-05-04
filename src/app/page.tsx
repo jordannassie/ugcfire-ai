@@ -1057,11 +1057,15 @@ export default function Home() {
           .brand-ticker:hover { animation-play-state: paused; }
         `}</style>
         <div className="brand-ticker">
-          {[...Array(6)].map((_, pass) => (
+          {[...Array(2)].map((_, pass) => (
             <React.Fragment key={pass}>
               {[
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/16-167642_amazon-logo-amazon-logo-white-text.png", alt: "Amazon", h: 28 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/95e2f3f9bfa4f9ac5b61fa7f4f8ef0d1.png", alt: "Printify", h: 32 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/home-banner-hyperx-logo.png", alt: "HyperX", h: 28 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Dell_Logo.png", alt: "Dell", h: 28 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/Ricoh-2009-new-Logo-Vector.svg-.png", alt: "Ricoh", h: 28 },
+                { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/5eb3c6a2c8c4590004435145.png", alt: "Orangetheory", h: 28 },
                 { src: "https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Shopping%20Brands/267-2675724_magento-to-shopify-migration-service-shopify-logo-white.png", alt: "Shopify", h: 30 },
               ].map(brand => (
                 <img
