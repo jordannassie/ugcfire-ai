@@ -81,7 +81,7 @@ export default function Home() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: #080808; color: #f2f0eb; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
@@ -115,8 +115,8 @@ export default function Home() {
         .mixed-heading { font-family: 'Syne', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #fff; line-height: 1.1; }
         .mixed-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.85); }
 
-        .hero-heading { font-family: 'Syne', sans-serif; font-size: clamp(40px, 6.5vw, 80px); font-weight: 800; line-height: 1.02; color: #fff; letter-spacing: -0.02em; }
-        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 1.05em; }
+        .hero-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 140px); font-weight: 400; line-height: 0.95; color: #fff; letter-spacing: 0.01em; }
+        .hero-heading .fire-word { color: #FF5C00; }
 
         /* Phone card */
         .phone-card { background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; position: relative; }
@@ -206,19 +206,27 @@ export default function Home() {
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────────── */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 64px', overflow: 'hidden', textAlign: 'center' }}>
-        {/* Radial orange glow */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-          background: 'radial-gradient(ellipse 60% 50% at 50% 110%, rgba(255,92,0,0.18) 0%, transparent 70%)' }} />
-        {/* Subtle grid overlay */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.07,
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px)',
-          backgroundSize: '48px 48px' }} />
+        {/* Rotating background videos */}
+        {HERO_VIDEOS.map((src, i) => (
+          <video key={src} autoPlay muted loop playsInline src={src} style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', zIndex: 0,
+            opacity: heroVidIdx === i ? 0.45 : 0,
+            transition: 'opacity 1.2s ease',
+          }} />
+        ))}
+        {/* Orange glow overlay (matches .com) */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 55% 60% at 72% 38%, rgba(255,92,0,0.22) 0%, transparent 70%)' }} />
+        {/* Dark gradient — bottom fade so content reads cleanly */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, rgba(8,8,8,0.35) 0%, rgba(8,8,8,0.0) 40%, rgba(8,8,8,0.92) 100%)' }} />
 
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 800, width: '100%' }}>
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: 900, width: '100%' }}>
           <div className="eyebrow" style={{ marginBottom: 20 }}>DIY AI Content Generator for Brands</div>
 
           <h1 className="hero-heading" style={{ marginBottom: 24 }}>
-            Create 10x More<br />Branded UGC <em>With AI</em>
+            Create 10x More<br />Branded UGC<br /><span className="fire-word">With AI.</span>
           </h1>
 
           <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: 10, maxWidth: 540, margin: '0 auto 20px' }}>
