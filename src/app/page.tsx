@@ -499,7 +499,7 @@ export default function Home() {
       <section id="pricing" style={{ background: '#0a0a0a', padding: '96px 0' }}>
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="pricing-heading">Transparent <span>Pricing</span></div>
+            <div className="mixed-heading">Transparent <em>Pricing</em></div>
           </div>
 
           <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
