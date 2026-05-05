@@ -254,7 +254,7 @@ export default function Home() {
           {/* Central product card */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 0, position: 'relative', zIndex: 2 }}>
             <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 18, padding: '14px 24px', display: 'flex', alignItems: 'center', gap: 14, backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)' }}>
-              <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: '#f5f5f5' }}>
+              <div style={{ width: 72, height: 72, borderRadius: 14, overflow: 'hidden', flexShrink: 0, background: '#f5f5f5' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
@@ -273,12 +273,12 @@ export default function Home() {
           {/* SVG connecting lines — white */}
           <div style={{ position: 'relative', height: 80 }}>
             <svg viewBox="0 0 720 80" preserveAspectRatio="none" style={{ width: '100%', height: 80 }}>
-              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <circle cx="140" cy="80" r="4" fill="rgba(255,255,255,0.5)"/>
-              <circle cx="360" cy="80" r="4" fill="rgba(255,255,255,0.7)"/>
-              <circle cx="580" cy="80" r="4" fill="rgba(255,255,255,0.5)"/>
+              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(255,255,255,0.75)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <circle cx="140" cy="80" r="5" fill="#fff" opacity="0.7"/>
+              <circle cx="360" cy="80" r="5" fill="#fff" opacity="0.9"/>
+              <circle cx="580" cy="80" r="5" fill="#fff" opacity="0.7"/>
             </svg>
           </div>
 
