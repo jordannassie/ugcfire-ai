@@ -188,7 +188,7 @@ export default function PlansPage() {
             if (isCurrent) buttonLabel = 'Current Plan'
             else if (isUpgrade) buttonLabel = `Upgrade to ${cfg.name}`
             else if (isDowngrade) buttonLabel = `Downgrade to ${cfg.name}`
-            else if (!currentPlan) buttonLabel = cfg.cta
+            else if (!currentPlan) buttonLabel = cfg.key === 'starter' ? 'Get Started' : cfg.key === 'growth' ? 'Select Growth' : cfg.key === 'scale' ? 'Select Scale' : cfg.cta
           }
 
           return (
@@ -290,7 +290,7 @@ export default function PlansPage() {
       <div className="bg-white/3 border border-white/8 rounded-xl p-5">
         <p className="text-white/40 text-xs leading-relaxed">
           <span className="text-white/60 font-semibold">What counts as a content asset?</span>{' '}
-          A content asset can be a branded image, AI photo-style visual, social post, ad creative, reel cover, story graphic, or short-form UGC-style video. UGCFire creates and delivers the content assets; posting and ad management are not included unless added separately.
+          A content asset can be a branded image, AI photo-style visual, social post, ad creative, reel cover, story graphic, or short-form UGC-style video.
         </p>
       </div>
 
