@@ -162,20 +162,45 @@ const TESTIMONIALS_NEW = [
 
 const PLANS = [
   {
+    key: "starter",
+    name: "Starter Pack",
+    monthlyPrice: 500,
+    yearlyMonthlyPrice: null,
+    priceSuffix: "one-time",
+    assetsLabel: "3 content assets",
+    tagline: "Test UGCFire with a simple one-time content pack.",
+    badge: null,
+    salesOnly: false,
+    desc: "Test UGCFire with a simple one-time content pack.",
+    includes: [
+      "1 quick content strategy call",
+      "3 content assets",
+      "Branded images, ad creatives, or 1 short video",
+      "Hooks, captions, and creative direction",
+      "Studio delivery folder",
+      "1 revision round included",
+    ],
+    cta: "Get Started",
+  },
+  {
     key: "growth",
     name: "Growth",
     monthlyPrice: 2500,
-    yearlyMonthlyPrice: 2000,  // 20% off monthly
-    tagline: "8 UGC-style videos per month",
+    yearlyMonthlyPrice: null,
+    priceSuffix: "/mo",
+    assetsLabel: "8 content assets/month",
+    tagline: "Best for small businesses that need consistent monthly content.",
     badge: null,
     salesOnly: false,
-    desc: "Best for brands that want consistent weekly content without hiring creators, editors, or a full content team.",
+    desc: "Best for small businesses that need consistent monthly content.",
     includes: [
-      "8 UGC-style videos/month",
-      "Brand voice onboarding",
-      "Hook and script creation",
-      "AI-assisted content production",
-      "Captions and creative direction",
+      "1 monthly content strategy call",
+      "8 content assets/month",
+      "Photos / AI photo-style images",
+      "Ad creatives and social posts",
+      "UGC-style short videos",
+      "Hooks, captions, and creative direction",
+      "Studio delivery folder",
       "1 revision round included",
       "Cancel anytime",
     ],
@@ -185,40 +210,46 @@ const PLANS = [
     key: "scale",
     name: "Scale",
     monthlyPrice: 5000,
-    yearlyMonthlyPrice: 4000,  // 20% off monthly
-    tagline: "20 UGC-style videos per month",
+    yearlyMonthlyPrice: null,
+    priceSuffix: "/mo",
+    assetsLabel: "20 content assets/month",
+    tagline: "Best for brands that want more content volume and creative testing.",
     badge: "Most Popular",
     salesOnly: false,
-    desc: "Best for brands that want daily content volume and more creative testing.",
+    desc: "Best for brands that want more content volume and creative testing.",
     includes: [
-      "20 UGC-style videos/month",
-      "One fresh content asset every business day",
-      "Brand voice onboarding",
-      "Hook and script creation",
-      "AI-assisted content production",
-      "Captions and creative direction",
-      "Priority delivery",
+      "1 monthly content strategy call",
+      "20 content assets/month",
+      "Photos / AI photo-style images",
+      "Ad creatives and social posts",
+      "UGC-style short videos",
+      "Hooks, captions, and creative direction",
+      "Studio delivery folder",
       "1 revision round included",
+      "Priority delivery",
       "Cancel anytime",
     ],
     cta: "Book Scale Call",
   },
   {
-    key: "enterprise",
+    key: "custom",
     name: "Custom / Agencies",
     monthlyPrice: null,
     yearlyMonthlyPrice: null,
-    tagline: "For brands that need higher volume, custom workflows, and priority support.",
+    priceSuffix: "",
+    assetsLabel: "Custom volume",
+    tagline: "For brands or agencies that need custom volume, white-label support, or a custom content workflow.",
     badge: null,
     salesOnly: true,
-    desc: "For high-volume brands and agencies that need a dedicated creative partner, custom workflows, and priority support.",
+    desc: "For brands or agencies that need custom volume, white-label support, or a custom content workflow.",
     includes: [
-      "Custom monthly deliverables",
-      "Dedicated creative strategist",
-      "Priority support",
-      "Custom workflows",
+      "Custom monthly content assets",
+      "Custom content workflow",
+      "Agency / white-label support",
       "Team collaboration",
       "Strategy support",
+      "Studio delivery system",
+      "1 revision round included",
       "Priority delivery",
     ],
     cta: "Talk to Sales",
@@ -1568,73 +1599,10 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Billing cycle toggle */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 48, marginTop: 8 }}>
-          <div style={{
-            display: "inline-flex",
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            borderRadius: 40,
-            padding: 4,
-            gap: 4,
-          }}>
-            <button
-              onClick={() => setBillingCycle("monthly")}
-              style={{
-                background: billingCycle === "monthly" ? "#FF3B1A" : "transparent",
-                color: billingCycle === "monthly" ? "#fff" : "rgba(255,255,255,0.45)",
-                border: "none",
-                borderRadius: 32,
-                padding: "8px 22px",
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: "pointer",
-                transition: "all 0.2s",
-                letterSpacing: "0.03em",
-              }}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBillingCycle("yearly")}
-              style={{
-                background: billingCycle === "yearly" ? "#22c55e" : "transparent",
-                color: billingCycle === "yearly" ? "#fff" : "rgba(255,255,255,0.45)",
-                border: "none",
-                borderRadius: 32,
-                padding: "8px 22px",
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: "pointer",
-                transition: "all 0.2s",
-                letterSpacing: "0.03em",
-                display: "flex",
-                alignItems: "center",
-                gap: 7,
-              }}
-            >
-              Yearly
-              <span style={{
-                background: billingCycle === "yearly" ? "rgba(255,255,255,0.25)" : "rgba(34,197,94,0.20)",
-                color: billingCycle === "yearly" ? "#fff" : "#22c55e",
-                fontSize: 10,
-                fontWeight: 800,
-                padding: "2px 7px",
-                borderRadius: 20,
-                letterSpacing: "0.05em",
-              }}>
-                -20%
-              </span>
-            </button>
-          </div>
-        </div>
-
-        {/* plans grid — 3 fixed columns on desktop, 1 on mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start" style={{ maxWidth: 1280, margin: "0 auto" }}>
+        {/* plans grid — 4 columns on desktop, 2 on medium, 1 on mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start" style={{ maxWidth: 1280, margin: "0 auto" }}>
           {PLANS.map((plan, i) => {
             const isScale = plan.key === "scale";
-
-            const isYearly = billingCycle === "yearly" && !plan.salesOnly;
 
             return (
               <div
@@ -1677,35 +1645,22 @@ export default function Home() {
                 <div style={{ marginBottom: 4 }}>
                   {plan.salesOnly ? (
                     <span style={{ fontFamily: "var(--font-bebas)", fontSize: 36, color: "#fff", letterSpacing: "0.02em", lineHeight: 1 }}>
-                      Custom / Agencies
+                      Custom
                     </span>
                   ) : (
-                    <>
-                      {/* Slashed original price — only on yearly */}
-                      {isYearly && (
-                        <div style={{ fontSize: 15, color: "rgba(255,255,255,0.35)", fontWeight: 600, textDecoration: "line-through", marginBottom: 2 }}>
-                          ${plan.monthlyPrice!.toLocaleString()}/mo
-                        </div>
-                      )}
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
-                        <span style={{ fontFamily: "var(--font-bebas)", fontSize: 44, color: "#fff", letterSpacing: "0.02em", lineHeight: 1 }}>
-                          ${(isYearly ? plan.yearlyMonthlyPrice! : plan.monthlyPrice!).toLocaleString()}
-                        </span>
-                        <span style={{ fontFamily: "var(--font-bebas)", fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                          /mo
-                        </span>
-                      </div>
-                      {isYearly && (
-                        <div style={{ fontSize: 12, color: "#4ade80", fontWeight: 600, marginTop: 3 }}>
-                          billed annually
-                        </div>
-                      )}
-                    </>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+                      <span style={{ fontFamily: "var(--font-bebas)", fontSize: 44, color: "#fff", letterSpacing: "0.02em", lineHeight: 1 }}>
+                        ${plan.monthlyPrice!.toLocaleString()}
+                      </span>
+                      <span style={{ fontFamily: "var(--font-bebas)", fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
+                        {plan.priceSuffix}
+                      </span>
+                    </div>
                   )}
                 </div>
 
-                <div style={{ fontSize: 14, color: "#FF3B1A", fontWeight: 600, marginBottom: 10, marginTop: 2 }}>
-                  {plan.tagline}
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontWeight: 500, marginBottom: 10, marginTop: 2 }}>
+                  {plan.assetsLabel}
                 </div>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, marginBottom: 20 }}>
                   {plan.desc}
@@ -1761,6 +1716,14 @@ export default function Home() {
               </div>
             );
           })}
+        </div>
+
+        {/* Content asset note */}
+        <div style={{ maxWidth: 1280, margin: "32px auto 0", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "16px 20px" }}>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", lineHeight: 1.7, margin: 0 }}>
+            <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>What counts as a content asset?</span>{" "}
+            A content asset can be a branded image, AI photo-style visual, social post, ad creative, reel cover, story graphic, or short-form UGC-style video. UGCFire creates and delivers the content assets; posting and ad management are not included unless added separately.
+          </p>
         </div>
       </section>
 
