@@ -81,7 +81,7 @@ export default function Home() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: #080808; color: #f2f0eb; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
@@ -112,15 +112,11 @@ export default function Home() {
         .section { padding: 96px 24px; max-width: 1160px; margin: 0 auto; }
         .eyebrow { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #FF5C00; margin-bottom: 14px; }
 
-        .mixed-heading { font-family: 'Syne', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #fff; line-height: 1.1; }
-        .mixed-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.85); }
+        .mixed-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
+        .mixed-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.85); letter-spacing: 0; }
 
-        .hero-heading { font-family: 'Syne', sans-serif; font-size: clamp(40px, 6.5vw, 80px); font-weight: 800; line-height: 1.02; color: #fff; letter-spacing: -0.02em; }
-        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 1.05em; }
-        .hero-heading .fire-word { color: #FF5C00; }
-
-        .pricing-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 7vw, 96px); font-weight: 400; color: #fff; line-height: 1; letter-spacing: 0.01em; }
-        .pricing-heading span { color: #FF5C00; }
+        .hero-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(40px, 6.5vw, 76px); font-weight: 700; line-height: 1.08; color: #fff; letter-spacing: -0.025em; }
+        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 1.05em; letter-spacing: 0; }
 
         /* Phone card */
         .phone-card { background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; position: relative; }
