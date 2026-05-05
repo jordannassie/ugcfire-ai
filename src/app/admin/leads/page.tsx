@@ -1471,6 +1471,16 @@ export default function AdminLeadsPage() {
     loadLeads('all')
   }
 
+  async function handleDeleteUnassigned() {
+    const unassigned = allLeads.filter(l => !l.folder_id)
+    if (unassigned.length === 0) { alert('No unassigned leads to delete.'); return }
+    if (!confirm(`Delete all ${unassigned.length} unassigned lead(s)? This cannot be undone.`)) return
+    await Promise.all(unassigned.map(l => fetch(`/api/admin/leads/${l.id}`, { method: 'DELETE' })))
+    loadAllLeadsForStats()
+    loadLeads(activeFolderId)
+    loadFolders()
+  }
+
   async function createFolder() {
     if (!newFolderName.trim()) return
     setCreatingFolder(true)
@@ -1547,18 +1557,27 @@ export default function AdminLeadsPage() {
         )}
 
         <div className="flex flex-wrap gap-2">
-          {/* All / Unassigned chips */}
-          {[
-            { id: 'all', label: 'All Leads', count: total },
-            { id: 'unassigned', label: 'Unassigned', count: allLeads.filter(l => !l.folder_id).length },
-          ].map(chip => (
-            <button key={chip.id} onClick={() => handleFolderChange(chip.id)}
-              className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition ${activeFolderId === chip.id ? 'bg-[#FF3B1A]/20 border-[#FF3B1A]/40 text-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}>
+          {/* All Leads chip — no delete */}
+          <button onClick={() => handleFolderChange('all')}
+            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition ${activeFolderId === 'all' ? 'bg-[#FF3B1A]/20 border-[#FF3B1A]/40 text-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}>
+            <FolderOpen size={11}/>
+            All Leads
+            <span className={`text-[10px] ${activeFolderId === 'all' ? 'text-white/60' : 'text-white/25'}`}>({total})</span>
+          </button>
+
+          {/* Unassigned chip — with delete button for unassigned leads */}
+          <div className={`flex items-center gap-1 rounded-lg border transition ${activeFolderId === 'unassigned' ? 'bg-[#FF3B1A]/20 border-[#FF3B1A]/40' : 'border-white/10 hover:border-white/20'}`}>
+            <button onClick={() => handleFolderChange('unassigned')}
+              className={`flex items-center gap-1.5 text-xs px-3 py-1.5 transition ${activeFolderId === 'unassigned' ? 'text-white' : 'text-white/40 hover:text-white'}`}>
               <FolderOpen size={11}/>
-              {chip.label}
-              <span className={`text-[10px] ${activeFolderId === chip.id ? 'text-white/60' : 'text-white/25'}`}>({chip.count})</span>
+              Unassigned
+              <span className={`text-[10px] ${activeFolderId === 'unassigned' ? 'text-white/60' : 'text-white/25'}`}>({allLeads.filter(l => !l.folder_id).length})</span>
             </button>
-          ))}
+            <button onClick={handleDeleteUnassigned} title="Delete all unassigned leads"
+              className="pr-2 text-white/20 hover:text-red-400 transition">
+              <Trash2 size={11}/>
+            </button>
+          </div>
 
           {/* Folder chips */}
           {folders.map(folder => (
@@ -1569,9 +1588,9 @@ export default function AdminLeadsPage() {
                 {folder.name}
                 <span className={`text-[10px] ${activeFolderId === folder.id ? 'text-white/60' : 'text-white/25'}`}>({folder.lead_count})</span>
               </button>
-              <button onClick={() => handleDeleteFolder(folder)}
+              <button onClick={() => handleDeleteFolder(folder)} title="Delete folder"
                 className="pr-2 text-white/20 hover:text-red-400 transition">
-                <X size={11}/>
+                <Trash2 size={11}/>
               </button>
             </div>
           ))}
