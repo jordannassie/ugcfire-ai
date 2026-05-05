@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { getSupabaseAuthCookieName, getSupabasePublishableKey, getSupabaseUrl } from '@/lib/supabase/env'
+import { getSupabaseAuthCookieName, getSupabasePublishableKey, getSupabaseUrl, hasSupabaseConfig } from '@/lib/supabase/env'
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
@@ -14,6 +14,12 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
     return NextResponse.next()
+  }
+
+  // Guard: if Supabase is not yet configured, redirect protected routes to homepage
+  if (!hasSupabaseConfig()) {
+    console.warn('[middleware] Supabase not configured — redirecting protected route to /')
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   let supabaseResponse = NextResponse.next({ request })

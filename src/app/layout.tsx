@@ -12,36 +12,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const OG_IMAGE = "https://ugcfire.com/og-image.png";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://ugcfire.ai';
+const OG_IMAGE = `${APP_URL}/og-image.png`;
 
 export const metadata: Metadata = {
-  title: "UGCFire — Monthly AI-Assisted UGC Content for Brands",
+  title: "UGCFire.ai — Create Branded UGC Content with AI",
   description:
-    "UGC content without hiring a content team. A monthly AI-assisted UGC subscription for brands that need consistent short-form videos.",
+    "Upload your product, logo, and brand style. Generate images, videos, hooks, and content assets in minutes.",
   icons: {
     icon: [{ url: "/favicon.png?v=3" }],
     shortcut: [{ url: "/favicon.png?v=3" }],
     apple: [{ url: "/apple-touch-icon.png?v=3" }],
   },
   openGraph: {
-    title: "UGCFire",
-    description: "UGC content without hiring a content team.",
+    title: "UGCFire.ai",
+    description: "Create branded UGC content yourself with AI.",
     type: "website",
-    url: "https://ugcfire.com",
-    siteName: "UGCFire",
+    url: APP_URL,
+    siteName: "UGCFire.ai",
     images: [
       {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "UGCFire",
+        alt: "UGCFire.ai",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "UGCFire",
-    description: "UGC content without hiring a content team.",
+    title: "UGCFire.ai",
+    description: "Create branded UGC content yourself with AI.",
     images: [OG_IMAGE],
   },
 };
