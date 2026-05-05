@@ -244,8 +244,8 @@ export default function Home() {
             ))}
           </div>
 
-          <a href="#" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px', marginBottom: 48 }}>
-            ✦ Start Creating
+          <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px', marginBottom: 48 }}>
+            ✦ Create Your AI Ad
           </a>
         </div>
 
