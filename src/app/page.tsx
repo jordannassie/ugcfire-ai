@@ -253,20 +253,24 @@ export default function Home() {
         <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 720, marginTop: 8 }}>
           {/* Central product card */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 0, position: 'relative', zIndex: 2 }}>
-            <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 18, padding: '14px 24px', display: 'flex', alignItems: 'center', gap: 14, backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)' }}>
-              <div style={{ width: 144, height: 144, borderRadius: 18, overflow: 'hidden', flexShrink: 0, background: '#f5f5f5' }}>
+            <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 22, overflow: 'hidden', backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)', width: 260 }}>
+              {/* Text header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px 10px' }}>
+                <div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Product + Logo + Style</div>
+                </div>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.7)', flexShrink: 0 }} />
+              </div>
+              {/* Large product image below */}
+              <div style={{ width: '100%', height: 240, background: '#f5f5f5' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
                   alt="Your product"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Product + Logo + Style</div>
-              </div>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.7)', marginLeft: 8 }} />
             </div>
           </div>
 
