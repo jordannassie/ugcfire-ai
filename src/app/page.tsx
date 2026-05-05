@@ -253,27 +253,32 @@ export default function Home() {
         <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 720, marginTop: 8 }}>
           {/* Central product card */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 0, position: 'relative', zIndex: 2 }}>
-            <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 18, padding: '18px 28px', display: 'flex', alignItems: 'center', gap: 14, backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,92,0,0.1), 0 20px 60px rgba(0,0,0,0.6)' }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(255,92,0,0.12)', border: '1px solid rgba(255,92,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 22 }}>📦</span>
+            <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 18, padding: '14px 24px', display: 'flex', alignItems: 'center', gap: 14, backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)' }}>
+              <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: '#f5f5f5' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
+                  alt="Your product"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
               </div>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Product + Logo + Style</div>
               </div>
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.7)', marginLeft: 8 }} />
             </div>
           </div>
 
-          {/* SVG connecting lines */}
+          {/* SVG connecting lines — white */}
           <div style={{ position: 'relative', height: 80 }}>
             <svg viewBox="0 0 720 80" preserveAspectRatio="none" style={{ width: '100%', height: 80 }}>
-              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(255,92,0,0.25)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(255,92,0,0.4)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(255,92,0,0.25)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <circle cx="140" cy="80" r="4" fill="#FF5C00" opacity="0.6"/>
-              <circle cx="360" cy="80" r="4" fill="#FF5C00" opacity="0.8"/>
-              <circle cx="580" cy="80" r="4" fill="#FF5C00" opacity="0.6"/>
+              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <circle cx="140" cy="80" r="4" fill="rgba(255,255,255,0.5)"/>
+              <circle cx="360" cy="80" r="4" fill="rgba(255,255,255,0.7)"/>
+              <circle cx="580" cy="80" r="4" fill="rgba(255,255,255,0.5)"/>
             </svg>
           </div>
 
