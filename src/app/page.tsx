@@ -254,7 +254,7 @@ export default function Home() {
           {/* Central product card */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 0, position: 'relative', zIndex: 2 }}>
             <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 18, padding: '14px 24px', display: 'flex', alignItems: 'center', gap: 14, backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)' }}>
-              <div style={{ width: 72, height: 72, borderRadius: 14, overflow: 'hidden', flexShrink: 0, background: '#f5f5f5' }}>
+              <div style={{ width: 144, height: 144, borderRadius: 18, overflow: 'hidden', flexShrink: 0, background: '#f5f5f5' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
