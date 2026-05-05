@@ -263,12 +263,12 @@ export default function Home() {
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.7)', flexShrink: 0 }} />
               </div>
               {/* Large product image below */}
-              <div style={{ width: '100%', height: 240, background: '#f5f5f5' }}>
+              <div style={{ width: '100%', height: 280, background: '#f5f5f5', padding: '24px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
                   alt="Your product"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
                 />
               </div>
             </div>
