@@ -115,8 +115,12 @@ export default function Home() {
         .mixed-heading { font-family: 'Syne', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #fff; line-height: 1.1; }
         .mixed-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.85); }
 
-        .hero-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 140px); font-weight: 400; line-height: 0.95; color: #fff; letter-spacing: 0.01em; }
+        .hero-heading { font-family: 'Syne', sans-serif; font-size: clamp(40px, 6.5vw, 80px); font-weight: 800; line-height: 1.02; color: #fff; letter-spacing: -0.02em; }
+        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 1.05em; }
         .hero-heading .fire-word { color: #FF5C00; }
+
+        .pricing-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 7vw, 96px); font-weight: 400; color: #fff; line-height: 1; letter-spacing: 0.01em; }
+        .pricing-heading span { color: #FF5C00; }
 
         /* Phone card */
         .phone-card { background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; position: relative; }
@@ -226,7 +230,7 @@ export default function Home() {
           <div className="eyebrow" style={{ marginBottom: 20 }}>DIY AI Content Generator for Brands</div>
 
           <h1 className="hero-heading" style={{ marginBottom: 24 }}>
-            Create 10x More<br />Branded UGC<br /><span className="fire-word">With AI.</span>
+            Create 10x More<br />Branded UGC <em>With AI</em>
           </h1>
 
           <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: 10, maxWidth: 540, margin: '0 auto 20px' }}>
@@ -495,7 +499,7 @@ export default function Home() {
       <section id="pricing" style={{ background: '#0a0a0a', padding: '96px 0' }}>
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="mixed-heading">Transparent <em>Pricing</em></div>
+            <div className="pricing-heading">Transparent <span>Pricing</span></div>
           </div>
 
           <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
