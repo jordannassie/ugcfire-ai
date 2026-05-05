@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   async function signOut() {
     exitDemoMode()
     const supabase = createClient()
-    await supabase.auth.signOut()
+    if (supabase) await supabase.auth.signOut()
     window.location.href = '/login'
   }
 

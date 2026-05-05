@@ -161,7 +161,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   async function signOut() {
     exitDemoMode()
     const supabase = createClient()
-    await supabase.auth.signOut()
+    if (supabase) await supabase.auth.signOut()
     window.location.href = '/login'
   }
 
