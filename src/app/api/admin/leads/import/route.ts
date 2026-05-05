@@ -88,7 +88,7 @@ async function fetchPlacesPage(query: string, pageToken?: string): Promise<{ pla
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function normalizePlaceRow(place: any) {
+function normalizePlaceRow(place: any, folderId?: string | null) {
   const website: string = place.websiteUri ?? ''
   const phone: string = place.nationalPhoneNumber ?? ''
   const rating: number = place.rating ?? 0
@@ -110,6 +110,7 @@ function normalizePlaceRow(place: any) {
     lead_score: calcLeadScore({ website, phone, rating, review_count, category }),
     status: 'New',
     source: 'Google Places',
+    ...(folderId ? { folder_id: folderId } : {}),
   }
 }
 
@@ -121,7 +122,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'query is required' }, { status: 400 })
     }
 
+    const providedFolderId: string | undefined = body.folder_id
+    const createFolderName: string | undefined = body.create_folder_name?.trim()
+
     const supabase = getSupabase()
+
+    // Resolve folder: create new one if name provided
+    let folderId: string | null = providedFolderId ?? null
+    let folder = null
+
+    if (createFolderName) {
+      const { data: newFolder, error: fErr } = await supabase
+        .from('lead_folders')
+        .insert({
+          name: createFolderName,
+          search_query: query,
+          color: '#FF3B1A',
+        })
+        .select()
+        .single()
+      if (fErr) throw fErr
+      folderId = newFolder.id
+      folder = { ...newFolder, lead_count: 0 }
+    } else if (folderId) {
+      const { data: existingFolder } = await supabase
+        .from('lead_folders').select('*').eq('id', folderId).maybeSingle()
+      folder = existingFolder
+    }
+
+    // Fetch places
     let allPlaces: unknown[] = []
     let pageToken: string | undefined
     let pages = 0
@@ -136,24 +165,37 @@ export async function POST(req: NextRequest) {
 
     let imported = 0
     let duplicatesSkipped = 0
+    let updatedExisting = 0
     let errors = 0
 
     for (const place of allPlaces) {
       try {
-        const row = normalizePlaceRow(place)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const p = place as any
+        const google_place_id = p.id ?? null
 
-        // Try upsert by google_place_id (the unique key)
+        const row = normalizePlaceRow(place, folderId)
+
+        if (google_place_id && folderId) {
+          // Check if lead already exists
+          const { data: existing } = await supabase
+            .from('leads').select('id, folder_id').eq('google_place_id', google_place_id).maybeSingle()
+
+          if (existing) {
+            // Update folder_id on existing lead
+            await supabase.from('leads').update({ folder_id: folderId }).eq('id', existing.id)
+            updatedExisting++
+            continue
+          }
+        }
+
         const { error } = await supabase
           .from('leads')
           .upsert(row, { onConflict: 'google_place_id', ignoreDuplicates: true })
 
         if (error) {
-          if (error.code === '23505') {
-            duplicatesSkipped++
-          } else {
-            console.error('[leads/import] insert error:', error.message)
-            errors++
-          }
+          if (error.code === '23505') duplicatesSkipped++
+          else { console.error('[leads/import] insert error:', error.message); errors++ }
         } else {
           imported++
         }
@@ -168,7 +210,9 @@ export async function POST(req: NextRequest) {
       found: allPlaces.length,
       imported,
       duplicatesSkipped,
+      updatedExisting,
       errors,
+      folder,
     })
   } catch (err) {
     console.error('[leads/import]', err)

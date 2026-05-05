@@ -5,6 +5,7 @@ import {
   Phone, MessageSquare, Globe, MapPin, Plus, X, Star,
   Search, Download, RefreshCw, Calendar,
   ClipboardList, PhoneCall, FileText, User, Save, Copy, Check, Target, Minus,
+  FolderOpen, Trash2, FolderPlus, AlertTriangle,
 } from 'lucide-react'
 
 // ── Confetti ───────────────────────────────────────────────────────────────
@@ -136,6 +137,19 @@ interface Lead {
   contact_email: string | null
   contact_phone: string | null
   business_notes: string | null
+  folder_id: string | null
+}
+
+interface LeadFolder {
+  id: string
+  name: string
+  description: string | null
+  search_query: string | null
+  city: string | null
+  category: string | null
+  color: string
+  created_at: string
+  lead_count: number
 }
 
 interface LeadNote {
@@ -212,11 +226,60 @@ async function apiSaveNote(id: string, note: string, outcome?: string, next_foll
 
 // ── Tab 1: Import ──────────────────────────────────────────────────────────
 
-function ImportTab({ onImported }: { onImported: () => void }) {
+function ImportTab({ onImported, folders, onFoldersChanged }: {
+  onImported: (folderId?: string) => void
+  folders: LeadFolder[]
+  onFoldersChanged: () => void
+}) {
   const [query, setQuery] = useState('')
   const [importing, setImporting] = useState(false)
-  const [result, setResult] = useState<{ found: number; imported: number; duplicatesSkipped: number; errors: number } | null>(null)
+  const [result, setResult] = useState<{ found: number; imported: number; duplicatesSkipped: number; updatedExisting: number; errors: number; folder?: LeadFolder } | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Folder options
+  const [folderMode, setFolderMode] = useState<'none' | 'new' | 'existing'>('new')
+  const [newFolderName, setNewFolderName] = useState('')
+  const [selectedFolderId, setSelectedFolderId] = useState('')
+
+  // Auto-suggest folder name from query
+  function suggestFolderName(q: string) {
+    if (!q.trim()) return ''
+    const parts = q.trim().split(' in ')
+    if (parts.length === 2) {
+      const cat = parts[0].trim().replace(/\b\w/g, c => c.toUpperCase())
+      const loc = parts[1].trim().replace(/\s+TX$/, '').replace(/,?\s*TX$/, '').trim()
+      return `${cat} — ${loc}`
+    }
+    return q.replace(/\b\w/g, c => c.toUpperCase()).slice(0, 50)
+  }
+
+  function handleQueryChange(q: string) {
+    setQuery(q)
+    if (folderMode === 'new') setNewFolderName(suggestFolderName(q))
+  }
+
+  // Reset panel
+  const [showReset, setShowReset] = useState(false)
+  const [resetConfirm, setResetConfirm] = useState('')
+  const [deleteFoldersOnReset, setDeleteFoldersOnReset] = useState(false)
+  const [resetting, setResetting] = useState(false)
+
+  async function handleReset() {
+    if (resetConfirm !== 'RESET') return
+    setResetting(true)
+    const url = `/api/admin/leads?all=true${deleteFoldersOnReset ? '&deleteFolders=true' : ''}`
+    const res = await fetch(url, { method: 'DELETE' }).catch(() => null)
+    const data = res ? await res.json().catch(() => ({})) : {}
+    if (data.success) {
+      onImported()
+      onFoldersChanged()
+      setShowReset(false)
+      setResetConfirm('')
+    } else {
+      alert(data.error ?? 'Reset failed')
+    }
+    setResetting(false)
+  }
 
   const examples = [
     'med spas in Dallas TX', 'marketing agencies in Frisco TX',
@@ -227,12 +290,23 @@ function ImportTab({ onImported }: { onImported: () => void }) {
   async function handleImport() {
     if (!query.trim()) return
     setImporting(true); setResult(null); setError(null)
+
+    const body: Record<string, unknown> = { query: query.trim() }
+    if (folderMode === 'new' && newFolderName.trim()) body.create_folder_name = newFolderName.trim()
+    else if (folderMode === 'existing' && selectedFolderId) body.folder_id = selectedFolderId
+
     const res = await fetch('/api/admin/leads/import', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: query.trim() }),
+      body: JSON.stringify(body),
     }).catch(() => null)
     const data = res ? await res.json().catch(() => ({})) : {}
-    if (data.success) { setResult(data); onImported() } else setError(data.error ?? 'Unknown error')
+    if (data.success) {
+      setResult(data)
+      onFoldersChanged()
+      onImported(data.folder?.id)
+    } else {
+      setError(data.error ?? 'Unknown error')
+    }
     setImporting(false)
   }
 
@@ -244,7 +318,7 @@ function ImportTab({ onImported }: { onImported: () => void }) {
           <p className="text-white/35 text-xs">Search by business type and city. Uses the official Google Places API — no scraping.</p>
         </div>
         <div className="flex gap-2 flex-col sm:flex-row">
-          <input value={query} onChange={e => setQuery(e.target.value)}
+          <input value={query} onChange={e => handleQueryChange(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleImport()}
             placeholder='e.g. "med spas in Dallas TX"' className={`flex-1 ${ic}`} />
           <button onClick={handleImport} disabled={importing || !query.trim()}
@@ -252,24 +326,52 @@ function ImportTab({ onImported }: { onImported: () => void }) {
             <Download size={14} /> {importing ? 'Pulling…' : 'Pull Leads'}
           </button>
         </div>
+
+        {/* Folder options */}
+        <div className="border border-white/8 rounded-xl p-4 space-y-3">
+          <p className="text-white/55 text-xs font-semibold flex items-center gap-2"><FolderOpen size={13} className="text-[#FF3B1A]"/> Import into folder</p>
+          <div className="flex flex-wrap gap-2">
+            {(['new', 'existing', 'none'] as const).map(m => (
+              <button key={m} onClick={() => setFolderMode(m)}
+                className={`text-xs px-3 py-1.5 rounded-lg border transition ${folderMode === m ? 'bg-[#FF3B1A]/20 border-[#FF3B1A]/40 text-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}>
+                {m === 'new' ? 'New folder' : m === 'existing' ? 'Existing folder' : 'No folder'}
+              </button>
+            ))}
+          </div>
+          {folderMode === 'new' && (
+            <input value={newFolderName} onChange={e => setNewFolderName(e.target.value)}
+              placeholder="Folder name (e.g. Gyms — Dallas)" className={ic} />
+          )}
+          {folderMode === 'existing' && (
+            <select value={selectedFolderId} onChange={e => setSelectedFolderId(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#FF3B1A] focus:outline-none">
+              <option value="">Select a folder…</option>
+              {folders.map(f => <option key={f.id} value={f.id}>{f.name} ({f.lead_count} leads)</option>)}
+            </select>
+          )}
+        </div>
+
         <div className="flex flex-wrap gap-2">
           {examples.map(q => (
-            <button key={q} onClick={() => setQuery(q)}
+            <button key={q} onClick={() => handleQueryChange(q)}
               className="text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/25 transition">
               {q}
             </button>
           ))}
         </div>
       </div>
+
       {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4"><p className="text-red-400 text-sm font-semibold">Import failed</p><p className="text-red-400/70 text-xs mt-1">{error}</p></div>}
       {result && (
         <div className="bg-green-500/8 border border-green-500/20 rounded-xl p-5">
-          <p className="text-green-400 font-semibold text-sm mb-3">Import complete</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <p className="text-green-400 font-semibold text-sm mb-1">Import complete</p>
+          {result.folder && <p className="text-white/40 text-xs mb-3">Saved to folder: <span className="text-white/70 font-medium">{result.folder.name}</span></p>}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {[
               { label: 'Found', value: result.found },
               { label: 'Imported', value: result.imported, accent: true },
-              { label: 'Duplicates Skipped', value: result.duplicatesSkipped },
+              { label: 'Duplicates', value: result.duplicatesSkipped },
+              { label: 'Updated', value: result.updatedExisting },
               { label: 'Errors', value: result.errors, warn: result.errors > 0 },
             ].map(s => (
               <div key={s.label} className="bg-white/4 rounded-lg p-3 text-center">
@@ -280,17 +382,58 @@ function ImportTab({ onImported }: { onImported: () => void }) {
           </div>
         </div>
       )}
+
+      {/* Reset danger zone */}
+      <div className="border border-red-500/15 rounded-xl p-4 space-y-3">
+        <button onClick={() => setShowReset(v => !v)}
+          className="flex items-center gap-2 text-xs text-red-400/60 hover:text-red-400 transition">
+          <AlertTriangle size={12}/> Reset All Leads
+        </button>
+        {showReset && (
+          <div className="space-y-3 pt-1">
+            <p className="text-white/45 text-xs leading-relaxed">This will delete all current leads, notes, and activities. This cannot be undone.</p>
+            <input value={resetConfirm} onChange={e => setResetConfirm(e.target.value)}
+              placeholder='Type RESET to confirm' className={ic} />
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={deleteFoldersOnReset} onChange={e => setDeleteFoldersOnReset(e.target.checked)}
+                className="rounded border-white/20" />
+              <span className="text-white/40 text-xs">Also delete all folders</span>
+            </label>
+            <div className="flex gap-2">
+              <button onClick={handleReset} disabled={resetConfirm !== 'RESET' || resetting}
+                className="flex items-center gap-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 text-xs font-bold px-4 py-2 rounded-lg transition disabled:opacity-40">
+                <Trash2 size={12}/> {resetting ? 'Deleting…' : 'Confirm Reset'}
+              </button>
+              <button onClick={() => { setShowReset(false); setResetConfirm('') }}
+                className="border border-white/10 text-white/35 hover:text-white text-xs px-4 py-2 rounded-lg transition">Cancel</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
 // ── Tab 2: Pipeline ────────────────────────────────────────────────────────
 
-function PipelineTab({ leads, loading, onRefresh, onOpenInQueue }: {
+function PipelineTab({ leads, loading, onRefresh, onOpenInQueue, onLeadDeleted }: {
   leads: Lead[]; loading: boolean; onRefresh: () => void; onOpenInQueue: (l: Lead) => void
+  onLeadDeleted: (id: string) => void
 }) {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  async function handleDelete(e: React.MouseEvent, lead: Lead) {
+    e.stopPropagation()
+    if (!confirm(`Delete "${lead.business_name}"? This cannot be undone.`)) return
+    setDeletingId(lead.id)
+    const res = await fetch(`/api/admin/leads/${lead.id}`, { method: 'DELETE' }).catch(() => null)
+    const data = res ? await res.json().catch(() => ({})) : {}
+    if (data.success) onLeadDeleted(lead.id)
+    else alert(data.error ?? 'Delete failed')
+    setDeletingId(null)
+  }
 
   const filtered = leads.filter(l => {
     const matchStatus = statusFilter === 'All' || l.status === statusFilter
@@ -357,6 +500,10 @@ function PipelineTab({ leads, loading, onRefresh, onOpenInQueue }: {
                           {lead.website && <a href={lead.website} target="_blank" rel="noopener noreferrer" title="Website" className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition"><Globe size={12}/></a>}
                           {lead.google_maps_url && <a href={lead.google_maps_url} target="_blank" rel="noopener noreferrer" title="Maps" className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition"><MapPin size={12}/></a>}
                           <button onClick={() => onOpenInQueue(lead)} title="Open in Call Queue" className="flex items-center gap-1 text-[10px] px-2 py-1 rounded-lg bg-[#FF3B1A]/15 hover:bg-[#FF3B1A]/25 text-[#FF3B1A] transition font-semibold whitespace-nowrap"><PhoneCall size={11}/> Call Queue</button>
+                          <button onClick={e => handleDelete(e, lead)} disabled={deletingId === lead.id} title="Delete lead"
+                            className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500/50 hover:text-red-400 transition disabled:opacity-40">
+                            <Trash2 size={12}/>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -1231,21 +1378,44 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
 export default function AdminLeadsPage() {
   const [tab, setTab] = useState<Tab>('pipeline')
   const [leads, setLeads] = useState<Lead[]>([])
+  const [allLeads, setAllLeads] = useState<Lead[]>([]) // for stats (unfiltered)
+  const [folders, setFolders] = useState<LeadFolder[]>([])
+  const [activeFolderId, setActiveFolderId] = useState<string>('all')
   const [scripts, setScripts] = useState<CallScript[]>([])
   const [loadingLeads, setLoadingLeads] = useState(true)
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
+
+  // New Folder modal
+  const [showNewFolder, setShowNewFolder] = useState(false)
+  const [newFolderName, setNewFolderName] = useState('')
+  const [newFolderDesc, setNewFolderDesc] = useState('')
+  const [creatingFolder, setCreatingFolder] = useState(false)
 
   function openLeadInQueue(lead: Lead) {
     setSelectedLead(lead)
     setTab('queue')
   }
 
-  const loadLeads = useCallback(async () => {
+  const loadFolders = useCallback(async () => {
+    const res = await fetch('/api/admin/leads/folders').catch(() => null)
+    const data = res ? await res.json().catch(() => ({})) : {}
+    setFolders(data.folders ?? [])
+  }, [])
+
+  const loadLeads = useCallback(async (folderId?: string) => {
     setLoadingLeads(true)
-    const res = await fetch('/api/admin/leads?limit=500').catch(() => null)
+    const folder = folderId ?? activeFolderId
+    const url = `/api/admin/leads?limit=500${folder !== 'all' ? `&folder_id=${folder}` : ''}`
+    const res = await fetch(url).catch(() => null)
     const data = res ? await res.json().catch(() => ({})) : {}
     setLeads(data.leads ?? [])
     setLoadingLeads(false)
+  }, [activeFolderId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const loadAllLeadsForStats = useCallback(async () => {
+    const res = await fetch('/api/admin/leads?limit=500').catch(() => null)
+    const data = res ? await res.json().catch(() => ({})) : {}
+    setAllLeads(data.leads ?? [])
   }, [])
 
   const loadScripts = useCallback(async () => {
@@ -1254,20 +1424,75 @@ export default function AdminLeadsPage() {
     setScripts(data.scripts ?? [])
   }, [])
 
-  useEffect(() => { loadLeads(); loadScripts() }, [loadLeads, loadScripts])
+  useEffect(() => {
+    loadAllLeadsForStats()
+    loadScripts()
+    loadFolders()
+  }, [loadAllLeadsForStats, loadScripts, loadFolders])
+
+  // Load leads when active folder changes
+  useEffect(() => {
+    loadLeads(activeFolderId)
+  }, [activeFolderId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleLeadUpdated(updated: Lead) {
     setLeads(prev => prev.map(l => l.id === updated.id ? updated : l))
+    setAllLeads(prev => prev.map(l => l.id === updated.id ? updated : l))
     if (selectedLead?.id === updated.id) setSelectedLead(updated)
   }
 
-  const total = leads.length
-  const newCount = leads.filter(l => l.status === 'New').length
-  const followUps = leads.filter(l =>
+  function handleLeadDeleted(id: string) {
+    setLeads(prev => prev.filter(l => l.id !== id))
+    setAllLeads(prev => prev.filter(l => l.id !== id))
+    loadFolders()
+  }
+
+  function handleImported(folderId?: string) {
+    loadAllLeadsForStats()
+    if (folderId) {
+      setActiveFolderId(folderId)
+    } else {
+      loadLeads(activeFolderId)
+    }
+    loadFolders()
+  }
+
+  async function handleFolderChange(id: string) {
+    setActiveFolderId(id)
+  }
+
+  async function handleDeleteFolder(folder: LeadFolder) {
+    if (!confirm(`Delete folder "${folder.name}"?\n\nLeads in this folder will become unassigned. Use "Delete leads too" if you also want to delete the ${folder.lead_count} lead(s).`)) return
+    const deleteLeads = folder.lead_count > 0 && confirm(`Also delete the ${folder.lead_count} lead(s) in this folder?`)
+    await fetch(`/api/admin/leads/folders/${folder.id}${deleteLeads ? '?deleteLeads=true' : ''}`, { method: 'DELETE' })
+    if (activeFolderId === folder.id) setActiveFolderId('all')
+    loadFolders()
+    loadAllLeadsForStats()
+    loadLeads('all')
+  }
+
+  async function createFolder() {
+    if (!newFolderName.trim()) return
+    setCreatingFolder(true)
+    await fetch('/api/admin/leads/folders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newFolderName.trim(), description: newFolderDesc.trim() || undefined }),
+    })
+    setNewFolderName(''); setNewFolderDesc('')
+    setShowNewFolder(false)
+    setCreatingFolder(false)
+    loadFolders()
+  }
+
+  const statsLeads = allLeads
+  const total = statsLeads.length
+  const newCount = statsLeads.filter(l => l.status === 'New').length
+  const followUps = statsLeads.filter(l =>
     l.status === 'Follow Up' || (!!l.next_follow_up_at && new Date(l.next_follow_up_at) <= new Date())
   ).length
-  const booked = leads.filter(l => l.status === 'Booked Call').length
-  const won = leads.filter(l => l.status === 'Won').length
+  const booked = statsLeads.filter(l => l.status === 'Booked Call').length
+  const won = statsLeads.filter(l => l.status === 'Won').length
 
   return (
     <div className="space-y-5 min-w-0">
@@ -1293,6 +1518,66 @@ export default function AdminLeadsPage() {
         ))}
       </div>
 
+      {/* Folders section */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold flex items-center gap-1.5"><FolderOpen size={12}/> Lead Folders</p>
+          <button onClick={() => setShowNewFolder(v => !v)}
+            className="flex items-center gap-1.5 text-xs border border-white/10 text-white/40 hover:text-white hover:border-white/25 px-3 py-1.5 rounded-lg transition">
+            <FolderPlus size={12}/> New Folder
+          </button>
+        </div>
+
+        {showNewFolder && (
+          <div className="bg-[#111] border border-[#FF3B1A]/20 rounded-xl p-4 space-y-3 max-w-sm">
+            <p className="text-white text-sm font-semibold">New Folder</p>
+            <input value={newFolderName} onChange={e => setNewFolderName(e.target.value)}
+              placeholder="Folder name (e.g. Gyms — Dallas)" className={ic} />
+            <input value={newFolderDesc} onChange={e => setNewFolderDesc(e.target.value)}
+              placeholder="Description (optional)" className={ic} />
+            <div className="flex gap-2">
+              <button onClick={createFolder} disabled={!newFolderName.trim() || creatingFolder}
+                className="bg-[#FF3B1A] hover:bg-[#e02e10] text-white text-xs font-bold px-4 py-2 rounded-lg transition disabled:opacity-50">
+                {creatingFolder ? 'Saving…' : 'Save'}
+              </button>
+              <button onClick={() => { setShowNewFolder(false); setNewFolderName(''); setNewFolderDesc('') }}
+                className="border border-white/10 text-white/35 hover:text-white text-xs px-4 py-2 rounded-lg transition">Cancel</button>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2">
+          {/* All / Unassigned chips */}
+          {[
+            { id: 'all', label: 'All Leads', count: total },
+            { id: 'unassigned', label: 'Unassigned', count: allLeads.filter(l => !l.folder_id).length },
+          ].map(chip => (
+            <button key={chip.id} onClick={() => handleFolderChange(chip.id)}
+              className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition ${activeFolderId === chip.id ? 'bg-[#FF3B1A]/20 border-[#FF3B1A]/40 text-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}>
+              <FolderOpen size={11}/>
+              {chip.label}
+              <span className={`text-[10px] ${activeFolderId === chip.id ? 'text-white/60' : 'text-white/25'}`}>({chip.count})</span>
+            </button>
+          ))}
+
+          {/* Folder chips */}
+          {folders.map(folder => (
+            <div key={folder.id} className={`flex items-center gap-1 rounded-lg border transition ${activeFolderId === folder.id ? 'bg-[#FF3B1A]/20 border-[#FF3B1A]/40' : 'border-white/10 hover:border-white/20'}`}>
+              <button onClick={() => handleFolderChange(folder.id)}
+                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 transition ${activeFolderId === folder.id ? 'text-white' : 'text-white/40 hover:text-white'}`}>
+                <FolderOpen size={11} style={{ color: folder.color }}/>
+                {folder.name}
+                <span className={`text-[10px] ${activeFolderId === folder.id ? 'text-white/60' : 'text-white/25'}`}>({folder.lead_count})</span>
+              </button>
+              <button onClick={() => handleDeleteFolder(folder)}
+                className="pr-2 text-white/20 hover:text-red-400 transition">
+                <X size={11}/>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="flex gap-1 bg-white/4 border border-white/8 rounded-xl p-1 w-fit flex-wrap">
         {TABS.map(t => {
           const Icon = t.icon
@@ -1305,13 +1590,20 @@ export default function AdminLeadsPage() {
         })}
       </div>
 
-      {tab === 'import' && <ImportTab onImported={loadLeads}/>}
+      {tab === 'import' && (
+        <ImportTab
+          onImported={handleImported}
+          folders={folders}
+          onFoldersChanged={loadFolders}
+        />
+      )}
       {tab === 'pipeline' && (
         <PipelineTab
           leads={leads}
           loading={loadingLeads}
-          onRefresh={loadLeads}
+          onRefresh={() => { loadLeads(activeFolderId); loadAllLeadsForStats() }}
           onOpenInQueue={openLeadInQueue}
+          onLeadDeleted={handleLeadDeleted}
         />
       )}
       {tab === 'queue' && (

@@ -7,11 +7,10 @@ function getSupabase() {
   return createClient(url, key)
 }
 
-// PATCH /api/admin/leads/[id] — update status, follow-up date, etc.
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type Ctx = { params: Promise<{ id: string }> }
+
+// PATCH /api/admin/leads/[id]
+export async function PATCH(req: NextRequest, { params }: Ctx) {
   try {
     const { id } = await params
     const body = await req.json().catch(() => ({}))
@@ -19,7 +18,8 @@ export async function PATCH(
 
     const allowed = [
       'status', 'next_follow_up_at', 'last_contacted_at', 'lead_score',
-      'main_contact', 'contact_title', 'contact_email', 'contact_phone', 'business_notes',
+      'main_contact', 'contact_title', 'contact_email', 'contact_phone',
+      'business_notes', 'folder_id', 'archived_at',
     ]
     const patch: Record<string, unknown> = { updated_at: new Date().toISOString() }
     for (const key of allowed) {
@@ -41,10 +41,10 @@ export async function PATCH(
   }
 }
 
-// GET /api/admin/leads/[id] — fetch single lead with notes and activities
+// GET /api/admin/leads/[id]
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: Ctx
 ) {
   try {
     const { id } = await params
@@ -65,6 +65,29 @@ export async function GET(
       activities: ae ? [] : (activities ?? []),
     })
   } catch (err) {
+    return NextResponse.json({ success: false, error: String((err as Error).message) }, { status: 500 })
+  }
+}
+
+// DELETE /api/admin/leads/[id]
+export async function DELETE(
+  _req: NextRequest,
+  { params }: Ctx
+) {
+  try {
+    const { id } = await params
+    const supabase = getSupabase()
+
+    await Promise.all([
+      supabase.from('lead_notes').delete().eq('lead_id', id),
+      supabase.from('lead_activities').delete().eq('lead_id', id),
+    ])
+    const { error } = await supabase.from('leads').delete().eq('id', id)
+    if (error) throw error
+
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('[lead DELETE]', err)
     return NextResponse.json({ success: false, error: String((err as Error).message) }, { status: 500 })
   }
 }
