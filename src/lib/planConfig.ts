@@ -8,12 +8,14 @@ export const BOOKING_CALENDAR_URL =
   'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1r9yLOh-Z6nt5dZAgnKaR9iXZ6ea-kOkrJxLqctzq_0C4uLmNgX2FpB6zTQl26FqmN21-zAquz?gv=true'
 
 export interface PlanConfig {
-  key: 'growth' | 'scale' | 'enterprise'
+  key: 'starter' | 'growth' | 'scale' | 'custom'
   name: string
-  monthlyPrice: number | null       // price when billed monthly
-  yearlyMonthlyPrice: number | null // price per month when billed yearly (20% off)
-  deliverables: number | null       // videos/assets per month
-  tagline: string                   // short subtitle under price
+  monthlyPrice: number | null
+  yearlyMonthlyPrice: number | null
+  deliverables: number | null
+  priceSuffix: string           // e.g. "one-time", "/mo", ""
+  assetsLabel: string           // e.g. "3 content assets"
+  tagline: string
   badge: string | null
   salesOnly: boolean
   desc: string
@@ -24,31 +26,67 @@ export interface PlanConfig {
 
 export const PLAN_CONFIG: PlanConfig[] = [
   {
+    key: 'starter',
+    name: 'Starter Pack',
+    monthlyPrice: 500,
+    yearlyMonthlyPrice: null,
+    deliverables: 3,
+    priceSuffix: 'one-time',
+    assetsLabel: '3 content assets',
+    tagline: 'Test UGCFire with a simple one-time content pack.',
+    badge: null,
+    salesOnly: false,
+    desc: 'Test UGCFire with a simple one-time content pack.',
+    includes: [
+      '1 quick content strategy call',
+      '3 content assets',
+      'Branded images, ad creatives, or 1 short video',
+      'Hooks, captions, and creative direction',
+      'Studio delivery folder',
+      '1 revision round included',
+    ],
+    cta: 'Select Starter',
+    dashboardFeatures: [
+      '1 quick content strategy call',
+      '3 content assets',
+      'Branded images, ad creatives, or 1 short video',
+      'Hooks, captions, and creative direction',
+      'Studio delivery folder',
+      '1 revision round included',
+    ],
+  },
+  {
     key: 'growth',
     name: 'Growth',
     monthlyPrice: 2500,
-    yearlyMonthlyPrice: 2000,        // 20% off monthly
+    yearlyMonthlyPrice: 2000,
     deliverables: 8,
-    tagline: '8 UGC-style videos per month',
+    priceSuffix: '/mo',
+    assetsLabel: '8 content assets/month',
+    tagline: 'Best for small businesses that need consistent monthly content.',
     badge: null,
     salesOnly: false,
-    desc: 'Best for brands that want consistent weekly content without hiring creators, editors, or a full content team.',
+    desc: 'Best for small businesses that need consistent monthly content.',
     includes: [
-      '8 UGC-style videos/month',
-      'Brand voice onboarding',
-      'Hook and script creation',
-      'AI-assisted content production',
-      'Captions and creative direction',
+      '1 monthly content strategy call',
+      '8 content assets/month',
+      'Photos / AI photo-style images',
+      'Ad creatives and social posts',
+      'UGC-style short videos',
+      'Hooks, captions, and creative direction',
+      'Studio delivery folder',
       '1 revision round included',
       'Cancel anytime',
     ],
-    cta: 'Book Growth Call',
+    cta: 'Select Growth',
     dashboardFeatures: [
-      '8 content deliverables/month',
-      'Photos + videos',
-      'AI-assisted production',
-      'Dashboard review system',
-      'Team chat support',
+      '1 monthly content strategy call',
+      '8 content assets/month',
+      'Photos / AI photo-style images',
+      'Ad creatives and social posts',
+      'UGC-style short videos',
+      'Hooks, captions, and creative direction',
+      'Studio delivery folder',
       '1 revision round included',
       'Cancel anytime',
     ],
@@ -57,86 +95,81 @@ export const PLAN_CONFIG: PlanConfig[] = [
     key: 'scale',
     name: 'Scale',
     monthlyPrice: 5000,
-    yearlyMonthlyPrice: 4000,        // 20% off monthly
+    yearlyMonthlyPrice: 4000,
     deliverables: 20,
-    tagline: '20 UGC-style videos per month',
+    priceSuffix: '/mo',
+    assetsLabel: '20 content assets/month',
+    tagline: 'Best for brands that want more content volume and creative testing.',
     badge: 'Most Popular',
     salesOnly: false,
-    desc: 'Best for brands that want daily content volume and more creative testing.',
+    desc: 'Best for brands that want more content volume and creative testing.',
     includes: [
-      '20 UGC-style videos/month',
-      'One fresh content asset every business day',
-      'Brand voice onboarding',
-      'Hook and script creation',
-      'AI-assisted content production',
-      'Captions and creative direction',
-      'Priority delivery',
+      '1 monthly content strategy call',
+      '20 content assets/month',
+      'Photos / AI photo-style images',
+      'Ad creatives and social posts',
+      'UGC-style short videos',
+      'Hooks, captions, and creative direction',
+      'Studio delivery folder',
       '1 revision round included',
+      'Priority delivery',
       'Cancel anytime',
     ],
-    cta: 'Book Scale Call',
+    cta: 'Select Scale',
     dashboardFeatures: [
-      '20 content deliverables/month',
-      'Photos + videos + carousels',
-      'AI-assisted production',
-      'Dashboard review system',
-      'Priority team chat support',
-      'Weekly content drops',
-      'Priority delivery',
+      '1 monthly content strategy call',
+      '20 content assets/month',
+      'Photos / AI photo-style images',
+      'Ad creatives and social posts',
+      'UGC-style short videos',
+      'Hooks, captions, and creative direction',
+      'Studio delivery folder',
       '1 revision round included',
+      'Priority delivery',
       'Cancel anytime',
     ],
   },
   {
-    key: 'enterprise',
-    name: 'Enterprise',
+    key: 'custom',
+    name: 'Custom / Agencies',
     monthlyPrice: null,
     yearlyMonthlyPrice: null,
     deliverables: null,
-    tagline: 'For brands that need higher volume, custom workflows, and priority support.',
+    priceSuffix: '',
+    assetsLabel: 'Custom volume',
+    tagline: 'For brands or agencies that need custom volume, white-label support, or a custom content workflow.',
     badge: null,
     salesOnly: true,
-    desc: 'For high-volume brands and agencies that need a dedicated creative partner, custom workflows, and priority support.',
+    desc: 'For brands or agencies that need custom volume, white-label support, or a custom content workflow.',
     includes: [
-      'Custom monthly deliverables',
-      'Dedicated creative strategist',
-      'Priority support',
-      'Custom workflows',
+      'Custom monthly content assets',
+      'Custom content workflow',
+      'Agency / white-label support',
       'Team collaboration',
       'Strategy support',
+      'Studio delivery system',
+      '1 revision round included',
       'Priority delivery',
     ],
     cta: 'Talk to Sales',
     dashboardFeatures: [
-      'Custom monthly deliverables',
-      'Dedicated creative strategist',
-      'Priority support',
-      'Custom workflows',
+      'Custom monthly content assets',
+      'Custom content workflow',
+      'Agency / white-label support',
       'Team collaboration',
       'Strategy support',
+      'Studio delivery system',
+      '1 revision round included',
       'Priority delivery',
     ],
   },
 ]
 
-/** Returns the display price string for a given plan + billing cycle. */
+/** Returns the display price string for a given plan (fixed prices, no billing cycle). */
 export function getDisplayPrice(
   plan: PlanConfig,
-  cycle: 'monthly' | 'yearly',
 ): { main: string; unit: string; note: string | null } {
-  if (plan.salesOnly) {
-    return { main: 'Custom', unit: '', note: null }
-  }
-  if (cycle === 'yearly' && plan.yearlyMonthlyPrice != null) {
-    return {
-      main: `$${plan.yearlyMonthlyPrice.toLocaleString()}`,
-      unit: '/mo',
-      note: 'billed annually',
-    }
-  }
-  return {
-    main: `$${plan.monthlyPrice!.toLocaleString()}`,
-    unit: '/mo',
-    note: null,
-  }
+  if (plan.salesOnly) return { main: 'Custom', unit: '', note: null }
+  if (plan.key === 'starter') return { main: `$${plan.monthlyPrice!.toLocaleString()}`, unit: 'one-time', note: null }
+  return { main: `$${plan.monthlyPrice!.toLocaleString()}`, unit: '/mo', note: null }
 }

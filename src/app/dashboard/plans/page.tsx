@@ -5,35 +5,23 @@ import { createClient } from '@/lib/supabase/client'
 import { getMyCompany, logActivity } from '@/lib/data'
 import type { Company, Plan, BillingRecord } from '@/lib/types'
 import { isDemoMode, DEMO_PLANS, DEMO_COMPANY } from '@/lib/demoData'
-import { PLAN_CONFIG, BOOKING_CALENDAR_URL, type PlanConfig } from '@/lib/planConfig'
+import { PLAN_CONFIG, BOOKING_CALENDAR_URL, getDisplayPrice, type PlanConfig } from '@/lib/planConfig'
 import {
-  CheckCircle, ArrowUp, ArrowDown, Loader2, Star, Zap, Building2,
+  CheckCircle, ArrowUp, ArrowDown, Loader2, Star, Zap, Building2, Package,
 } from 'lucide-react'
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function getDisplayPrice(cfg: PlanConfig, cycle: 'monthly' | 'yearly') {
-  if (cfg.salesOnly) return { main: 'Custom', unit: '', note: null }
-  if (cycle === 'yearly' && cfg.yearlyMonthlyPrice != null) {
-    return { main: `$${cfg.yearlyMonthlyPrice.toLocaleString()}`, unit: '/mo', note: 'billed annually' }
-  }
-  return { main: `$${cfg.monthlyPrice!.toLocaleString()}`, unit: '/mo', note: null }
-}
-
 const ICON_MAP: Record<string, typeof Zap> = {
+  starter: Package,
   growth: Zap,
   scale: Star,
-  enterprise: Building2,
+  custom: Building2,
 }
-
-// ─── Component ───────────────────────────────────────────────────────────────
 
 export default function PlansPage() {
   const [company, setCompany] = useState<Company | null>(null)
   const [plans, setPlans] = useState<Plan[]>([])
   const [billing, setBilling] = useState<Partial<BillingRecord> | null>(null)
   const [currentPlan, setCurrentPlan] = useState<Plan | null>(null)
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly')
   const [loading, setLoading] = useState(true)
   const [selecting, setSelecting] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
@@ -64,10 +52,7 @@ export default function PlansPage() {
       if (co?.id) {
         const { data: br } = await supabase
           .from('billing_records').select('*').eq('company_id', co.id).maybeSingle()
-        if (br) {
-          setBilling(br)
-          setBillingCycle((br.billing_interval as 'monthly' | 'yearly') ?? 'monthly')
-        }
+        if (br) setBilling(br)
       }
 
       setLoading(false)
@@ -80,7 +65,7 @@ export default function PlansPage() {
     setTimeout(() => setToast(null), 3500)
   }
 
-  async function selectPlan(dbPlan: Plan, cfg: PlanConfig, interval: 'monthly' | 'yearly') {
+  async function selectPlan(dbPlan: Plan, cfg: PlanConfig) {
     if (!company || cfg.salesOnly) return
     setSelecting(dbPlan.id)
     try {
@@ -98,7 +83,7 @@ export default function PlansPage() {
         plan_id: dbPlan.id,
         billing_status: 'inactive',
         subscription_status: 'none',
-        billing_interval: interval,
+        billing_interval: 'monthly',
         cancel_at_period_end: false,
         mock_mode: true,
       }, { onConflict: 'company_id' })
@@ -108,13 +93,12 @@ export default function PlansPage() {
         actor_user_id: user.id,
         actor_role: 'client',
         event_type: eventType,
-        event_message: `Plan ${eventType.replace('_', ' ')}: ${dbPlan.name} (${interval})`,
-        metadata: { plan_id: dbPlan.id, plan_name: dbPlan.name, billing_interval: interval },
+        event_message: `Plan ${eventType.replace('_', ' ')}: ${dbPlan.name}`,
+        metadata: { plan_id: dbPlan.id, plan_name: dbPlan.name },
       })
 
       setCurrentPlan(dbPlan)
-      setBillingCycle(interval)
-      showToast(`Switched to ${dbPlan.name} · ${interval === 'yearly' ? 'Yearly' : 'Monthly'}`)
+      showToast(`Switched to ${dbPlan.name}`)
     } catch {
       showToast('Something went wrong. Please try again.')
     } finally {
@@ -124,11 +108,11 @@ export default function PlansPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-4xl">
+      <div className="space-y-6">
         <div className="h-8 w-56 bg-white/5 rounded animate-pulse" />
         <div className="h-20 bg-white/5 rounded-xl animate-pulse" />
-        <div className="grid md:grid-cols-3 gap-5">
-          {[0, 1, 2].map(i => <div key={i} className="h-96 bg-white/5 rounded-xl animate-pulse" />)}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[0, 1, 2, 3].map(i => <div key={i} className="h-96 bg-white/5 rounded-xl animate-pulse" />)}
         </div>
       </div>
     )
@@ -139,7 +123,7 @@ export default function PlansPage() {
     : null
 
   return (
-    <div className="max-w-4xl space-y-8">
+    <div className="space-y-8">
 
       {/* Toast */}
       {toast && (
@@ -152,7 +136,7 @@ export default function PlansPage() {
       <div>
         <h1 className="text-3xl font-bold text-white">Choose Your Plan</h1>
         <p className="text-white/40 mt-1 text-sm">
-          Select the content plan that fits your brand. You can upgrade or downgrade at any time.
+          Select the content plan that fits your brand. You can upgrade or change at any time.
         </p>
       </div>
 
@@ -173,7 +157,7 @@ export default function PlansPage() {
               ? 'bg-green-500/15 text-green-400'
               : 'bg-white/8 text-white/40'
           }`}>
-            {billing?.billing_status === 'active_mock' ? 'Active' : 'Inactive'}
+            {billing?.billing_status === 'active_mock' ? 'Active' : 'No Billing'}
           </span>
         </div>
         <div>
@@ -184,56 +168,28 @@ export default function PlansPage() {
         </div>
       </div>
 
-      {/* Billing cycle toggle */}
-      <div className="flex items-center gap-3">
-        <span className="text-white/35 text-xs font-semibold uppercase tracking-wider">Billing:</span>
-        <div className="flex items-center bg-white/5 border border-white/10 rounded-full p-1 gap-1">
-          <button
-            onClick={() => setBillingCycle('monthly')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-              billingCycle === 'monthly' ? 'bg-[#FF3B1A] text-white' : 'text-white/45 hover:text-white/70'
-            }`}
-          >
-            Monthly
-          </button>
-          <button
-            onClick={() => setBillingCycle('yearly')}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-              billingCycle === 'yearly' ? 'bg-green-500 text-white' : 'text-white/45 hover:text-white/70'
-            }`}
-          >
-            Yearly
-            <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-full ${
-              billingCycle === 'yearly' ? 'bg-white/25 text-white' : 'bg-green-500/20 text-green-400'
-            }`}>-20%</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Plan cards */}
-      <div className="grid md:grid-cols-3 gap-5">
+      {/* Plan cards — 4 columns on large, 2 on medium, 1 on mobile */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {PLAN_CONFIG.map(cfg => {
-          // Find matching DB plan by slug
           const dbPlan = plans.find(p => p.slug === cfg.key)
 
           const isCurrent = !!currentPlan && !!dbPlan && currentPlan.id === dbPlan.id
-          const isCurrentBillingMatch = isCurrent && billing?.billing_interval === billingCycle
           const isScale = cfg.key === 'scale'
-          const isEnterprise = cfg.key === 'enterprise'
+          const isCustom = cfg.key === 'custom'
           const currentMonthly = currentPlan?.price_monthly ?? 0
-          const isUpgrade = !!currentPlan && !!dbPlan && !isEnterprise && (dbPlan.price_monthly ?? 0) > currentMonthly
-          const isDowngrade = !!currentPlan && !!dbPlan && !isEnterprise && (dbPlan.price_monthly ?? 0) < currentMonthly
+          const isUpgrade = !!currentPlan && !!dbPlan && !isCustom && (dbPlan.price_monthly ?? 0) > currentMonthly
+          const isDowngrade = !!currentPlan && !!dbPlan && !isCustom && (dbPlan.price_monthly ?? 0) < currentMonthly
           const isBusy = !!dbPlan && selecting === dbPlan.id
           const Icon = ICON_MAP[cfg.key] ?? Zap
-          const { main, unit, note } = getDisplayPrice(cfg, billingCycle)
+          const { main, unit } = getDisplayPrice(cfg)
 
-          let buttonLabel = 'Select Plan'
-          if (isEnterprise) buttonLabel = 'Talk to Sales'
-          else if (isCurrentBillingMatch) buttonLabel = 'Current Plan'
-          else if (isCurrent) buttonLabel = billingCycle === 'yearly' ? 'Switch to Yearly' : 'Switch to Monthly'
-          else if (isUpgrade) buttonLabel = `Upgrade to ${cfg.name}`
-          else if (isDowngrade) buttonLabel = `Downgrade to ${cfg.name}`
-          else if (!currentPlan) buttonLabel = `Select ${cfg.name}`
+          let buttonLabel = cfg.cta
+          if (!isCustom) {
+            if (isCurrent) buttonLabel = 'Current Plan'
+            else if (isUpgrade) buttonLabel = `Upgrade to ${cfg.name}`
+            else if (isDowngrade) buttonLabel = `Downgrade to ${cfg.name}`
+            else if (!currentPlan) buttonLabel = cfg.cta
+          }
 
           return (
             <div
@@ -246,7 +202,7 @@ export default function PlansPage() {
                   : 'bg-[#111] border border-white/10 hover:border-white/18'
               }`}
             >
-              {/* Current plan badge */}
+              {/* Badges */}
               {isCurrent && (
                 <div className="absolute -top-3.5 left-5">
                   <span className="bg-[#FF3B1A] text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
@@ -275,35 +231,29 @@ export default function PlansPage() {
                 {cfg.salesOnly ? (
                   <span className="text-3xl font-bold text-white">{main}</span>
                 ) : (
-                  <>
-                    {/* Slashed original price — only shown on yearly */}
-                    {billingCycle === 'yearly' && cfg.monthlyPrice != null && (
-                      <div className="text-sm text-white/30 font-semibold line-through mb-0.5">
-                        ${cfg.monthlyPrice.toLocaleString()}/mo
-                      </div>
-                    )}
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-white">{main}</span>
-                      {unit && <span className="text-white/40 text-sm">{unit}</span>}
-                    </div>
-                    {note && <p className="text-green-400 text-xs font-semibold mt-1">{note}</p>}
-                  </>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold text-white">{main}</span>
+                    {unit && <span className="text-white/40 text-sm">{unit}</span>}
+                  </div>
                 )}
               </div>
-              <p className="text-white/35 text-xs mb-4 mt-1">{cfg.deliverables ? `${cfg.deliverables} deliverables/month` : 'Custom volume'}</p>
+              <p className="text-white/35 text-xs mb-4 mt-1">{cfg.assetsLabel}</p>
+
+              {/* Description */}
+              <p className="text-white/45 text-xs mb-4 leading-relaxed">{cfg.desc}</p>
 
               {/* Features */}
               <ul className="space-y-2 flex-1 mb-5">
                 {cfg.dashboardFeatures.map(feat => (
-                  <li key={feat} className="flex items-center gap-2 text-xs text-white/60">
-                    <CheckCircle className="text-green-400 flex-shrink-0" size={12} />
+                  <li key={feat} className="flex items-start gap-2 text-xs text-white/60">
+                    <CheckCircle className="text-green-400 flex-shrink-0 mt-0.5" size={12} />
                     {feat}
                   </li>
                 ))}
               </ul>
 
               {/* CTA */}
-              {isEnterprise ? (
+              {isCustom ? (
                 <a
                   href={BOOKING_CALENDAR_URL}
                   target="_blank"
@@ -314,10 +264,10 @@ export default function PlansPage() {
                 </a>
               ) : (
                 <button
-                  onClick={() => !isCurrentBillingMatch && !isBusy && dbPlan && selectPlan(dbPlan, cfg, billingCycle)}
-                  disabled={isCurrentBillingMatch || isBusy || selecting !== null}
+                  onClick={() => !isCurrent && !isBusy && dbPlan && selectPlan(dbPlan, cfg)}
+                  disabled={isCurrent || isBusy || selecting !== null}
                   className={`w-full font-bold px-4 py-2.5 rounded-lg text-xs transition flex items-center justify-center gap-2 disabled:opacity-60 ${
-                    isCurrentBillingMatch
+                    isCurrent
                       ? 'border border-white/10 text-white/30 cursor-default'
                       : isScale
                       ? 'bg-[#FF3B1A] text-white hover:bg-[#e02e10]'
@@ -325,7 +275,7 @@ export default function PlansPage() {
                   }`}
                 >
                   {isBusy ? <><Loader2 size={13} className="animate-spin" /> Updating...</>
-                  : isCurrentBillingMatch ? <><CheckCircle size={13} /> Current Plan</>
+                  : isCurrent ? <><CheckCircle size={13} /> Current Plan</>
                   : isUpgrade ? <><ArrowUp size={13} /> {buttonLabel}</>
                   : isDowngrade ? <><ArrowDown size={13} /> {buttonLabel}</>
                   : buttonLabel}
@@ -336,7 +286,15 @@ export default function PlansPage() {
         })}
       </div>
 
-      {/* Enterprise callout */}
+      {/* Content asset note */}
+      <div className="bg-white/3 border border-white/8 rounded-xl p-5">
+        <p className="text-white/40 text-xs leading-relaxed">
+          <span className="text-white/60 font-semibold">What counts as a content asset?</span>{' '}
+          A content asset can be a branded image, AI photo-style visual, social post, ad creative, reel cover, story graphic, or short-form UGC-style video. UGCFire creates and delivers the content assets; posting and ad management are not included unless added separately.
+        </p>
+      </div>
+
+      {/* Custom callout */}
       <div className="bg-white/3 border border-white/8 rounded-xl p-5 flex items-center justify-between gap-4 flex-wrap">
         <div>
           <p className="text-white font-semibold text-sm">Need higher volume or a custom plan?</p>
