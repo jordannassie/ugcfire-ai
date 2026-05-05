@@ -965,7 +965,7 @@ function CallQueueTab({ leads, scripts, onLeadUpdated, preSelectedLead }: {
             <div>
               <p className="text-white/25 text-[10px] uppercase tracking-widest mb-2">Mark As</p>
               <div className="flex flex-wrap gap-2">
-                {['Called','No Answer','Left Voicemail','Interested','Booked Call','Lost'].map(s => (
+                {['Called','No Answer','Left Voicemail','Interested','Follow Up','Booked Call','Lost'].map(s => (
                   <button key={s} onClick={() => quickStatus(s)}
                     className={`text-xs px-3 py-1.5 rounded-lg border transition ${selectedLead.status === s ? 'bg-[#FF3B1A] border-[#FF3B1A] text-white' : 'border-white/12 text-white/45 hover:text-white hover:border-white/25'}`}>
                     {s}
@@ -1270,7 +1270,7 @@ function LeadDrawer({ lead, onClose, onUpdate }: {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            {['Called','No Answer','Interested','Booked Call','Won','Lost'].map(s => (
+            {['Called','No Answer','Interested','Follow Up','Booked Call','Won','Lost'].map(s => (
               <button key={s} onClick={() => quickStatus(s)}
                 className={`text-xs px-3 py-1.5 rounded-lg border transition ${currentLead.status === s ? 'bg-[#FF3B1A] border-[#FF3B1A] text-white' : 'border-white/12 text-white/45 hover:text-white hover:border-white/25'}`}>
                 {s}
