@@ -676,6 +676,39 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SECTION 7b: UGCFIRE.COM CROSS-LINK ─────────────────────────────── */}
+      <section style={{ background: '#0a0a0a', padding: '0 24px 72px' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '36px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32, flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FF5C00', marginBottom: 10 }}>
+              Need a team to do it for you?
+            </div>
+            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 12 }}>
+              Need Done-For-You UGC Ads?
+            </div>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75, marginBottom: 10, maxWidth: 440 }}>
+              If you want a team to create fresh UGC ad creatives for your brand each month, visit UGCFire.com — our done-for-you service for brands and agencies.
+            </p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', fontStyle: 'italic' }}>
+              UGCFire.ai is the DIY platform. UGCFire.com is the full-service option.
+            </p>
+          </div>
+          <div style={{ flexShrink: 0 }}>
+            <a
+              href="https://ugcfire.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ghost-btn"
+              style={{ padding: '12px 28px', fontSize: 14, fontWeight: 600, borderColor: 'rgba(255,92,0,0.3)', color: '#FF5C00' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,92,0,0.6)'; (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,92,0,0.08)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,92,0,0.3)'; (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.07)'; }}
+            >
+              Visit UGCFire.com →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ── SECTION 8: FINAL CTA ────────────────────────────────────────────── */}
       <section style={{ position: 'relative', overflow: 'hidden', background: '#0a0a0a', padding: '96px 24px' }}>
         {/* Left and right floating video cards */}
