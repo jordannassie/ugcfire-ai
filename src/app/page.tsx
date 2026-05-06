@@ -207,28 +207,24 @@ export default function Home() {
       </div>
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 80px', overflow: 'hidden', textAlign: 'center', background: '#F3EFE6' }}>
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 80px', overflow: 'hidden', textAlign: 'center', background: '#080808' }}>
 
-        {/* Subtle rotating video background */}
+        {/* Rotating background videos */}
         {HERO_VIDEOS.map((src, i) => (
           <video key={src} autoPlay muted loop playsInline src={src} style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'cover', zIndex: 0,
-            opacity: heroVidIdx === i ? 0.13 : 0,
-            transform: 'scale(1.08)',
-            filter: 'blur(6px)',
-            transition: 'opacity 1.4s ease',
+            opacity: heroVidIdx === i ? 0.45 : 0,
+            transition: 'opacity 1.2s ease',
             pointerEvents: 'none',
           }} />
         ))}
-
-        {/* Cream overlay — keeps hero light and readable */}
+        {/* Orange glow overlay */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: 'rgba(243,239,230,0.82)' }} />
-        {/* Soft orange glow — top right */}
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,92,0,0.10) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
-        {/* Warm ambient blob — bottom left */}
-        <div style={{ position: 'absolute', bottom: '-5%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,140,60,0.07) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
+          background: 'radial-gradient(ellipse 55% 60% at 72% 38%, rgba(255,92,0,0.22) 0%, transparent 70%)' }} />
+        {/* Dark gradient — bottom fade */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, rgba(8,8,8,0.35) 0%, rgba(8,8,8,0.0) 40%, rgba(8,8,8,0.92) 100%)' }} />
 
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 860, width: '100%' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
@@ -236,11 +232,11 @@ export default function Home() {
             <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#FF5C00' }}>DIY AI Content Generator for Brands</span>
           </div>
 
-          <h1 className="hero-heading" style={{ marginBottom: 24 }}>
+          <h1 className="hero-heading" style={{ marginBottom: 24, color: '#fff' }}>
             Create 10x More<br />Branded UGC <em>With AI</em>
           </h1>
 
-          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(0,0,0,0.45)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto 24px' }}>
+          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto 24px' }}>
             Upload your product, logo, and brand style.<br />
             Generate images, videos, hooks, and content assets in minutes.
           </p>
@@ -249,33 +245,28 @@ export default function Home() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
             {['Upload Product', 'Add Brand', 'Generate Content'].map((s, i, a) => (
               <React.Fragment key={s}>
-                <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}>{s}</span>
-                {i < a.length - 1 && <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.2)' }}>›</span>}
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', fontWeight: 500 }}>{s}</span>
+                {i < a.length - 1 && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>›</span>}
               </React.Fragment>
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px' }}>
-              ✦ Create Your AI Ad
-            </a>
-            <a href="#examples" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.06)', color: 'rgba(0,0,0,0.6)', border: '1px solid rgba(0,0,0,0.1)', padding: '15px 28px', borderRadius: 100, fontSize: 15, fontWeight: 500, textDecoration: 'none', transition: 'background 0.2s' }}>
-              View Examples
-            </a>
-          </div>
+          <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px' }}>
+            ✦ Create Your AI Ad
+          </a>
         </div>
 
         {/* Hero centerpiece: product → outputs */}
         <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 760, marginTop: 56 }}>
-          {/* Central product card — white */}
+          {/* Central product card */}
           <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
-            <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 22, overflow: 'hidden', boxShadow: '0 4px 32px rgba(0,0,0,0.1)', width: 260 }}>
+            <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 22, overflow: 'hidden', backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)', width: 260 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px 10px' }}>
                 <div>
-                  <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Product + Logo + Style</div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Product + Logo + Style</div>
                 </div>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.5)', flexShrink: 0 }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.7)', flexShrink: 0 }} />
               </div>
               <div style={{ width: '100%', height: 280 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -288,15 +279,15 @@ export default function Home() {
             </div>
           </div>
 
-          {/* SVG connecting lines — dark on light bg */}
+          {/* SVG connecting lines */}
           <div style={{ position: 'relative', height: 80 }}>
             <svg viewBox="0 0 720 80" preserveAspectRatio="none" style={{ width: '100%', height: 80 }}>
-              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(0,0,0,0.3)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <circle cx="140" cy="80" r="5" fill="rgba(0,0,0,0.3)"/>
-              <circle cx="360" cy="80" r="5" fill="rgba(0,0,0,0.45)"/>
-              <circle cx="580" cy="80" r="5" fill="rgba(0,0,0,0.3)"/>
+              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(255,255,255,0.75)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <circle cx="140" cy="80" r="5" fill="#fff" opacity="0.7"/>
+              <circle cx="360" cy="80" r="5" fill="#fff" opacity="0.9"/>
+              <circle cx="580" cy="80" r="5" fill="#fff" opacity="0.7"/>
             </svg>
           </div>
 
@@ -310,14 +301,14 @@ export default function Home() {
                   <div className="phone-active-dot" />
                   <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block' }} />
                 </div>
-                <div style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}>
+                <div style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
                   {['AI Image','UGC Video','Hook Asset'][i]}
                 </div>
               </div>
             ))}
           </div>
 
-          <p style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: 'rgba(0,0,0,0.3)', fontStyle: 'italic' }}>
+          <p style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.2)', fontStyle: 'italic' }}>
             Generated in minutes from one brand upload
           </p>
         </div>
