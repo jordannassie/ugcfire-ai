@@ -208,10 +208,27 @@ export default function Home() {
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────────── */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 80px', overflow: 'hidden', textAlign: 'center', background: '#F3EFE6' }}>
-        {/* Soft orange blob — top right */}
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,92,0,0.12) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-        {/* Soft warm blob — bottom left */}
-        <div style={{ position: 'absolute', bottom: '-5%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,140,60,0.08) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+
+        {/* Subtle rotating video background */}
+        {HERO_VIDEOS.map((src, i) => (
+          <video key={src} autoPlay muted loop playsInline src={src} style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', zIndex: 0,
+            opacity: heroVidIdx === i ? 0.13 : 0,
+            transform: 'scale(1.08)',
+            filter: 'blur(6px)',
+            transition: 'opacity 1.4s ease',
+            pointerEvents: 'none',
+          }} />
+        ))}
+
+        {/* Cream overlay — keeps hero light and readable */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+          background: 'rgba(243,239,230,0.82)' }} />
+        {/* Soft orange glow — top right */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,92,0,0.10) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
+        {/* Warm ambient blob — bottom left */}
+        <div style={{ position: 'absolute', bottom: '-5%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,140,60,0.07) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 1 }} />
 
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 860, width: '100%' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
