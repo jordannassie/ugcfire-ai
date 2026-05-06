@@ -203,7 +203,7 @@ export default function Home() {
         {[['How It Works','#how-it-works'],['Pricing','#pricing'],['Examples','#examples'],['FAQ','#faq']].map(([l,h])=>(
           <a key={l} href={h} onClick={()=>setMenuOpen(false)} style={{ color:'rgba(255,255,255,0.7)', fontSize:16, textDecoration:'none', fontWeight:500 }}>{l}</a>
         ))}
-        <a href="#" className="fire-btn" style={{ marginTop:8 }} onClick={()=>setMenuOpen(false)}>Start Creating</a>
+        <a href="/login" className="fire-btn" style={{ marginTop:8 }} onClick={()=>setMenuOpen(false)}>Create Your AI Ad</a>
       </div>
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────────── */}
@@ -229,21 +229,20 @@ export default function Home() {
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 860, width: '100%' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FF5C00', display: 'inline-block' }} />
-            <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#FF5C00' }}>DIY AI Content Generator for Brands</span>
+            <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#FF5C00' }}>AI UGC Ad Generator For Brands</span>
           </div>
 
           <h1 className="hero-heading" style={{ marginBottom: 24, color: '#fff' }}>
-            Create 10x More<br />Branded UGC <span style={{ color: '#FF5C00', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: '1.05em' }}>With AI</span>
+            Generate UGC Ads<br />In <span style={{ color: '#FF5C00', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: '1.05em' }}>Minutes</span> With AI
           </h1>
 
-          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto 24px' }}>
-            Upload your product, logo, and brand style.<br />
-            Generate images, videos, hooks, and content assets in minutes.
+          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 24px' }}>
+            Upload your product, pick an ad style, choose your actor and emotion, and generate fresh UGC-style ad creatives for your brand without filming from scratch.
           </p>
 
           {/* Process breadcrumb */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
-            {['Upload Product', 'Add Brand', 'Generate Content'].map((s, i, a) => (
+            {['Upload Product', 'Pick Actor + Emotion', 'Generate Ads'].map((s, i, a) => (
               <React.Fragment key={s}>
                 <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', fontWeight: 500 }}>{s}</span>
                 {i < a.length - 1 && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>›</span>}
@@ -299,12 +298,12 @@ export default function Home() {
               <div key={i} className="hero-output-card" style={{ position: 'relative', flex: '0 0 auto', width: 160, transform: i === 1 ? 'scale(1.06)' : 'scale(0.96)', zIndex: i === 1 ? 3 : 2 }}>
                 <div className="phone-card" style={{ borderRadius: 18, boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}>
                   {i === 1 && <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: '#FF5C00', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 12px', borderRadius: 20, letterSpacing: '0.06em', zIndex: 4, whiteSpace: 'nowrap' }}>GENERATED</div>}
-                  <div className="phone-badge">{['Image Output','Video Output','Content Asset'][i]}</div>
+                  <div className="phone-badge">{['Product Ad Image','UGC Ad Video','Hook Variation'][i]}</div>
                   <div className="phone-active-dot" />
                   <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block' }} />
                 </div>
                 <div style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}>
-                  {['AI Image','UGC Video','Hook Asset'][i]}
+                  {['Ad Image','Ad Video','Hook'][i]}
                 </div>
               </div>
             ))}
@@ -321,16 +320,16 @@ export default function Home() {
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="mixed-heading" style={{ marginBottom: 16 }}>
-              Trusted By Brands Creating More <em>Content With AI</em>
+              Trusted By Brands Creating More <em>Ads With AI</em>
             </div>
           </div>
 
           {/* 3 testimonial cards */}
           <div className="trust-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginBottom: 56 }}>
             {[
-              { name: 'Brand Founder', role: 'Ecommerce Brand', quote: 'I used to spend thousands on content teams. Now I upload my product and have a full content batch in under an hour.', img: 'https://i.pravatar.cc/80?img=68' },
-              { name: 'Marketing Lead', role: 'DTC Growth Team', quote: 'The image quality is insane. Couldn\'t tell these apart from a photoshoot. Took me 10 minutes.', img: 'https://i.pravatar.cc/80?img=32' },
-              { name: 'Agency Owner', role: 'Client Content Partner', quote: 'We\'re testing 5x more hooks every week. Generating a new script takes seconds. Changed how we run ads completely.', img: 'https://i.pravatar.cc/80?img=12' },
+              { name: 'Brand Founder', role: 'Ecommerce Brand', quote: 'I used to spend thousands on ad shoots. Now I upload my product and have a full batch of UGC ads in under an hour.', img: 'https://i.pravatar.cc/80?img=68' },
+              { name: 'Marketing Lead', role: 'DTC Growth Team', quote: 'The ad quality is insane. I can\'t tell these apart from real creator UGC. Generated 10 ad variations in 10 minutes.', img: 'https://i.pravatar.cc/80?img=32' },
+              { name: 'Agency Owner', role: 'Ad Creative Partner', quote: 'We\'re testing 5x more hooks every week. Generating new ad angles takes seconds. Changed how we run paid completely.', img: 'https://i.pravatar.cc/80?img=12' },
             ].map((t, i) => (
               <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, overflow: 'hidden' }}>
                 {/* Preview image strip */}
@@ -356,9 +355,9 @@ export default function Home() {
           {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'rgba(255,255,255,0.06)', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
             {[
-              { num: '10x', numSuffix: ' Faster', lbl: 'Content Creation vs. Traditional' },
-              { num: 'Minutes', lbl: 'Average Generation Time' },
-              { num: 'Multi-Format', lbl: 'Images, Videos, Scripts, Hooks' },
+              { num: '10x', numSuffix: ' Faster', lbl: 'Ad Creation vs. Traditional Shoots' },
+              { num: 'Minutes', lbl: 'Average Ad Generation Time' },
+              { num: 'Multi-Format', lbl: 'Images, Videos, Hooks, Scripts' },
             ].map((s, i) => (
               <div key={i} className="stat-block" style={{ background: '#0c0c0c', padding: '40px 24px' }}>
                 <div className="num">{s.num}<em>{s.numSuffix ?? ''}</em></div>
@@ -369,14 +368,112 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── SECTION 2b: GENERATE 10 ADS IN MINUTES ─────────────────────────── */}
+      <section style={{ background: '#111', padding: '96px 0' }}>
+        <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <div className="mixed-heading">
+              Generate 10 Ads <em>In Minutes</em>
+            </div>
+          </div>
+
+          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+
+            {/* Card 1 — Add Product */}
+            <div style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden' }}>
+              <div style={{ padding: '28px 28px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1 }}>1</span>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Add Product</div>
+                </div>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
+                  Upload your product once and generate ad creatives anytime without re-uploading.
+                </p>
+              </div>
+              <div style={{ padding: '0 28px 28px' }}>
+                <div style={{ background: '#222', border: '1px dashed rgba(255,255,255,0.15)', borderRadius: 14, overflow: 'hidden' }}>
+                  <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Product Image</div>
+                  </div>
+                  <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
+                      alt="Product"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  </div>
+                  <div style={{ padding: '12px 16px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '8px 14px', textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 500, cursor: 'default' }}>
+                      Change Image
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2 — Pick Actors + Emotion */}
+            <div style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden' }}>
+              <div style={{ padding: '28px 28px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1 }}>2</span>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Pick Actors + Emotion</div>
+                </div>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
+                  Choose the type of creator, expression, emotion, and ad angle you want to test.
+                </p>
+              </div>
+              <div style={{ padding: '0 28px 28px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+                  {UGC_VIDEOS.slice(0, 6).map((src, i) => (
+                    <div key={i} style={{ borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.07)', background: '#111' }}>
+                      <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
+                      {i === 1 && <div style={{ position: 'absolute', bottom: 4, left: 4, right: 4, background: 'rgba(255,92,0,0.85)', borderRadius: 4, fontSize: 9, fontWeight: 700, color: '#fff', textAlign: 'center', padding: '2px 0', letterSpacing: '0.04em' }}>PRO</div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3 — Generate 10+ Ads */}
+            <div style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden' }}>
+              <div style={{ padding: '28px 28px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1 }}>3</span>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Generate 10+ Ads</div>
+                </div>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
+                  Create multiple ads with different actors, hooks, scripts, emotions, and product angles in minutes.
+                </p>
+              </div>
+              <div style={{ padding: '0 28px 28px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+                  {[UGC_VIDEOS[2], UGC_VIDEOS[3], UGC_VIDEOS[4], UGC_VIDEOS[5], UGC_VIDEOS[6], UGC_VIDEOS[0]].map((src, i) => (
+                    <div key={i} style={{ borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.07)', background: '#111' }}>
+                      <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
+                      {i === 0 && <div style={{ position: 'absolute', top: 4, right: 4, width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.6)' }} />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 48 }}>
+            <a href="/login" className="fire-btn" style={{ fontSize: 15, padding: '14px 36px' }}>✦ Create Your AI Ad</a>
+          </div>
+        </div>
+      </section>
+
       {/* ── SECTION 3: "AI LOOKS FAKE" ─────────────────────────────────────── */}
       <section style={{ background: '#0b0b0b', padding: '96px 0', overflow: 'hidden' }}>
         <div style={{ textAlign: 'center', padding: '0 24px', marginBottom: 56, maxWidth: 700, margin: '0 auto 56px' }}>
           <div className="mixed-heading" style={{ fontSize: 'clamp(32px,5vw,58px)', marginBottom: 16 }}>
-            The &ldquo;AI Content Looks Fake&rdquo; Era <em>Is Over.</em>
+            The &ldquo;AI Ads Look Fake&rdquo; Era <em>Is Over.</em>
           </div>
           <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
-            Create content that feels real, branded, and ready to publish.
+            Generate UGC-style ads that feel real, branded, and ready to test.
           </p>
         </div>
 
@@ -408,29 +505,29 @@ export default function Home() {
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="eyebrow">Features</div>
-            <div className="mixed-heading-dark">Built To Generate Better <em>Brand Content</em></div>
+            <div className="mixed-heading-dark">Built To Generate Better <em>UGC Ads</em></div>
           </div>
 
           <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             {[
               {
-                title: 'Brand-Consistent Output',
-                desc: 'Keep your content aligned with your logo, product, and visual style — every single generation.',
+                title: 'Product-Led Ads',
+                desc: 'Generate UGC-style ads from your product images, brand assets, and campaign ideas.',
                 media: { type: 'img' as const, src: PRODUCT_IMAGES[0] },
               },
               {
-                title: 'Multi-Format Content',
-                desc: 'Generate images, hooks, UGC-style visuals, and video-ready assets from one brand upload.',
+                title: 'Fast Ad Creation',
+                desc: 'Create new ad angles, hooks, scripts, and visuals in minutes — without waiting on a full shoot.',
                 media: { type: 'video' as const, src: UGC_VIDEOS[3] },
               },
               {
-                title: 'Fast Content Creation',
-                desc: 'Go from upload to usable, ready-to-post content in minutes — not days.',
+                title: 'On-Brand Variations',
+                desc: 'Keep every ad aligned with your product, voice, audience, and offer.',
                 media: { type: 'video' as const, src: UGC_VIDEOS[4] },
               },
               {
                 title: 'Studio-Ready Workflow',
-                desc: 'Save, organize, and reuse all your generated assets in one place. Built for speed.',
+                desc: 'Save, organize, and reuse all your ad variations in one place. Built for speed.',
                 media: { type: 'img' as const, src: PRODUCT_IMAGES[3] },
               },
             ].map((f, i) => (
@@ -458,24 +555,24 @@ export default function Home() {
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="eyebrow">How It Works</div>
-            <div className="mixed-heading-dark">Generate Content <em>In Minutes</em></div>
+            <div className="mixed-heading-dark">Generate Ads <em>In Minutes</em></div>
           </div>
 
           <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
             {[
               {
-                num: '1', title: 'Upload Product + Brand',
-                desc: 'Add your product, logo, website, and brand style once. UGCFire.ai learns your identity.',
+                num: '1', title: 'Add Product',
+                desc: 'Upload your product image, logo, website, and brand style once. UGCFire.ai remembers everything.',
                 media: { type: 'img' as const, src: PRODUCT_IMAGES[1] },
               },
               {
-                num: '2', title: 'Pick Content Type',
-                desc: 'Choose images, UGC-style visuals, hooks, and content formats from your brand dashboard.',
+                num: '2', title: 'Pick Ad Style',
+                desc: 'Choose your actor, emotion, hook angle, product demo, testimonial, or founder-style ad format.',
                 media: { type: 'video' as const, src: UGC_VIDEOS[1] },
               },
               {
-                num: '3', title: 'Generate + Save',
-                desc: 'Create multiple assets fast and save them into your Studio — organized and ready to use.',
+                num: '3', title: 'Generate Variations',
+                desc: 'Create multiple UGC ad variations fast and save them into your Studio — organized and ready to test.',
                 media: { type: 'video' as const, src: UGC_VIDEOS[5] },
               },
             ].map((s, i) => (
@@ -516,17 +613,17 @@ export default function Home() {
             {[
               {
                 name: 'Starter', price: 29, period: 'Per Month',
-                features: ['25 content generations','Brand kit upload','AI image outputs','Basic Studio access','Cancel anytime'],
+                features: ['25 ad generations','Brand kit upload','AI ad image outputs','Basic Studio access','Cancel anytime'],
                 badge: null,
               },
               {
                 name: 'Growth', price: 99, period: 'Per Month',
-                features: ['150 content generations','Brand kit upload','Images + content outputs','Studio access','Priority processing'],
+                features: ['150 ad generations','Brand kit upload','Images + video ad outputs','Studio access','Priority processing'],
                 badge: 'Most Popular',
               },
               {
                 name: 'Pro', price: 299, period: 'Per Month',
-                features: ['500 content generations','Full brand kit','Images + content + advanced outputs','Studio access','Team-ready workflow'],
+                features: ['500 ad generations','Full brand kit','Images + video + advanced ad outputs','Studio access','Team-ready workflow'],
                 badge: null,
               },
             ].map((p, i) => (
@@ -568,12 +665,12 @@ export default function Home() {
             <div className="mixed-heading">Frequently Asked <em>Questions</em></div>
           </div>
           {[
-            { q: 'What can I generate with UGCFire.ai?', a: 'You can generate AI product images, UGC-style short-form videos, hooks, captions, and ad scripts — all matched to your specific brand, product, and audience.' },
-            { q: 'Can I upload my logo and product images?', a: 'Yes. You upload your product photos, logo, website URL, and brand guidelines once. UGCFire.ai uses them to keep every generation on-brand.' },
-            { q: 'Will the content match my brand style?', a: 'Yes. Every generation is grounded in your brand kit. Colors, visual style, and product identity are preserved across all output formats.' },
-            { q: 'Can I use the generated content for my business?', a: 'Absolutely. All generated content is yours to use for paid ads, organic posts, landing pages, and any other commercial purpose — no licensing restrictions.' },
-            { q: 'Do I need design experience?', a: 'No. UGCFire.ai is built for founders, marketers, and brand managers — not designers. Upload your assets, pick a style, click generate.' },
-            { q: 'Can I save my generated content?', a: 'Yes. Everything you generate lives in your Studio — organized by type, ready to download, share, or use in your next campaign.' },
+            { q: 'What can I generate with UGCFire.ai?', a: 'You can generate UGC-style ad videos, product ad images, hooks, scripts, captions, and creative variations matched to your brand, product, and audience.' },
+            { q: 'Can I upload my logo and product images?', a: 'Yes. Upload your product photos, logo, website URL, and brand guidelines once. UGCFire.ai uses them to keep every ad on-brand.' },
+            { q: 'Do I need design or video experience?', a: 'No. UGCFire.ai is built for founders, marketers, agencies, and brand managers. Upload your assets, pick an ad style, and generate.' },
+            { q: 'Will the ads match my brand style?', a: 'Yes. Every generation is grounded in your brand kit. Colors, visual style, and product identity are preserved across all ad formats.' },
+            { q: 'Can I use the generated ads for paid campaigns?', a: 'Absolutely. All generated ad creatives are yours to use for paid ads, organic posts, landing pages, and any other commercial purpose — no licensing restrictions.' },
+            { q: 'Can I save my generated ads?', a: 'Yes. Everything you generate lives in your Studio — organized by type, ready to download, share, or deploy in your next campaign.' },
           ].map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
 
         </div>
@@ -600,12 +697,12 @@ export default function Home() {
         {/* Center content */}
         <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: 560, margin: '0 auto' }}>
           <div className="mixed-heading" style={{ marginBottom: 20 }}>
-            Ready To Create More UGC <em>With AI?</em>
+            Ready To Generate More UGC <em>Ads With AI?</em>
           </div>
           <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginBottom: 36 }}>
-            Turn one product and one brand kit into a stream of content assets — images, videos, hooks, and scripts in minutes.
+            Turn one product upload into a stream of UGC ad creatives — images, videos, hooks, scripts, and ad variations in minutes.
           </p>
-          <a href="#" className="fire-btn" style={{ fontSize: 16, padding: '16px 44px' }}>✦ Start Creating</a>
+          <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '16px 44px' }}>✦ Create Your AI Ad</a>
           <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No credit card required · Cancel anytime</p>
         </div>
       </section>
@@ -618,7 +715,7 @@ export default function Home() {
             <div>
               <Image src={LOGO_URL} alt="UGCFire.ai" width={120} height={36} style={{ objectFit: 'contain', height: 32, width: 'auto', marginBottom: 16 }} unoptimized />
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', lineHeight: 1.8, maxWidth: 240, marginTop: 12 }}>
-                UGCFire.ai helps brands generate branded UGC-style content faster with AI.
+                UGCFire.ai helps brands generate UGC-style ads, product visuals, hooks, scripts, and ad variations faster with AI.
               </p>
             </div>
             {/* Product */}
