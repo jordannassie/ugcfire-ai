@@ -114,9 +114,11 @@ export default function Home() {
 
         .mixed-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
         .mixed-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.85); letter-spacing: 0; }
+        .mixed-heading-dark { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #0f0f0f; line-height: 1.1; letter-spacing: -0.02em; }
+        .mixed-heading-dark em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(0,0,0,0.45); letter-spacing: 0; }
 
-        .hero-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(40px, 6.5vw, 76px); font-weight: 700; line-height: 1.08; color: #fff; letter-spacing: -0.025em; }
-        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.9); font-size: 1.05em; letter-spacing: 0; }
+        .hero-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(40px, 6.5vw, 76px); font-weight: 700; line-height: 1.08; color: #0f0f0f; letter-spacing: -0.025em; }
+        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(0,0,0,0.5); font-size: 1.05em; letter-spacing: 0; }
 
         /* Phone card */
         .phone-card { background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; position: relative; }
@@ -131,20 +133,20 @@ export default function Home() {
 
         /* Stat block */
         .stat-block { text-align: center; }
-        .stat-block .num { font-family: 'Syne', sans-serif; font-size: clamp(36px,5vw,56px); font-weight: 800; color: #fff; line-height: 1; }
+        .stat-block .num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px,5vw,56px); font-weight: 800; color: #fff; line-height: 1; }
         .stat-block .num em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; }
         .stat-block .lbl { font-size: 14px; color: rgba(255,255,255,0.4); margin-top: 8px; }
 
-        /* Feature card */
-        .feat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; overflow: hidden; transition: border-color 0.25s; }
-        .feat-card:hover { border-color: rgba(255,92,0,0.3); }
+        /* Feature card — light */
+        .feat-card { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; overflow: hidden; transition: border-color 0.25s, box-shadow 0.25s; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+        .feat-card:hover { border-color: rgba(255,74,28,0.25); box-shadow: 0 8px 32px rgba(255,74,28,0.08); }
 
         /* Pricing */
-        .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; }
-        .plan-card.popular { background: rgba(255,92,0,0.06); border-color: rgba(255,92,0,0.35); }
+        .plan-card { background: #1c1c1c; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; }
+        .plan-card.popular { background: #1f1510; border-color: rgba(255,92,0,0.5); box-shadow: 0 0 0 1px rgba(255,92,0,0.15); }
 
-        /* Step card */
-        .step-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; overflow: hidden; }
+        /* Step card — light */
+        .step-card { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
 
         /* Mobile nav */
         .mob-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 98; background: rgba(8,8,8,0.97); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 24px; flex-direction: column; gap: 16px; }
@@ -205,64 +207,59 @@ export default function Home() {
       </div>
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 64px', overflow: 'hidden', textAlign: 'center' }}>
-        {/* Rotating background videos */}
-        {HERO_VIDEOS.map((src, i) => (
-          <video key={src} autoPlay muted loop playsInline src={src} style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', zIndex: 0,
-            opacity: heroVidIdx === i ? 0.45 : 0,
-            transition: 'opacity 1.2s ease',
-          }} />
-        ))}
-        {/* Orange glow overlay (matches .com) */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 55% 60% at 72% 38%, rgba(255,92,0,0.22) 0%, transparent 70%)' }} />
-        {/* Dark gradient — bottom fade so content reads cleanly */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, rgba(8,8,8,0.35) 0%, rgba(8,8,8,0.0) 40%, rgba(8,8,8,0.92) 100%)' }} />
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 80px', overflow: 'hidden', textAlign: 'center', background: '#F3EFE6' }}>
+        {/* Soft orange blob — top right */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,92,0,0.12) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+        {/* Soft warm blob — bottom left */}
+        <div style={{ position: 'absolute', bottom: '-5%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,140,60,0.08) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 900, width: '100%' }}>
-          <div className="eyebrow" style={{ marginBottom: 20 }}>DIY AI Content Generator for Brands</div>
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: 860, width: '100%' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FF5C00', display: 'inline-block' }} />
+            <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#FF5C00' }}>DIY AI Content Generator for Brands</span>
+          </div>
 
           <h1 className="hero-heading" style={{ marginBottom: 24 }}>
             Create 10x More<br />Branded UGC <em>With AI</em>
           </h1>
 
-          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: 10, maxWidth: 540, margin: '0 auto 20px' }}>
+          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(0,0,0,0.45)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto 24px' }}>
             Upload your product, logo, and brand style.<br />
             Generate images, videos, hooks, and content assets in minutes.
           </p>
 
           {/* Process breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 36, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
             {['Upload Product', 'Add Brand', 'Generate Content'].map((s, i, a) => (
               <React.Fragment key={s}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', fontWeight: 500 }}>{s}</span>
-                {i < a.length - 1 && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>›</span>}
+                <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}>{s}</span>
+                {i < a.length - 1 && <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.2)' }}>›</span>}
               </React.Fragment>
             ))}
           </div>
 
-          <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px', marginBottom: 48 }}>
-            ✦ Create Your AI Ad
-          </a>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px' }}>
+              ✦ Create Your AI Ad
+            </a>
+            <a href="#examples" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.06)', color: 'rgba(0,0,0,0.6)', border: '1px solid rgba(0,0,0,0.1)', padding: '15px 28px', borderRadius: 100, fontSize: 15, fontWeight: 500, textDecoration: 'none', transition: 'background 0.2s' }}>
+              View Examples
+            </a>
+          </div>
         </div>
 
         {/* Hero centerpiece: product → outputs */}
-        <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 720, marginTop: 8 }}>
-          {/* Central product card */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 0, position: 'relative', zIndex: 2 }}>
-            <div style={{ background: 'rgba(18,18,18,0.95)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 22, overflow: 'hidden', backdropFilter: 'blur(16px)', boxShadow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6)', width: 260 }}>
-              {/* Text header */}
+        <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 760, marginTop: 56 }}>
+          {/* Central product card — white */}
+          <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
+            <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 22, overflow: 'hidden', boxShadow: '0 4px 32px rgba(0,0,0,0.1)', width: 260 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px 10px' }}>
                 <div>
-                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>Product + Logo + Style</div>
+                  <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Product + Logo + Style</div>
                 </div>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.7)', flexShrink: 0 }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.5)', flexShrink: 0 }} />
               </div>
-              {/* Large product image below */}
               <div style={{ width: '100%', height: 280 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -274,15 +271,15 @@ export default function Home() {
             </div>
           </div>
 
-          {/* SVG connecting lines — white */}
+          {/* SVG connecting lines — dark on light bg */}
           <div style={{ position: 'relative', height: 80 }}>
             <svg viewBox="0 0 720 80" preserveAspectRatio="none" style={{ width: '100%', height: 80 }}>
-              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(255,255,255,0.75)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <circle cx="140" cy="80" r="5" fill="#fff" opacity="0.7"/>
-              <circle cx="360" cy="80" r="5" fill="#fff" opacity="0.9"/>
-              <circle cx="580" cy="80" r="5" fill="#fff" opacity="0.7"/>
+              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(0,0,0,0.3)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
+              <circle cx="140" cy="80" r="5" fill="rgba(0,0,0,0.3)"/>
+              <circle cx="360" cy="80" r="5" fill="rgba(0,0,0,0.45)"/>
+              <circle cx="580" cy="80" r="5" fill="rgba(0,0,0,0.3)"/>
             </svg>
           </div>
 
@@ -290,20 +287,20 @@ export default function Home() {
           <div className="hero-outputs" style={{ display: 'flex', justifyContent: 'center', gap: 16, alignItems: 'flex-start' }}>
             {[UGC_VIDEOS[0], UGC_VIDEOS[1], UGC_VIDEOS[2]].map((src, i) => (
               <div key={i} className="hero-output-card" style={{ position: 'relative', flex: '0 0 auto', width: 160, transform: i === 1 ? 'scale(1.06)' : 'scale(0.96)', zIndex: i === 1 ? 3 : 2 }}>
-                <div className="phone-card" style={{ borderRadius: 18 }}>
+                <div className="phone-card" style={{ borderRadius: 18, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}>
                   {i === 1 && <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: '#FF5C00', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 12px', borderRadius: 20, letterSpacing: '0.06em', zIndex: 4, whiteSpace: 'nowrap' }}>GENERATED</div>}
                   <div className="phone-badge">{['Image Output','Video Output','Content Asset'][i]}</div>
                   <div className="phone-active-dot" />
                   <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block' }} />
                 </div>
-                <div style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
+                <div style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}>
                   {['AI Image','UGC Video','Hook Asset'][i]}
                 </div>
               </div>
             ))}
           </div>
 
-          <p style={{ textAlign: 'center', marginTop: 20, fontSize: 12, color: 'rgba(255,255,255,0.2)', fontStyle: 'italic' }}>
+          <p style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: 'rgba(0,0,0,0.3)', fontStyle: 'italic' }}>
             Generated in minutes from one brand upload
           </p>
         </div>
@@ -363,7 +360,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3: "AI LOOKS FAKE" ─────────────────────────────────────── */}
-      <section style={{ padding: '96px 0', overflow: 'hidden' }}>
+      <section style={{ background: '#0b0b0b', padding: '96px 0', overflow: 'hidden' }}>
         <div style={{ textAlign: 'center', padding: '0 24px', marginBottom: 56, maxWidth: 700, margin: '0 auto 56px' }}>
           <div className="mixed-heading" style={{ fontSize: 'clamp(32px,5vw,58px)', marginBottom: 16 }}>
             The &ldquo;AI Content Looks Fake&rdquo; Era <em>Is Over.</em>
@@ -397,11 +394,11 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4: FEATURE GRID ─────────────────────────────────────────── */}
-      <section style={{ background: '#0a0a0a', padding: '96px 0' }}>
+      <section style={{ background: '#F3EFE6', padding: '96px 0' }}>
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="eyebrow">Features</div>
-            <div className="mixed-heading">Built To Generate Better <em>Brand Content</em></div>
+            <div className="mixed-heading-dark">Built To Generate Better <em>Brand Content</em></div>
           </div>
 
           <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -428,17 +425,17 @@ export default function Home() {
               },
             ].map((f, i) => (
               <div key={i} className="feat-card">
-                <div style={{ position: 'relative', height: 240, background: '#111', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: 240, background: '#e8e4dd', overflow: 'hidden' }}>
                   {f.media.type === 'video'
                     ? <video src={f.media.src} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                     : <Image src={f.media.src} alt={f.title} fill style={{ objectFit: 'cover' }} unoptimized />}
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7))' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.45))' }} />
                 </div>
                 <div style={{ padding: '24px 28px 28px' }}>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 10, lineHeight: 1.3 }}>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 20, fontWeight: 700, color: '#0f0f0f', marginBottom: 10, lineHeight: 1.3 }}>
                     {f.title}
                   </div>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75 }}>{f.desc}</p>
+                  <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.5)', lineHeight: 1.75 }}>{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -447,11 +444,11 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 5: HOW IT WORKS ─────────────────────────────────────────── */}
-      <section id="how-it-works" style={{ padding: '96px 0' }}>
+      <section id="how-it-works" style={{ background: '#EDEAE2', padding: '96px 0' }}>
         <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="eyebrow">How It Works</div>
-            <div className="mixed-heading">Generate Content <em>In Minutes</em></div>
+            <div className="mixed-heading-dark">Generate Content <em>In Minutes</em></div>
           </div>
 
           <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -473,29 +470,27 @@ export default function Home() {
               },
             ].map((s, i) => (
               <div key={i} className="step-card">
-                <div style={{ position: 'relative', height: 280, background: '#111', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: 280, background: '#ddd9d1', overflow: 'hidden' }}>
                   {s.media.type === 'video'
                     ? <video src={s.media.src} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                     : <Image src={s.media.src} alt={s.title} fill style={{ objectFit: 'cover' }} unoptimized />}
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7))' }} />
-                  {/* Step number overlay */}
-                  <div style={{ position: 'absolute', top: 14, left: 14, fontFamily: "'Cormorant Garamond', serif", fontSize: 72, fontWeight: 400, color: 'rgba(255,255,255,0.12)', lineHeight: 1, userSelect: 'none' }}>{s.num}</div>
-                  {/* Dot indicators (like Adsper) */}
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55))' }} />
+                  <div style={{ position: 'absolute', top: 14, left: 14, fontFamily: "'Cormorant Garamond', serif", fontSize: 72, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1, userSelect: 'none' }}>{s.num}</div>
                   <div style={{ position: 'absolute', bottom: 14, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6 }}>
-                    {[0,1,2].map(d=><div key={d} style={{ width: d===i?20:6, height: 6, borderRadius: 999, background: d===i?'#FF5C00':'rgba(255,255,255,0.3)', transition: 'all 0.3s' }} />)}
+                    {[0,1,2].map(d=><div key={d} style={{ width: d===i?20:6, height: 6, borderRadius: 999, background: d===i?'#FF5C00':'rgba(255,255,255,0.4)', transition: 'all 0.3s' }} />)}
                   </div>
                 </div>
                 <div style={{ padding: '22px 24px 26px' }}>
-                  <div style={{ fontSize: 11, color: '#FF5C00', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Step {s.num}</div>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 8, lineHeight: 1.3 }}>{s.title}</div>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7 }}>{s.desc}</p>
+                  <div style={{ fontSize: 11, color: '#FF4A1C', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Step {s.num}</div>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#0f0f0f', marginBottom: 8, lineHeight: 1.3 }}>{s.title}</div>
+                  <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.5)', lineHeight: 1.7 }}>{s.desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
           <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <a href="#" className="fire-btn">✦ Start Creating</a>
+            <a href="/login" className="fire-btn">✦ Create Your AI Ad</a>
           </div>
         </div>
       </section>
@@ -533,7 +528,7 @@ export default function Home() {
                 )}
                 <div style={{ marginTop: p.badge ? 32 : 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>{p.name}</div>
-                  <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 52, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 4 }}>${p.price}</div>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 52, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 4 }}>${p.price}</div>
                   <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 24 }}>{p.period}</div>
                 </div>
                 <div style={{ flex: 1 }}>
