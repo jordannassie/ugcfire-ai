@@ -551,7 +551,7 @@ export default function Home() {
               UGCFire.ai is the AI Creator Network for UGC ads, product videos, and image-to-video creators. Publish your best work, grow your portfolio, and become visible for agency opportunities.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/signup"
+              <Link href="/discover?tab=creators"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>

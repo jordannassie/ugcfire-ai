@@ -16,12 +16,11 @@ const BORDER   = 'rgba(255,255,255,0.07)';
 // `key` is used to match against activePage prop.
 // `homeHref` is the anchor used when already on the homepage (avoids reload).
 const NAV_ITEMS = [
-  { key: 'video',     label: 'Video',     href: '/#video',    homeHref: '#video',    group: 'core'    },
-  { key: 'image',     label: 'Image',     href: '/#image',    homeHref: '#image',    group: 'core'    },
-  { key: 'examples',  label: 'Examples',  href: '/#examples', homeHref: '#examples', group: 'core'    },
-  { key: 'pricing',   label: 'Pricing',   href: '/#pricing',  homeHref: '#pricing',  group: 'core'    },
-  { key: 'discover',  label: 'Discover',  href: '/discover',  homeHref: '/discover', group: 'network' },
-  { key: 'community', label: 'Community', href: '/community', homeHref: '/community',group: 'network' },
+  { key: 'video',     label: 'Video',     href: '/#video',   homeHref: '#video',    group: 'core'    },
+  { key: 'image',     label: 'Image',     href: '/#image',   homeHref: '#image',    group: 'core'    },
+  { key: 'pricing',   label: 'Pricing',   href: '/#pricing', homeHref: '#pricing',  group: 'core'    },
+  { key: 'discover',  label: 'Discover',  href: '/discover', homeHref: '/discover', group: 'network' },
+  { key: 'community', label: 'Community', href: '/community',homeHref: '/community',group: 'network' },
 ] as const;
 
 type ActivePage = typeof NAV_ITEMS[number]['key'] | 'home' | 'creators';
