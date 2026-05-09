@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Play, Video, ImageIcon } from 'lucide-react';
+import HoverVideoPreview from '@/components/shared/HoverVideoPreview';
 import { UGC_VIDEOS, PRODUCT_IMAGES, UGC_IMAGES } from '@/lib/demoAssets';
 
 const ORANGE = '#FF5C00';
@@ -80,7 +81,7 @@ export default function AdminGenerationsPage() {
             <div style={{ position: 'relative', aspectRatio: g.kind === 'video' ? '9/16' : '3/4', overflow: 'hidden', maxHeight: 220 }}>
               {g.kind === 'video' ? (
                 <>
-                  <video src={g.src} muted autoPlay loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  <HoverVideoPreview src={g.src} autoPlay loop style={{ height: '100%' }} />
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.7 }}>
                       <Play size={12} color="#fff" fill="#fff" />

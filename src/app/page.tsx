@@ -10,6 +10,7 @@ import {
   Clock, Cpu, Maximize2, Monitor,
 } from 'lucide-react';
 import PublicHeader from '@/components/public/PublicHeader';
+import HoverVideoPreview from '@/components/shared/HoverVideoPreview';
 
 // ─── Media assets ─────────────────────────────────────────────────────────────
 
@@ -293,7 +294,7 @@ export default function Home() {
                     {card.badge}
                   </div>
                 )}
-                <video src={card.src} autoPlay muted loop playsInline style={{ width: '100%', height: 264, objectFit: 'cover', display: 'block' }} />
+                <HoverVideoPreview src={card.src} autoPlay loop style={{ height: 264 }} />
                 {card.quote && (
                   <div style={{ position: 'absolute', top: card.badge ? 38 : 10, left: 10, right: 10, fontSize: 11, fontWeight: 600, color: '#fff', lineHeight: 1.45, textShadow: '0 1px 6px rgba(0,0,0,0.7)', whiteSpace: 'pre-line', pointerEvents: 'none' }}>
                     {card.quote}

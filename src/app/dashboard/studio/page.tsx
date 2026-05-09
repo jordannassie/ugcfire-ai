@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, Play, Heart, Video, ImageIcon } from 'lucide-react';
+import HoverVideoPreview from '@/components/shared/HoverVideoPreview';
 import {
   DEMO_VIDEO_GENS, DEMO_IMAGE_GENS, LS_VIDEO_GENS, LS_IMAGE_GENS,
   loadFromLS, formatGenDate,
@@ -109,7 +110,7 @@ export default function StudioPage() {
               {/* Media */}
               {item.kind === 'video' ? (
                 <div style={{ position: 'relative' }}>
-                  <video src={(item as VideoGeneration).videoSrc} muted autoPlay loop playsInline style={{ width: '100%', height: mobile ? 160 : 240, objectFit: 'cover', display: 'block' }} />
+                  <HoverVideoPreview src={(item as VideoGeneration).videoSrc} autoPlay loop style={{ height: mobile ? 160 : 240 }} />
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.7 }}>
                       <Play size={12} color="#fff" fill="#fff" />

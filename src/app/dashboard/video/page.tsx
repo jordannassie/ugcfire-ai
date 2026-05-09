@@ -12,6 +12,7 @@ import {
   type VideoGeneration,
 } from '@/lib/demoAssets';
 import AssetPickerModal from '@/components/dashboard/AssetPickerModal';
+import HoverVideoPreview from '@/components/shared/HoverVideoPreview';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
@@ -232,7 +233,7 @@ export default function VideoPage() {
               <div key={g.id} onClick={() => { setSelectedId(g.id); if (mobile) setSheetOpen(true); }}
                 style={{ width: mobile ? 'calc(50% - 6px)' : 168, flexShrink: 0, borderRadius: 14, overflow: 'hidden', background: PANEL, border: `2px solid ${isSel ? LIME : BORDER}`, cursor: 'pointer', transition: 'border-color 0.15s', position: 'relative' }}>
                 <div style={{ position: 'relative' }}>
-                  <video src={g.videoSrc} muted loop autoPlay playsInline style={{ width: '100%', height: mobile ? 200 : 290, objectFit: 'cover', display: 'block' }} />
+                  <HoverVideoPreview src={g.videoSrc} autoPlay loop style={{ height: mobile ? 200 : 290 }} />
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.7 }}>
                       <Play size={14} color="#fff" fill="#fff" />
@@ -271,7 +272,7 @@ export default function VideoPage() {
             <button onClick={() => setSheetOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 20 }}>✕</button>
           </div>
           <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 14, border: `1px solid ${BORDER}` }}>
-            <video src={selected.videoSrc} muted autoPlay loop playsInline style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }} />
+            <HoverVideoPreview src={selected.videoSrc} autoPlay loop style={{ height: 200 }} />
           </div>
           <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>UGC Fire 2.0</p>
           <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 14 }}>{formatGenDate(selected.createdAt)}</p>
@@ -364,7 +365,7 @@ export default function VideoPage() {
               <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', fontSize: 16 }}>···</button>
             </div>
             <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 14, border: `1px solid ${BORDER}` }}>
-              <video src={selected.videoSrc} muted autoPlay loop playsInline style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />
+              <HoverVideoPreview src={selected.videoSrc} autoPlay loop style={{ height: 180 }} />
             </div>
             <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>UGC Fire 2.0</p>
             <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.32)', marginBottom: 16 }}>{formatGenDate(selected.createdAt)}</p>

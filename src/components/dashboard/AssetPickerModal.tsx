@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { X, Plus, Upload, Check } from 'lucide-react';
+import HoverVideoPreview from '@/components/shared/HoverVideoPreview';
 import { ALL_DEMO_ASSETS, DEMO_IMAGE_GENS, DEMO_VIDEO_GENS, loadFromLS, LS_IMAGE_GENS, LS_VIDEO_GENS } from '@/lib/demoAssets';
 import type { ImageGeneration, VideoGeneration } from '@/lib/demoAssets';
 
@@ -118,7 +119,7 @@ export default function AssetPickerModal({ onClose, onSelect, initialSelected = 
                 <div key={i} onClick={() => toggleAsset(url)}
                   style={{ aspectRatio: '1', borderRadius: 12, overflow: 'hidden', position: 'relative', cursor: 'pointer', border: isSelected ? `2px solid ${LIME}` : '2px solid transparent', transition: 'border-color 0.12s', background: '#1a1a1a' }}>
                   {isVideo ? (
-                    <video src={url} muted loop autoPlay playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <HoverVideoPreview src={url} autoPlay loop style={{ height: '100%' }} showAudioButton={false} />
                   ) : (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
