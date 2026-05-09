@@ -17,7 +17,7 @@ export default function SignupPage() {
     enterDemoMode(role)
     // Small delay so the cookie is written before navigation
     setTimeout(() => {
-      router.push(role === 'admin' ? '/admin' : '/dashboard')
+      router.push(role === 'admin' ? '/admin' : '/dashboard/video')
     }, 120)
   }
 

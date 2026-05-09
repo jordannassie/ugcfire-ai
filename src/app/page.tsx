@@ -1,16 +1,18 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { enterDemoMode } from '@/lib/demoData';
+import {
+  ChevronDown, Lock, Search, Shield, X,
+  Clock, Cpu, Maximize2, Monitor, Gift, Zap, Rocket,
+} from 'lucide-react';
 
-// ─── Media assets (reusing all existing UGCFire content) ──────────────────────
+// ─── Media assets ─────────────────────────────────────────────────────────────
 
-const LOGO_URL = 'https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/UGCfirelog.png';
-
-const HERO_VIDEOS = [
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/Videos/hf_20260429_020651_1d9ae862-a0c1-498e-9296-651fb43dc88c%20(1).mp4',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/Videos/hf_20260504_162546_98fa6dc2-bf22-4a86-9bff-5ee8c96948ed.mp4',
-];
+const LOGO_URL =
+  'https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/UGCfirelog.png';
 
 const UGC_VIDEOS = [
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC/magnific_style-casual-ugc-style-ve_2891981897.mp4',
@@ -18,774 +20,491 @@ const UGC_VIDEOS = [
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC/magnific_style-casual-ugcstyle-tes_2892041483.mp4',
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC/magnific_make-ugc-video-with-this-_2892034073.mp4',
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC/magnific_style-cinematic-ugc-testi_2892073891.mp4',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC/magnific_style-ugcstyle-vertical-s_2892334025.mp4',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC/magnific_style-casual-ugc-selfiest_2892474678.mp4',
 ];
 
 const PRODUCT_IMAGES = [
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/be7f70f4-139f-4cb1-bcaa-964d79dc6a9e.png',
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/a9a7a9fd-e332-4750-bdd9-859ab5f45948.png',
   'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/5e1cf241-a837-4b51-a46c-f0fb5d643f1f.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/brands/Fire%20Images/images/d0702dbc-8d8e-4f40-b4e7-7aa4d7b98cbc.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/video/Site%20reels/images/097881dc-4c18-4c17-8bf4-b106b302d197.png',
 ];
 
-const UGC_IMAGES = [
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC%20images/02952be0-8ac1-4d5d-98b6-daa52cb4fd08.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC%20images/010aa1e6-c801-4299-85c5-62b7c7462e31.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC%20images/6038b54b-e507-44e5-a160-691b1788f55a.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC%20images/9491597e-5c30-40cc-92cb-e606b4d0a037.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC%20images/df522445-4f8c-4c49-9dba-76b8131f0ada.png',
-  'https://yawgvntvhpgittvntihx.supabase.co/storage/v1/object/public/UGC%20Fire/Brands/Home%20UGC%20images/6dacd0a5-e10c-4eaa-b6c2-ab1fae07726e.png',
+// ─── Static data ───────────────────────────────────────────────────────────────
+
+const NAV_LINKS = [
+  { label: 'Explore',      href: '#',                  active: false },
+  { label: 'Image',        href: '#',                  active: false },
+  { label: 'Video',        href: '#',                  active: true  },
+  { label: 'Brand Assets', href: '#',                  active: false },
+  { label: 'Studio',       href: '/dashboard/studio',  active: false },
+  { label: 'Pricing',      href: '#pricing',           active: false },
 ];
 
-// ─── Small reusable components ─────────────────────────────────────────────────
+const STEPS = [
+  { num: 1, title: 'Upload Image',           desc: 'Add any photo or product shot.' },
+  { num: 2, title: 'Choose Motion / Style',  desc: 'Pick a preset or describe the vibe you want.' },
+  { num: 3, title: 'Generate Video',         desc: 'Preview and download your UGC video.' },
+];
 
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-      <button
-        onClick={() => setOpen(!open)}
-        style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, padding: '22px 0', textAlign: 'left' }}
-      >
-        <span style={{ fontSize: 16, fontWeight: 500, color: '#fff', lineHeight: 1.4 }}>{q}</span>
-        <span style={{ color: open ? '#FF5C00' : 'rgba(255,255,255,0.5)', fontSize: 22, flexShrink: 0, transition: 'transform 0.2s, color 0.2s', transform: open ? 'rotate(45deg)' : 'rotate(0deg)', fontWeight: 300 }}>+</span>
-      </button>
-      {open && <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, paddingBottom: 22, marginTop: -4 }}>{a}</p>}
-    </div>
-  );
-}
+const VIDEO_CARD_DATA = [
+  { src: UGC_VIDEOS[0], badge: 'UGC Demo', quote: 'Realistic. Relatable.\nMade for conversion.' },
+  { src: UGC_VIDEOS[1], badge: null,        quote: 'My go-to serum\nfor glass skin ✨' },
+  { src: UGC_VIDEOS[2], badge: null,        quote: 'Feels premium,\nlooks even better.' },
+  { src: UGC_VIDEOS[3], badge: null,        quote: 'Clean ingredients.\nReal results.' },
+  { src: UGC_VIDEOS[4], badge: null,        quote: 'Hydration that\nactually lasts.' },
+];
+
+const SETTING_ROWS = [
+  { icon: Cpu,       label: 'Model',        key: 'model'       as const, options: ['Seedance 2.0', 'Seedance 1.0'] },
+  { icon: Clock,     label: 'Duration',     key: 'duration'    as const, options: ['4s', '6s', '8s', '12s'] },
+  { icon: Maximize2, label: 'Aspect Ratio', key: 'aspectRatio' as const, options: ['9:16', '16:9', '1:1'] },
+  { icon: Monitor,   label: 'Resolution',   key: 'resolution'  as const, options: ['720p', '1080p'] },
+];
+
+const BENEFIT_CARDS = [
+  { Icon: Gift,   title: 'Start Free',             desc: 'Explore the studio and create previews before signing up.',                         link: 'No credit card required' },
+  { Icon: Zap,    title: 'Use Seedance 2.0',        desc: 'Powered by the latest Seedance model for ultra-realistic motion.',                   link: 'Pro quality by default'  },
+  { Icon: Rocket, title: 'Built for UGC Creators', desc: 'Made for TikTok, Reels, Shorts and performance-driven content.',                    link: 'Creators love it'        },
+];
+
+// ─── Design tokens ─────────────────────────────────────────────────────────────
+
+const LIME   = '#a3e635';
+const ORANGE = '#FF5C00';
+const BG     = '#0d0d0d';
+const PANEL  = '#141414';
+const BORDER = 'rgba(255,255,255,0.07)';
 
 // ─── Main page ─────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [heroVidIdx, setHeroVidIdx] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', fn);
-    return () => window.removeEventListener('scroll', fn);
-  }, []);
+  const [activeTab,   setActiveTab]   = useState<'create' | 'edit' | 'motion'>('create');
+  const [prompt,      setPrompt]      = useState('A young woman in a city at night holding a LED skincare device. Neon lights, cinematic bokeh, UGC style, natural look.');
+  const [settings,    setSettings]    = useState({ model: 'Seedance 2.0', duration: '6s', aspectRatio: '9:16', resolution: '1080p' });
+  const [openSetting, setOpenSetting] = useState<string | null>(null);
+  const [selectedImg, setSelectedImg] = useState(0);
+  const [showModal,   setShowModal]   = useState(false);
+  const [entering,    setEntering]    = useState<'user' | 'admin' | null>(null);
 
-  useEffect(() => {
-    const t = setInterval(() => setHeroVidIdx(v => (v + 1) % HERO_VIDEOS.length), 7000);
-    return () => clearInterval(t);
-  }, []);
+  function setSetting(key: keyof typeof settings, value: string) {
+    setSettings(s => ({ ...s, [key]: value }));
+    setOpenSetting(null);
+  }
 
-  const FIRE = '#FF5C00';
+  function handleDemo(role: 'client' | 'admin') {
+    setEntering(role === 'admin' ? 'admin' : 'user');
+    enterDemoMode(role);
+    setTimeout(() => router.push(role === 'admin' ? '/admin' : '/dashboard/video'), 120);
+  }
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { background: #080808; color: #f2f0eb; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
-        ::selection { background: rgba(255,92,0,0.25); }
+        body { background: ${BG}; color: #f2f0eb; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; overflow-x: hidden; }
+        ::selection { background: rgba(163,230,53,0.2); }
 
-        .fire-btn {
-          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-          background: #FF5C00; color: #fff; border: none;
-          padding: 14px 32px; border-radius: 100px;
-          font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
-          cursor: pointer; text-decoration: none;
-          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-          box-shadow: 0 0 0 0 rgba(255,92,0,0);
-        }
-        .fire-btn:hover { background: #ff7022; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,92,0,0.35); }
+        .nav-link { color: rgba(255,255,255,0.5); font-size: 13.5px; text-decoration: none; padding: 5px 9px; border-radius: 6px; transition: color 0.15s; font-weight: 500; white-space: nowrap; }
+        .nav-link:hover { color: #fff; }
+        .nav-link-active { color: ${ORANGE}; font-size: 13.5px; text-decoration: none; padding: 5px 9px; border-bottom: 2px solid ${ORANGE}; font-weight: 600; white-space: nowrap; }
 
-        .ghost-btn {
-          display: inline-flex; align-items: center; justify-content: center;
-          background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.75);
-          border: 1px solid rgba(255,255,255,0.12);
-          padding: 13px 26px; border-radius: 100px;
-          font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
-          cursor: pointer; text-decoration: none;
-          transition: background 0.2s, border-color 0.2s, color 0.2s;
-        }
-        .ghost-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); color: #fff; }
+        .setting-row { display: flex; align-items: center; padding: 9px 0; cursor: pointer; gap: 8px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .setting-row:last-child { border-bottom: none; }
 
-        .section { padding: 96px 24px; max-width: 1160px; margin: 0 auto; }
-        .eyebrow { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #FF5C00; margin-bottom: 14px; }
+        .setting-dropdown { position: absolute; right: 0; top: calc(100% + 4px); background: #1e1e1e; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; overflow: hidden; z-index: 20; min-width: 140px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .setting-option { padding: 10px 14px; font-size: 13px; color: rgba(255,255,255,0.6); cursor: pointer; transition: background 0.1s; font-family: inherit; }
+        .setting-option:hover { background: rgba(255,255,255,0.06); color: #fff; }
+        .setting-option-selected { color: ${ORANGE}; }
 
-        .mixed-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
-        .mixed-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.85); letter-spacing: 0; }
-        .mixed-heading-dark { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px, 5vw, 60px); font-weight: 700; color: #0f0f0f; line-height: 1.1; letter-spacing: -0.02em; }
-        .mixed-heading-dark em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(0,0,0,0.45); letter-spacing: 0; }
+        .gen-btn { width: 100%; background: ${LIME}; color: #0d0d0d; border: none; border-radius: 10px; padding: 13px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s, transform 0.1s; letter-spacing: -0.01em; font-family: inherit; }
+        .gen-btn:hover { background: #b6f23f; transform: translateY(-1px); }
+        .gen-btn:active { transform: translateY(0); }
 
-        .hero-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(40px, 6.5vw, 76px); font-weight: 700; line-height: 1.08; color: #0f0f0f; letter-spacing: -0.025em; }
-        .hero-heading em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; color: rgba(0,0,0,0.5); font-size: 1.05em; letter-spacing: 0; }
+        .video-card { flex-shrink: 0; position: relative; border-radius: 14px; overflow: hidden; background: #111; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
+        .video-card:hover { border-color: rgba(255,255,255,0.2); transform: scale(1.02); }
 
-        /* Phone card */
-        .phone-card { background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; position: relative; }
-        .phone-badge { position: absolute; top: 8px; left: 8px; background: rgba(10,10,10,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.8); letter-spacing: 0.04em; z-index: 2; }
-        .phone-active-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.6); z-index: 2; }
+        .modal-btn { width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 12px 16px; cursor: pointer; transition: all 0.15s; text-align: left; color: #fff; font-size: 14px; font-weight: 600; font-family: inherit; }
+        .modal-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+        .modal-btn:disabled { opacity: 0.5; cursor: default; pointer-events: none; }
 
-        /* Scroll carousels */
-        .scroll-left { display: flex; gap: 14px; animation: scrollL 28s linear infinite; width: max-content; }
-        .scroll-right { display: flex; gap: 14px; animation: scrollR 32s linear infinite; width: max-content; }
-        @keyframes scrollL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        @keyframes scrollR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+        .ghost-scroll::-webkit-scrollbar { display: none; }
+        .ghost-scroll { scrollbar-width: none; }
 
-        /* Stat block */
-        .stat-block { text-align: center; }
-        .stat-block .num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(36px,5vw,56px); font-weight: 800; color: #fff; line-height: 1; }
-        .stat-block .num em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; }
-        .stat-block .lbl { font-size: 14px; color: rgba(255,255,255,0.4); margin-top: 8px; }
-
-        /* Feature card — light */
-        .feat-card { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; overflow: hidden; transition: border-color 0.25s, box-shadow 0.25s; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
-        .feat-card:hover { border-color: rgba(255,74,28,0.25); box-shadow: 0 8px 32px rgba(255,74,28,0.08); }
-
-        /* Pricing */
-        .plan-card { background: #1c1c1c; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; }
-        .plan-card.popular { background: #1f1510; border-color: rgba(255,92,0,0.5); box-shadow: 0 0 0 1px rgba(255,92,0,0.15); }
-
-        /* Step card — light */
-        .step-card { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 20px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.05); }
-
-        /* Mobile nav */
-        .mob-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 98; background: rgba(8,8,8,0.97); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 24px; flex-direction: column; gap: 16px; }
-        .mob-menu.open { display: flex; }
-
-        @media(max-width:768px){
+        @media (max-width: 900px) {
+          .home-split { flex-direction: column !important; }
+          .home-panel { width: 100% !important; position: relative !important; top: auto !important; height: auto !important; padding: 16px !important; }
+          .home-content { padding: 24px 16px !important; }
           .nav-links-desk { display: none !important; }
-          .ham { display: flex !important; }
-          .hero-center { flex-direction: column !important; }
-          .hero-outputs { gap: 10px !important; }
-          .hero-output-card { width: 100px !important; }
-          .trust-cards { grid-template-columns: 1fr !important; }
-          .feat-grid { grid-template-columns: 1fr !important; }
-          .steps-grid { grid-template-columns: 1fr !important; }
-          .plans-grid { grid-template-columns: 1fr !important; }
-          .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .section { padding: 64px 20px; }
+          .nav-search { display: none !important; }
+          .benefit-grid { grid-template-columns: 1fr !important; }
+          .steps-strip { flex-direction: column !important; gap: 16px !important; }
+          .step-arrow { display: none !important; }
         }
       `}</style>
 
-      {/* ── NAV ─────────────────────────────────────────────────────────────── */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, height: 64,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 32px',
-        background: scrolled ? 'rgba(8,8,8,0.90)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
-        transition: 'background 0.3s, backdrop-filter 0.3s',
-      }}>
-        <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Image src={LOGO_URL} alt="UGCFire.ai" width={120} height={36} style={{ objectFit: 'contain', height: 32, width: 'auto' }} unoptimized />
+      {/* ── NAV ───────────────────────────────────────────────────────────────── */}
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 60, zIndex: 100, background: '#0d0d0d', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: 4, padding: '0 16px' }}>
+
+        <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginRight: 10, flexShrink: 0 }}>
+          <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 28, width: 'auto' }} unoptimized />
         </a>
-        <div className="nav-links-desk" style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
-          {[['How It Works','#how-it-works'],['Pricing','#pricing'],['Examples','#examples'],['FAQ','#faq']].map(([l,h]) => (
-            <a key={l} href={h} style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, textDecoration: 'none', transition: 'color 0.2s' }}
-              onMouseEnter={e=>(e.currentTarget.style.color='#fff')}
-              onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.45)')}
-            >{l}</a>
+
+        <div className="nav-links-desk" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+          {NAV_LINKS.map(l => (
+            <a key={l.label} href={l.href} className={l.active ? 'nav-link-active' : 'nav-link'}>{l.label}</a>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="/login" className="ghost-btn" style={{ padding: '10px 20px', fontSize: 13 }}>Login / Signup</a>
-          {/* Hamburger */}
-          <button className="ham" onClick={()=>setMenuOpen(m=>!m)}
-            style={{ display: 'none', flexDirection: 'column', gap: 5, background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-            {[0,1,2].map(i=><span key={i} style={{ display: 'block', width: 22, height: 2, background: '#fff', borderRadius: 2 }} />)}
-          </button>
+
+        <div className="nav-search" style={{ marginLeft: 'auto', marginRight: 10, display: 'flex', alignItems: 'center', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '6px 10px', gap: 7, flexShrink: 0 }}>
+          <Search size={13} color="rgba(255,255,255,0.3)" strokeWidth={2} />
+          <input
+            placeholder="Search templates, styles, assets..."
+            style={{ background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.45)', fontSize: 13, width: 200, fontFamily: 'inherit' }}
+          />
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontWeight: 500, flexShrink: 0 }}>⌘K</span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
+          <a href="/login"
+            style={{ color: 'rgba(255,255,255,0.65)', fontSize: 13.5, fontWeight: 500, textDecoration: 'none', padding: '7px 16px', border: `1px solid ${BORDER}`, borderRadius: 8, transition: 'all 0.15s', whiteSpace: 'nowrap' }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = '#fff'; el.style.borderColor = 'rgba(255,255,255,0.2)'; }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = 'rgba(255,255,255,0.65)'; el.style.borderColor = BORDER; }}
+          >Login</a>
+          <a href="/signup"
+            style={{ color: '#0d0d0d', fontSize: 13.5, fontWeight: 700, textDecoration: 'none', padding: '7px 18px', background: LIME, borderRadius: 8, transition: 'background 0.15s', whiteSpace: 'nowrap' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}
+          >Sign up</a>
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div className={`mob-menu${menuOpen?' open':''}`}>
-        {[['How It Works','#how-it-works'],['Pricing','#pricing'],['Examples','#examples'],['FAQ','#faq']].map(([l,h])=>(
-          <a key={l} href={h} onClick={()=>setMenuOpen(false)} style={{ color:'rgba(255,255,255,0.7)', fontSize:16, textDecoration:'none', fontWeight:500 }}>{l}</a>
-        ))}
-        <a href="/login" className="fire-btn" style={{ marginTop:8 }} onClick={()=>setMenuOpen(false)}>Create Your AI Ad</a>
-      </div>
+      {/* ── HERO SPLIT ────────────────────────────────────────────────────────── */}
+      <div className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)' }}>
 
-      {/* ── SECTION 1: HERO ─────────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '120px 24px 80px', overflow: 'hidden', textAlign: 'center', background: '#080808' }}>
+        {/* ── LEFT CREATION PANEL ──────────────────────────────────────────── */}
+        <div className="home-panel" style={{ width: 296, padding: '18px 0 24px 16px', position: 'sticky', top: 60, alignSelf: 'flex-start', height: 'calc(100vh - 60px)', overflowY: 'auto', flexShrink: 0 }} onClick={() => setOpenSetting(null)}>
+          <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'visible' }}>
 
-        {/* Rotating background videos */}
-        {HERO_VIDEOS.map((src, i) => (
-          <video key={src} autoPlay muted loop playsInline src={src} style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', zIndex: 0,
-            opacity: heroVidIdx === i ? 0.45 : 0,
-            transition: 'opacity 1.2s ease',
-            pointerEvents: 'none',
-          }} />
-        ))}
-        {/* Orange glow overlay */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 55% 60% at 72% 38%, rgba(255,92,0,0.22) 0%, transparent 70%)' }} />
-        {/* Dark gradient — bottom fade */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, rgba(8,8,8,0.35) 0%, rgba(8,8,8,0.0) 40%, rgba(8,8,8,0.92) 100%)' }} />
+            {/* Tabs */}
+            <div style={{ display: 'flex', borderBottom: `1px solid ${BORDER}` }}>
+              {(['Create Video', 'Edit Video', 'Motion Control'] as const).map((tab, i) => {
+                const key = (['create', 'edit', 'motion'] as const)[i];
+                return (
+                  <button key={tab} onClick={e => { e.stopPropagation(); setActiveTab(key); }}
+                    style={{ flex: 1, padding: '11px 4px', fontSize: 11, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', color: activeTab === key ? '#fff' : 'rgba(255,255,255,0.3)', borderBottom: activeTab === key ? `2px solid ${ORANGE}` : '2px solid transparent', transition: 'color 0.15s, border-color 0.15s', fontFamily: 'inherit', letterSpacing: '-0.01em' }}>
+                    {tab}
+                  </button>
+                );
+              })}
+            </div>
 
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 860, width: '100%' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#FF5C00', display: 'inline-block' }} />
-            <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#FF5C00' }}>AI UGC Ad Generator For Brands</span>
+            <div style={{ padding: 14 }}>
+
+              {/* Reference Image */}
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)' }}>Reference Image</span>
+                  <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'rgba(255,255,255,0.4)', flexShrink: 0 }}>?</span>
+                </div>
+                <div style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
+                  {/* Upload slot */}
+                  <div style={{ width: 50, height: 50, border: '1.5px dashed rgba(255,255,255,0.18)', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, background: 'rgba(255,255,255,0.02)' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span style={{ fontSize: 8, color: 'rgba(255,255,255,0.22)', marginTop: 3, textAlign: 'center', lineHeight: 1.3 }}>Upload<br/>PNG, JPG</span>
+                  </div>
+                  {/* Thumbnails */}
+                  {PRODUCT_IMAGES.map((src, i) => (
+                    <div key={i} onClick={e => { e.stopPropagation(); setSelectedImg(i); }}
+                      style={{ width: 50, height: 50, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: selectedImg === i ? `2px solid ${ORANGE}` : '2px solid transparent', flexShrink: 0, position: 'relative' }}>
+                      <Image src={src} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
+                      {selectedImg === i && (
+                        <div
+                          onClick={e => { e.stopPropagation(); setSelectedImg(-1); }}
+                          style={{ position: 'absolute', top: -5, right: -5, width: 14, height: 14, borderRadius: '50%', background: '#0d0d0d', border: `1px solid rgba(255,255,255,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}>
+                          <X size={8} color="rgba(255,255,255,0.6)" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <button style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit' }}>View all</button>
+                </div>
+              </div>
+
+              {/* Prompt */}
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)' }}>Prompt</span>
+                  <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'rgba(255,255,255,0.4)', flexShrink: 0 }}>?</span>
+                </div>
+                <div style={{ background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, overflow: 'hidden' }}>
+                  <textarea
+                    value={prompt}
+                    onChange={e => setPrompt(e.target.value)}
+                    maxLength={500}
+                    rows={4}
+                    onClick={e => e.stopPropagation()}
+                    style={{ width: '100%', background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 1.65, padding: '10px 12px', resize: 'none', fontFamily: 'inherit' }}
+                  />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px 8px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>{prompt.length}/500</span>
+                    <button style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', color: ORANGE, fontSize: 11, fontWeight: 600, fontFamily: 'inherit' }}>
+                      ✦ Enhance Prompt
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Settings */}
+              <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 4, marginBottom: 14 }}>
+                {SETTING_ROWS.map(row => (
+                  <div key={row.key} style={{ position: 'relative' }}>
+                    <div className="setting-row"
+                      onClick={e => { e.stopPropagation(); setOpenSetting(openSetting === row.key ? null : row.key); }}>
+                      <row.icon size={13} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
+                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', flex: 1 }}>{row.label}</span>
+                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>{settings[row.key]}</span>
+                      <ChevronDown size={13} color="rgba(255,255,255,0.3)"
+                        style={{ transition: 'transform 0.15s', transform: openSetting === row.key ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }} />
+                    </div>
+                    {openSetting === row.key && (
+                      <div className="setting-dropdown" onClick={e => e.stopPropagation()}>
+                        {row.options.map(opt => (
+                          <div key={opt}
+                            className={`setting-option${settings[row.key] === opt ? ' setting-option-selected' : ''}`}
+                            onClick={() => setSetting(row.key, opt)}>
+                            {opt}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Generate */}
+              <button className="gen-btn" onClick={e => { e.stopPropagation(); setShowModal(true); }} style={{ marginBottom: 10 }}>
+                ✦ Generate
+              </button>
+
+              {/* Note */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                <Lock size={11} color="rgba(255,255,255,0.2)" style={{ marginTop: 1, flexShrink: 0 }} />
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', lineHeight: 1.5 }}>
+                  You&apos;ll be prompted to sign up when you click Generate.
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT CONTENT ────────────────────────────────────────────────── */}
+        <div className="home-content" style={{ flex: 1, padding: '32px 28px 48px', minWidth: 0 }}>
+
+          {/* Trust badge */}
+          <div style={{ float: 'right', display: 'flex', alignItems: 'center', gap: 10, background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '10px 14px', marginBottom: 8, marginLeft: 16, flexShrink: 0 }}>
+            <Shield size={18} color={ORANGE} strokeWidth={1.5} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>No credit card</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginTop: 1 }}>Start for free. No paywall until you generate.</div>
+            </div>
           </div>
 
-          <h1 className="hero-heading" style={{ marginBottom: 24, color: '#fff' }}>
-            Generate UGC Ads<br />In <span style={{ color: '#FF5C00', fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: '1.05em' }}>Minutes</span> With AI
+          {/* Headline */}
+          <h1 style={{ fontSize: 'clamp(30px, 4.5vw, 54px)', fontWeight: 800, color: '#fff', lineHeight: 1.08, letterSpacing: '-0.03em', marginBottom: 16, maxWidth: 620 }}>
+            Create <span style={{ color: ORANGE }}>UGC</span> videos<br />
+            before you even sign in.
           </h1>
 
-          <p style={{ fontSize: 'clamp(15px,1.4vw,18px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 24px' }}>
-            Upload your product, pick an ad style, choose your actor and emotion, and generate fresh UGC-style ad creatives for your brand without filming from scratch.
+          <p style={{ fontSize: 'clamp(13px, 1.15vw, 16px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: 28, maxWidth: 460 }}>
+            Upload any image. Turn it into scroll-stopping UGC in seconds.<br />
+            Sign up <span style={{ color: ORANGE, fontWeight: 600 }}>only when you&apos;re ready</span> to generate.
           </p>
 
-          {/* Process breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 36, flexWrap: 'wrap' }}>
-            {['Upload Product', 'Pick Actor + Emotion', 'Generate Ads'].map((s, i, a) => (
-              <React.Fragment key={s}>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', fontWeight: 500 }}>{s}</span>
-                {i < a.length - 1 && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>›</span>}
+          {/* Steps strip */}
+          <div className="steps-strip" style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 14, padding: '18px 22px', marginBottom: 28, display: 'flex', alignItems: 'flex-start' }}>
+            {STEPS.map((step, i) => (
+              <React.Fragment key={step.num}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 11, flex: 1 }}>
+                  <div style={{ width: 27, height: 27, borderRadius: '50%', background: ORANGE, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{step.num}</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{step.title}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', lineHeight: 1.5, maxWidth: 160 }}>{step.desc}</div>
+                  </div>
+                </div>
+                {i < STEPS.length - 1 && (
+                  <div className="step-arrow" style={{ display: 'flex', alignItems: 'center', padding: '4px 14px', flexShrink: 0 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </div>
+                )}
               </React.Fragment>
             ))}
           </div>
 
-          <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '15px 40px' }}>
-            ✦ Create Your AI Ad
-          </a>
-        </div>
-      </section>
-
-      {/* ── SECTION 1b: PRODUCT CENTERPIECE ─────────────────────────────────── */}
-      <section style={{ background: '#fff', padding: '72px 24px 80px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          {/* Central product card — white bg */}
-          <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
-            <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.09)', borderRadius: 22, overflow: 'hidden', boxShadow: '0 4px 40px rgba(0,0,0,0.1)', width: 260 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px 10px' }}>
-                <div>
-                  <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Your Brand</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Product + Logo + Style</div>
-                </div>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 8px rgba(34,197,94,0.5)', flexShrink: 0 }} />
-              </div>
-              <div style={{ width: '100%', height: 280 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
-                  alt="Your product"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* SVG connecting lines — dark on white */}
-          <div style={{ position: 'relative', height: 80 }}>
-            <svg viewBox="0 0 720 80" preserveAspectRatio="none" style={{ width: '100%', height: 80 }}>
-              <path d="M360 0 C360 30 140 50 140 80" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 40 360 40 360 80" stroke="rgba(0,0,0,0.3)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <path d="M360 0 C360 30 580 50 580 80" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" fill="none" strokeDasharray="4 4"/>
-              <circle cx="140" cy="80" r="5" fill="rgba(0,0,0,0.3)"/>
-              <circle cx="360" cy="80" r="5" fill="rgba(0,0,0,0.5)"/>
-              <circle cx="580" cy="80" r="5" fill="rgba(0,0,0,0.3)"/>
-            </svg>
-          </div>
-
-          {/* Three output phone cards */}
-          <div className="hero-outputs" style={{ display: 'flex', justifyContent: 'center', gap: 16, alignItems: 'flex-start' }}>
-            {[UGC_VIDEOS[0], UGC_VIDEOS[1], UGC_VIDEOS[2]].map((src, i) => (
-              <div key={i} className="hero-output-card" style={{ position: 'relative', flex: '0 0 auto', width: 160, transform: i === 1 ? 'scale(1.06)' : 'scale(0.96)', zIndex: i === 1 ? 3 : 2 }}>
-                <div className="phone-card" style={{ borderRadius: 18, boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}>
-                  {i === 1 && <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: '#FF5C00', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 12px', borderRadius: 20, letterSpacing: '0.06em', zIndex: 4, whiteSpace: 'nowrap' }}>GENERATED</div>}
-                  <div className="phone-badge">{['Product Ad Image','UGC Ad Video','Hook Variation'][i]}</div>
-                  <div className="phone-active-dot" />
-                  <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block' }} />
-                </div>
-                <div style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}>
-                  {['Ad Image','Ad Video','Hook'][i]}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: 'rgba(0,0,0,0.3)', fontStyle: 'italic' }}>
-            Generated in minutes from one brand upload
-          </p>
-        </div>
-      </section>
-
-      {/* ── SECTION 2: TRUST / RESULTS ──────────────────────────────────────── */}
-      <section id="examples" style={{ background: '#0c0c0c', padding: '96px 0' }}>
-        <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="mixed-heading" style={{ marginBottom: 16 }}>
-              Trusted By Brands Creating More <em>Ads With AI</em>
-            </div>
-          </div>
-
-          {/* 3 testimonial cards */}
-          <div className="trust-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginBottom: 56 }}>
-            {[
-              { name: 'Brand Founder', role: 'Ecommerce Brand', quote: 'I used to spend thousands on ad shoots. Now I upload my product and have a full batch of UGC ads in under an hour.', img: 'https://i.pravatar.cc/80?img=68' },
-              { name: 'Marketing Lead', role: 'DTC Growth Team', quote: 'The ad quality is insane. I can\'t tell these apart from real creator UGC. Generated 10 ad variations in 10 minutes.', img: 'https://i.pravatar.cc/80?img=32' },
-              { name: 'Agency Owner', role: 'Ad Creative Partner', quote: 'We\'re testing 5x more hooks every week. Generating new ad angles takes seconds. Changed how we run paid completely.', img: 'https://i.pravatar.cc/80?img=12' },
-            ].map((t, i) => (
-              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, overflow: 'hidden' }}>
-                {/* Preview image strip */}
-                <div style={{ height: 160, position: 'relative', background: '#111', overflow: 'hidden' }}>
-                  <Image src={PRODUCT_IMAGES[i]} alt="content preview" fill style={{ objectFit: 'cover', opacity: 0.7 }} unoptimized />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8))' }} />
-                </div>
-                <div style={{ padding: '20px 22px 24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={t.img} alt={t.name} width={36} height={36} style={{ borderRadius: '50%', border: '2px solid rgba(255,92,0,0.4)' }} />
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{t.name}</div>
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{t.role}</div>
-                    </div>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>&ldquo;{t.quote}&rdquo;</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'rgba(255,255,255,0.06)', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
-            {[
-              { num: '10x', numSuffix: ' Faster', lbl: 'Ad Creation vs. Traditional Shoots' },
-              { num: 'Minutes', lbl: 'Average Ad Generation Time' },
-              { num: 'Multi-Format', lbl: 'Images, Videos, Hooks, Scripts' },
-            ].map((s, i) => (
-              <div key={i} className="stat-block" style={{ background: '#0c0c0c', padding: '40px 24px' }}>
-                <div className="num">{s.num}<em>{s.numSuffix ?? ''}</em></div>
-                <div className="lbl">{s.lbl}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 2b: GENERATE 10 ADS IN MINUTES ─────────────────────────── */}
-      <section style={{ background: '#111', padding: '96px 0' }}>
-        <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="mixed-heading">
-              Generate 10 Ads <em>In Minutes</em>
-            </div>
-          </div>
-
-          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-
-            {/* Card 1 — Add Product */}
-            <div style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden' }}>
-              <div style={{ padding: '28px 28px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1 }}>1</span>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Add Product</div>
-                </div>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
-                  Upload your product once and generate ad creatives anytime without re-uploading.
-                </p>
-              </div>
-              <div style={{ padding: '0 28px 28px' }}>
-                <div style={{ background: '#222', border: '1px dashed rgba(255,255,255,0.15)', borderRadius: 14, overflow: 'hidden' }}>
-                  <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Product Image</div>
-                  </div>
-                  <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/Makeupimage.jpg"
-                      alt="Product"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                    />
-                  </div>
-                  <div style={{ padding: '12px 16px' }}>
-                    <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '8px 14px', textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 500, cursor: 'default' }}>
-                      Change Image
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2 — Pick Actors + Emotion */}
-            <div style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden' }}>
-              <div style={{ padding: '28px 28px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1 }}>2</span>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Pick Actors + Emotion</div>
-                </div>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
-                  Choose the type of creator, expression, emotion, and ad angle you want to test.
-                </p>
-              </div>
-              <div style={{ padding: '0 28px 28px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
-                  {UGC_VIDEOS.slice(0, 6).map((src, i) => (
-                    <div key={i} style={{ borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.07)', background: '#111' }}>
-                      <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
-                      {i === 1 && <div style={{ position: 'absolute', bottom: 4, left: 4, right: 4, background: 'rgba(255,92,0,0.85)', borderRadius: 4, fontSize: 9, fontWeight: 700, color: '#fff', textAlign: 'center', padding: '2px 0', letterSpacing: '0.04em' }}>PRO</div>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 — Generate 10+ Ads */}
-            <div style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden' }}>
-              <div style={{ padding: '28px 28px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 48, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1 }}>3</span>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Generate 10+ Ads</div>
-                </div>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
-                  Create multiple ads with different actors, hooks, scripts, emotions, and product angles in minutes.
-                </p>
-              </div>
-              <div style={{ padding: '0 28px 28px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
-                  {[UGC_VIDEOS[2], UGC_VIDEOS[3], UGC_VIDEOS[4], UGC_VIDEOS[5], UGC_VIDEOS[6], UGC_VIDEOS[0]].map((src, i) => (
-                    <div key={i} style={{ borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.07)', background: '#111' }}>
-                      <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
-                      {i === 0 && <div style={{ position: 'absolute', top: 4, right: 4, width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.6)' }} />}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <a href="/login" className="fire-btn" style={{ fontSize: 15, padding: '14px 36px' }}>✦ Create Your AI Ad</a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 3: "AI LOOKS FAKE" ─────────────────────────────────────── */}
-      <section style={{ background: '#0b0b0b', padding: '96px 0', overflow: 'hidden' }}>
-        <div style={{ textAlign: 'center', padding: '0 24px', marginBottom: 56, maxWidth: 700, margin: '0 auto 56px' }}>
-          <div className="mixed-heading" style={{ fontSize: 'clamp(32px,5vw,58px)', marginBottom: 16 }}>
-            The &ldquo;AI Ads Look Fake&rdquo; Era <em>Is Over.</em>
-          </div>
-          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
-            Generate UGC-style ads that feel real, branded, and ready to test.
-          </p>
-        </div>
-
-        {/* Video scroll row 1 — left */}
-        <div style={{ overflow: 'hidden', marginBottom: 16 }}>
-          <div className="scroll-left">
-            {[...UGC_VIDEOS, ...UGC_VIDEOS].map((src, i) => (
-              <div key={i} className="phone-card" style={{ width: 160, flexShrink: 0, borderRadius: 16 }}>
-                <video src={src} autoPlay muted loop playsInline style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block' }} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Image scroll row 2 — right */}
-        <div style={{ overflow: 'hidden' }}>
-          <div className="scroll-right">
-            {[...UGC_IMAGES, ...UGC_IMAGES].map((src, i) => (
-              <div key={i} style={{ width: 220, height: 260, flexShrink: 0, borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.07)', position: 'relative' }}>
-                <Image src={src} alt={`content ${i}`} fill style={{ objectFit: 'cover' }} unoptimized />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 4: FEATURE GRID ─────────────────────────────────────────── */}
-      <section style={{ background: '#F3EFE6', padding: '96px 0' }}>
-        <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="eyebrow">Features</div>
-            <div className="mixed-heading-dark">Built To Generate Better <em>UGC Ads</em></div>
-          </div>
-
-          <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            {[
-              {
-                title: 'Product-Led Ads',
-                desc: 'Generate UGC-style ads from your product images, brand assets, and campaign ideas.',
-                media: { type: 'img' as const, src: PRODUCT_IMAGES[0] },
-              },
-              {
-                title: 'Fast Ad Creation',
-                desc: 'Create new ad angles, hooks, scripts, and visuals in minutes — without waiting on a full shoot.',
-                media: { type: 'video' as const, src: UGC_VIDEOS[3] },
-              },
-              {
-                title: 'On-Brand Variations',
-                desc: 'Keep every ad aligned with your product, voice, audience, and offer.',
-                media: { type: 'video' as const, src: UGC_VIDEOS[4] },
-              },
-              {
-                title: 'Studio-Ready Workflow',
-                desc: 'Save, organize, and reuse all your ad variations in one place. Built for speed.',
-                media: { type: 'img' as const, src: PRODUCT_IMAGES[3] },
-              },
-            ].map((f, i) => (
-              <div key={i} className="feat-card">
-                <div style={{ position: 'relative', height: 240, background: '#e8e4dd', overflow: 'hidden' }}>
-                  {f.media.type === 'video'
-                    ? <video src={f.media.src} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                    : <Image src={f.media.src} alt={f.title} fill style={{ objectFit: 'cover' }} unoptimized />}
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.45))' }} />
-                </div>
-                <div style={{ padding: '24px 28px 28px' }}>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 20, fontWeight: 700, color: '#0f0f0f', marginBottom: 10, lineHeight: 1.3 }}>
-                    {f.title}
-                  </div>
-                  <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.5)', lineHeight: 1.75 }}>{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 5: HOW IT WORKS ─────────────────────────────────────────── */}
-      <section id="how-it-works" style={{ background: '#EDEAE2', padding: '96px 0' }}>
-        <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="eyebrow">How It Works</div>
-            <div className="mixed-heading-dark">Generate Ads <em>In Minutes</em></div>
-          </div>
-
-          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
-            {[
-              {
-                num: '1', title: 'Add Product',
-                desc: 'Upload your product image, logo, website, and brand style once. UGCFire.ai remembers everything.',
-                media: { type: 'img' as const, src: PRODUCT_IMAGES[1] },
-              },
-              {
-                num: '2', title: 'Pick Ad Style',
-                desc: 'Choose your actor, emotion, hook angle, product demo, testimonial, or founder-style ad format.',
-                media: { type: 'video' as const, src: UGC_VIDEOS[1] },
-              },
-              {
-                num: '3', title: 'Generate Variations',
-                desc: 'Create multiple UGC ad variations fast and save them into your Studio — organized and ready to test.',
-                media: { type: 'video' as const, src: UGC_VIDEOS[5] },
-              },
-            ].map((s, i) => (
-              <div key={i} className="step-card">
-                <div style={{ position: 'relative', height: 280, background: '#ddd9d1', overflow: 'hidden' }}>
-                  {s.media.type === 'video'
-                    ? <video src={s.media.src} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                    : <Image src={s.media.src} alt={s.title} fill style={{ objectFit: 'cover' }} unoptimized />}
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55))' }} />
-                  <div style={{ position: 'absolute', top: 14, left: 14, fontFamily: "'Cormorant Garamond', serif", fontSize: 72, fontWeight: 400, color: 'rgba(255,255,255,0.18)', lineHeight: 1, userSelect: 'none' }}>{s.num}</div>
-                  <div style={{ position: 'absolute', bottom: 14, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6 }}>
-                    {[0,1,2].map(d=><div key={d} style={{ width: d===i?20:6, height: 6, borderRadius: 999, background: d===i?'#FF5C00':'rgba(255,255,255,0.4)', transition: 'all 0.3s' }} />)}
-                  </div>
-                </div>
-                <div style={{ padding: '22px 24px 26px' }}>
-                  <div style={{ fontSize: 11, color: '#FF4A1C', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Step {s.num}</div>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 700, color: '#0f0f0f', marginBottom: 8, lineHeight: 1.3 }}>{s.title}</div>
-                  <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.5)', lineHeight: 1.7 }}>{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <a href="/login" className="fire-btn">✦ Create Your AI Ad</a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 6: PRICING ──────────────────────────────────────────────── */}
-      <section id="pricing" style={{ background: '#0a0a0a', padding: '96px 0' }}>
-        <div className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="mixed-heading">Transparent <em>Pricing</em></div>
-          </div>
-
-          <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
-            {[
-              {
-                name: 'Starter', price: 29, period: 'Per Month',
-                features: ['25 ad generations','Brand kit upload','AI ad image outputs','Basic Studio access','Cancel anytime'],
-                badge: null,
-              },
-              {
-                name: 'Growth', price: 99, period: 'Per Month',
-                features: ['150 ad generations','Brand kit upload','Images + video ad outputs','Studio access','Priority processing'],
-                badge: 'Most Popular',
-              },
-              {
-                name: 'Pro', price: 299, period: 'Per Month',
-                features: ['500 ad generations','Full brand kit','Images + video + advanced ad outputs','Studio access','Team-ready workflow'],
-                badge: null,
-              },
-            ].map((p, i) => (
-              <div key={i} className={`plan-card${p.badge?' popular':''}`}>
-                {p.badge && (
-                  <div style={{ position: 'absolute' }}>
-                    <div style={{ background: '#FF5C00', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '4px 14px', borderRadius: 20, marginBottom: 16, display: 'inline-block' }}>{p.badge}</div>
+          {/* Video gallery */}
+          <div className="ghost-scroll" style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8, alignItems: 'flex-start' }}>
+            {VIDEO_CARD_DATA.map((card, i) => (
+              <div key={i} className="video-card" style={{ width: 155, flexShrink: 0 }}>
+                {card.badge && (
+                  <div style={{ position: 'absolute', top: 8, left: 8, zIndex: 3, background: ORANGE, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20, letterSpacing: '0.04em' }}>
+                    {card.badge}
                   </div>
                 )}
-                <div style={{ marginTop: p.badge ? 32 : 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>{p.name}</div>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 52, fontWeight: 800, color: '#fff', lineHeight: 1, marginBottom: 4 }}>${p.price}</div>
-                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 24 }}>{p.period}</div>
-                </div>
-                <div style={{ flex: 1 }}>
-                  {p.features.map((f, j) => (
-                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                      <div style={{ width: 20, height: 20, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </div>
-                      <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)' }}>{f}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: 28 }}>
-                  <a href="#" className="fire-btn" style={{ width: '100%', display: 'flex' }}>Start Creating</a>
-                  <p style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 10 }}>No credit card required. Cancel Anytime.</p>
+                <video src={card.src} autoPlay muted loop playsInline style={{ width: '100%', height: 264, objectFit: 'cover', display: 'block' }} />
+                {card.quote && (
+                  <div style={{ position: 'absolute', top: card.badge ? 38 : 10, left: 10, right: 10, fontSize: 11, fontWeight: 600, color: '#fff', lineHeight: 1.45, textShadow: '0 1px 6px rgba(0,0,0,0.7)', whiteSpace: 'pre-line', pointerEvents: 'none' }}>
+                    {card.quote}
+                  </div>
+                )}
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)', padding: '24px 8px 8px', pointerEvents: 'none' }}>
+                  <div style={{ display: 'flex', gap: 5 }}>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.75)', background: 'rgba(0,0,0,0.45)', padding: '2px 6px', borderRadius: 4, fontWeight: 500 }}>{settings.duration}</span>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.75)', background: 'rgba(0,0,0,0.45)', padding: '2px 6px', borderRadius: 4, fontWeight: 500 }}>{settings.aspectRatio}</span>
+                  </div>
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 7: FAQ ──────────────────────────────────────────────────── */}
-      <section id="faq" style={{ padding: '96px 24px' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div className="mixed-heading">Frequently Asked <em>Questions</em></div>
-          </div>
-          {[
-            { q: 'What can I generate with UGCFire.ai?', a: 'You can generate UGC-style ad videos, product ad images, hooks, scripts, captions, and creative variations matched to your brand, product, and audience.' },
-            { q: 'Can I upload my logo and product images?', a: 'Yes. Upload your product photos, logo, website URL, and brand guidelines once. UGCFire.ai uses them to keep every ad on-brand.' },
-            { q: 'Do I need design or video experience?', a: 'No. UGCFire.ai is built for founders, marketers, agencies, and brand managers. Upload your assets, pick an ad style, and generate.' },
-            { q: 'Will the ads match my brand style?', a: 'Yes. Every generation is grounded in your brand kit. Colors, visual style, and product identity are preserved across all ad formats.' },
-            { q: 'Can I use the generated ads for paid campaigns?', a: 'Absolutely. All generated ad creatives are yours to use for paid ads, organic posts, landing pages, and any other commercial purpose — no licensing restrictions.' },
-            { q: 'Can I save my generated ads?', a: 'Yes. Everything you generate lives in your Studio — organized by type, ready to download, share, or deploy in your next campaign.' },
-          ].map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
-
-        </div>
-      </section>
-
-      {/* ── SECTION 7b: UGCFIRE.COM CROSS-LINK ─────────────────────────────── */}
-      <section style={{ background: '#0a0a0a', padding: '0 24px 72px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '36px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32, flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: 240 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#FF5C00', marginBottom: 10 }}>
-              Need a team to do it for you?
+            {/* Play all */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, paddingLeft: 8, gap: 8, cursor: 'pointer' }}>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#1a1a1a', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.65)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap', fontWeight: 500 }}>Play all</span>
             </div>
-            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 12 }}>
-              Need Done-For-You UGC Ads?
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── BENEFIT CARDS ─────────────────────────────────────────────────────── */}
+      <section style={{ background: BG, borderTop: `1px solid ${BORDER}`, padding: '40px 20px' }}>
+        <div className="benefit-grid" style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+          {BENEFIT_CARDS.map(({ Icon, title, desc, link }) => (
+            <div key={title} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '22px 22px 20px' }}>
+              <div style={{ width: 44, height: 44, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.18)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                <Icon size={20} color={ORANGE} strokeWidth={1.75} />
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{title}</div>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', lineHeight: 1.75, marginBottom: 10 }}>{desc}</p>
+              <span style={{ fontSize: 13, color: ORANGE, fontWeight: 600 }}>{link}</span>
             </div>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75, marginBottom: 10, maxWidth: 440 }}>
-              If you want a team to create fresh UGC ad creatives for your brand each month, visit UGCFire.com — our done-for-you service for brands and agencies.
-            </p>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', fontStyle: 'italic' }}>
-              UGCFire.ai is the DIY platform. UGCFire.com is the full-service option.
-            </p>
-          </div>
-          <div style={{ flexShrink: 0 }}>
-            <a
-              href="https://ugcfire.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ghost-btn"
-              style={{ padding: '12px 28px', fontSize: 14, fontWeight: 600, borderColor: 'rgba(255,92,0,0.3)', color: '#FF5C00' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,92,0,0.6)'; (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,92,0,0.08)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,92,0,0.3)'; (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.07)'; }}
-            >
-              Visit UGCFire.com →
-            </a>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* ── SECTION 8: FINAL CTA ────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', overflow: 'hidden', background: '#0a0a0a', padding: '96px 24px' }}>
-        {/* Left and right floating video cards */}
-        <div style={{ position: 'absolute', left: 32, top: '50%', transform: 'translateY(-50%) rotate(-6deg)', width: 140, borderRadius: 16, overflow: 'hidden', opacity: 0.5, pointerEvents: 'none' }}>
-          <video src={UGC_VIDEOS[5]} autoPlay muted loop playsInline style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }} />
-        </div>
-        <div style={{ position: 'absolute', left: 180, top: '50%', transform: 'translateY(-70%) rotate(-3deg)', width: 120, borderRadius: 16, overflow: 'hidden', opacity: 0.35, pointerEvents: 'none' }}>
-          <Image src={UGC_IMAGES[0]} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
-          <div style={{ height: 200 }} />
-        </div>
-        <div style={{ position: 'absolute', right: 32, top: '50%', transform: 'translateY(-50%) rotate(6deg)', width: 140, borderRadius: 16, overflow: 'hidden', opacity: 0.5, pointerEvents: 'none' }}>
-          <video src={UGC_VIDEOS[6]} autoPlay muted loop playsInline style={{ width: '100%', height: 220, objectFit: 'cover', display: 'block' }} />
-        </div>
-        <div style={{ position: 'absolute', right: 180, top: '50%', transform: 'translateY(-30%) rotate(3deg)', width: 120, borderRadius: 16, overflow: 'hidden', opacity: 0.35, pointerEvents: 'none' }}>
-          <Image src={UGC_IMAGES[3]} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
-          <div style={{ height: 200 }} />
-        </div>
-
-        {/* Center content */}
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: 560, margin: '0 auto' }}>
-          <div className="mixed-heading" style={{ marginBottom: 20 }}>
-            Ready To Generate More UGC <em>Ads With AI?</em>
-          </div>
-          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginBottom: 36 }}>
-            Turn one product upload into a stream of UGC ad creatives — images, videos, hooks, scripts, and ad variations in minutes.
-          </p>
-          <a href="/login" className="fire-btn" style={{ fontSize: 16, padding: '16px 44px' }}>✦ Create Your AI Ad</a>
-          <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>No credit card required · Cancel anytime</p>
-        </div>
-      </section>
-
-      {/* ── FOOTER ──────────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#060606', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '56px 32px 32px' }}>
+      {/* ── FOOTER ────────────────────────────────────────────────────────────── */}
+      <footer style={{ background: '#060606', borderTop: `1px solid ${BORDER}`, padding: '40px 24px 28px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 48 }}>
-            {/* Brand col */}
-            <div>
-              <Image src={LOGO_URL} alt="UGCFire.ai" width={120} height={36} style={{ objectFit: 'contain', height: 32, width: 'auto', marginBottom: 16 }} unoptimized />
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', lineHeight: 1.8, maxWidth: 240, marginTop: 12 }}>
+          <div style={{ display: 'flex', gap: 48, marginBottom: 32, flexWrap: 'wrap' }}>
+            <div style={{ flex: '0 0 auto', marginRight: 8 }}>
+              <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 28, width: 'auto', marginBottom: 12 }} unoptimized />
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', lineHeight: 1.8, maxWidth: 220 }}>
                 UGCFire.ai helps brands generate UGC-style ads, product visuals, hooks, scripts, and ad variations faster with AI.
               </p>
             </div>
-            {/* Product */}
-            <div>
-              <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontWeight: 600, marginBottom: 16 }}>Product</div>
-              {['How It Works','Features','Pricing','FAQ'].map(l=>(
-                <a key={l} href={`#${l.toLowerCase().replace(/ /g,'-')}`} style={{ display:'block', fontSize:13, color:'rgba(255,255,255,0.4)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
-                  onMouseEnter={e=>(e.currentTarget.style.color='#fff')} onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}
-                >{l}</a>
-              ))}
-            </div>
-            {/* Social */}
-            <div>
-              <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontWeight: 600, marginBottom: 16 }}>Social</div>
-              {[['Instagram','https://www.instagram.com/ugcfire'],['TikTok','https://www.tiktok.com/@ugcfire'],['X','https://x.com/ugcfire']].map(([l,h])=>(
-                <a key={l} href={h} target="_blank" rel="noopener noreferrer" style={{ display:'block', fontSize:13, color:'rgba(255,255,255,0.4)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
-                  onMouseEnter={e=>(e.currentTarget.style.color='#fff')} onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}
-                >{l}</a>
-              ))}
-            </div>
-            {/* Legal */}
-            <div>
-              <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', fontWeight: 600, marginBottom: 16 }}>Legal</div>
-              {[['Terms of Service','/terms'],['Privacy Policy','/privacy']].map(([l,h])=>(
-                <a key={l} href={h} style={{ display:'block', fontSize:13, color:'rgba(255,255,255,0.4)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
-                  onMouseEnter={e=>(e.currentTarget.style.color='#fff')} onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}
-                >{l}</a>
-              ))}
-            </div>
+            {[
+              { title: 'Product', links: [['How It Works', '#'], ['Pricing', '#pricing'], ['Studio', '/dashboard/studio']] },
+              { title: 'Social',  links: [['Instagram', 'https://www.instagram.com/ugcfire'], ['TikTok', 'https://www.tiktok.com/@ugcfire'], ['X', 'https://x.com/ugcfire']] },
+              { title: 'Legal',   links: [['Terms of Service', '/terms'], ['Privacy Policy', '/privacy']] },
+            ].map(col => (
+              <div key={col.title}>
+                <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', fontWeight: 600, marginBottom: 14 }}>{col.title}</div>
+                {col.links.map(([l, h]) => (
+                  <a key={l} href={h} target={h.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
+                    style={{ display: 'block', fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', marginBottom: 10, transition: 'color 0.15s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
+                  >{l}</a>
+                ))}
+              </div>
+            ))}
           </div>
-
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.18)' }}>© 2026 UGCFire.ai. All rights reserved.</span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.18)' }}>Built for brands that move fast 🔥</span>
+          <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.16)' }}>© 2026 UGCFire.ai. All rights reserved.</span>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.16)' }}>Built for brands that move fast 🔥</span>
           </div>
         </div>
       </footer>
+
+      {/* ── GENERATE MODAL ────────────────────────────────────────────────────── */}
+      {showModal && (
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
+        >
+          <div style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 22, padding: '36px 32px', width: '100%', maxWidth: 400, position: 'relative' }}>
+
+            {/* Close */}
+            <button onClick={() => setShowModal(false)}
+              style={{ position: 'absolute', top: 14, right: 14, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <X size={14} color="rgba(255,255,255,0.6)" />
+            </button>
+
+            {/* Header */}
+            <div style={{ textAlign: 'center', marginBottom: 24 }}>
+              <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 26, width: 'auto', margin: '0 auto 16px' }} unoptimized />
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
+                Create an account to generate
+              </h2>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>Start free. No credit card required.</p>
+            </div>
+
+            {/* Demo buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 18 }}>
+              <button className="modal-btn" onClick={() => handleDemo('client')} disabled={entering !== null}>
+                <span style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,92,0,0.12)', border: '1px solid rgba(255,92,0,0.25)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>👤</span>
+                <div style={{ flex: 1 }}>
+                  <div>{entering === 'user' ? 'Entering…' : 'Demo User'}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.32)', fontWeight: 400, marginTop: 1 }}>Explore the client dashboard</div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+
+              <button className="modal-btn" onClick={() => handleDemo('admin')} disabled={entering !== null}
+                style={{ borderColor: 'rgba(255,92,0,0.2)' }}>
+                <span style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⚡</span>
+                <div style={{ flex: 1 }}>
+                  <div>{entering === 'admin' ? 'Entering…' : 'Demo Admin'}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.32)', fontWeight: 400, marginTop: 1 }}>Explore the admin command center</div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>or continue with</span>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
+            </div>
+
+            {/* Auth buttons */}
+            <div style={{ display: 'flex', gap: 10 }}>
+              <a href="/signup"
+                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, borderRadius: 10, padding: '11px 0', textDecoration: 'none', transition: 'background 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#b6f23f')}
+                onMouseLeave={e => (e.currentTarget.style.background = LIME)}
+              >Sign up</a>
+              <a href="/login"
+                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: 600, fontSize: 14, borderRadius: 10, padding: '11px 0', textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'background 0.15s' }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
+              >Login</a>
+            </div>
+
+          </div>
+        </div>
+      )}
     </>
   );
 }
