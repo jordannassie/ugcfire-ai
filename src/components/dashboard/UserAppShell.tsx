@@ -172,29 +172,56 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
             </div>
 
             {avatarOpen && (
-              <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, overflow: 'hidden', minWidth: 180, boxShadow: '0 8px 32px rgba(0,0,0,0.6)', zIndex: 200 }}>
-                <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: LIME, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: 11, fontWeight: 800, color: '#0d0d0d' }}>D</span>
+              <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14, overflow: 'hidden', minWidth: 220, boxShadow: '0 12px 40px rgba(0,0,0,0.7)', zIndex: 200 }}>
+                {/* User info */}
+                <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: LIME, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 12, fontWeight: 800, color: '#0d0d0d' }}>D</span>
                     </div>
                     <div>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>Demo User</p>
-                      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.2 }}>demo@ugcfire.ai</p>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Demo User</p>
+                      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.3 }}>Demo Plan</p>
+                    </div>
+                  </div>
+                  {/* Credits bar */}
+                  <div style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8, padding: '8px 10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>{credits} credits left</span>
+                      <button onClick={() => { setAvatarOpen(false); setUpgradeOpen(true); }}
+                        style={{ fontSize: 10, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 5, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        Top up
+                      </button>
+                    </div>
+                    <div style={{ height: 4, background: 'rgba(255,255,255,0.07)', borderRadius: 2 }}>
+                      <div style={{ height: '100%', width: `${Math.min(100, (credits / 125) * 100)}%`, background: LIME, borderRadius: 2, transition: 'width 0.3s' }} />
                     </div>
                   </div>
                 </div>
+
+                {/* Menu items */}
                 <div style={{ padding: '6px' }}>
-                  <button onClick={() => setAvatarOpen(false)}
-                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'inherit', textAlign: 'left' }}>
-                    <User size={14} strokeWidth={1.75} />
-                    Profile
-                  </button>
+                  {[
+                    { icon: User,      label: 'View profile',      href: '/dashboard/profile' },
+                    { icon: CreditCard, label: 'Manage account',   href: '/dashboard/profile?tab=account' },
+                    { icon: Zap,       label: 'Join our community',href: '/community' },
+                  ].map(item => (
+                    <button key={item.label}
+                      onClick={() => { setAvatarOpen(false); router.push(item.href); }}
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 10px', borderRadius: 8, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontFamily: 'inherit', textAlign: 'left', transition: 'background 0.1s, color 0.1s' }}
+                      onMouseEnter={e => { const el = e.currentTarget as HTMLButtonElement; el.style.background = 'rgba(255,255,255,0.05)'; el.style.color = '#fff'; }}
+                      onMouseLeave={e => { const el = e.currentTarget as HTMLButtonElement; el.style.background = 'none'; el.style.color = 'rgba(255,255,255,0.6)'; }}>
+                      <item.icon size={14} strokeWidth={1.75} />
+                      {item.label}
+                    </button>
+                  ))}
                   <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '4px 0' }} />
                   <button onClick={handleLogout}
-                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontSize: 13, fontFamily: 'inherit', textAlign: 'left' }}>
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 10px', borderRadius: 8, background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontSize: 13, fontFamily: 'inherit', textAlign: 'left' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(239,68,68,0.07)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}>
                     <LogOut size={14} strokeWidth={1.75} />
-                    Log out
+                    Sign out
                   </button>
                 </div>
               </div>
