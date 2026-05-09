@@ -19,6 +19,16 @@ body {
   font-feature-settings: "cv03" 1, "ss01" 1;
 }
 
+/* ─── Dark Scrollbars (global) ───────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a #070707;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #070707; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
 /* ─── Dashboard Light Mode ────────────────────────────────────────────────── */
 
 [data-theme="light"] {

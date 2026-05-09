@@ -8,6 +8,7 @@ import {
 import {
   UGC_VIDEOS, PRODUCT_IMAGES, DEMO_VIDEO_GENS,
   LS_VIDEO_GENS, loadFromLS, saveToLS, formatGenDate,
+  subtractCredits,
   type VideoGeneration,
 } from '@/lib/demoAssets';
 import AssetPickerModal from '@/components/dashboard/AssetPickerModal';
@@ -79,6 +80,7 @@ export default function VideoPage() {
 
   async function handleGenerate() {
     if (generating) return;
+    subtractCredits(75);
     setGenerating(true);
     await new Promise(r => setTimeout(r, 1800));
     const newGen: VideoGeneration = {

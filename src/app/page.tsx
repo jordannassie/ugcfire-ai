@@ -31,12 +31,10 @@ const PRODUCT_IMAGES = [
 // ─── Static data ───────────────────────────────────────────────────────────────
 
 const NAV_LINKS = [
-  { label: 'Explore',      href: '#',                  active: false },
-  { label: 'Image',        href: '#',                  active: false },
-  { label: 'Video',        href: '#',                  active: true  },
-  { label: 'Brand Assets', href: '#',                  active: false },
-  { label: 'Studio',       href: '/dashboard/studio',  active: false },
-  { label: 'Pricing',      href: '#pricing',           active: false },
+  { label: 'Video',    href: '#video',    active: true  },
+  { label: 'Image',    href: '#image',    active: false },
+  { label: 'Examples', href: '#examples', active: false },
+  { label: 'Pricing',  href: '#pricing',  active: false },
 ];
 
 const STEPS = [
@@ -79,6 +77,7 @@ export default function Home() {
   const [selectedImg, setSelectedImg] = useState(0);
   const [showModal,   setShowModal]   = useState(false);
   const [entering,    setEntering]    = useState<'user' | 'admin' | null>(null);
+  const [pricingTab,  setPricingTab]  = useState<'plans' | 'credits'>('plans');
 
   function setSetting(key: keyof typeof settings, value: string) {
     setSettings(s => ({ ...s, [key]: value }));
@@ -182,7 +181,7 @@ export default function Home() {
       </nav>
 
       {/* ── HERO SPLIT ────────────────────────────────────────────────────────── */}
-      <div className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)', overflow: 'hidden', maxWidth: '100%' }}>
+      <div id="video" className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)', overflow: 'hidden', maxWidth: '100%' }}>
 
         {/* ── LEFT CREATION PANEL ──────────────────────────────────────────── */}
         <div className="home-panel" style={{ width: 360, padding: '18px 0 24px 16px', position: 'sticky', top: 60, alignSelf: 'flex-start', height: 'calc(100vh - 60px)', overflowY: 'auto', flexShrink: 0 }} onClick={() => setOpenSetting(null)}>
@@ -344,7 +343,7 @@ export default function Home() {
           </div>
 
           {/* Video gallery */}
-          <div className="ghost-scroll" style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8, alignItems: 'flex-start' }}>
+          <div id="examples" className="ghost-scroll" style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8, alignItems: 'flex-start' }}>
             {VIDEO_CARD_DATA.map((card, i) => (
               <div key={i} className="video-card" style={{ width: 155, flexShrink: 0 }}>
                 {card.badge && (
@@ -379,7 +378,7 @@ export default function Home() {
       </div>
 
       {/* ── MODEL BANNERS ─────────────────────────────────────────────────────── */}
-      <section style={{ background: '#060606', borderTop: `1px solid ${BORDER}`, padding: '56px 20px' }}>
+      <section id="image" style={{ background: '#060606', borderTop: `1px solid ${BORDER}`, padding: '56px 20px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
 
           {/* Section heading */}
@@ -455,6 +454,128 @@ export default function Home() {
             </a>
 
           </div>
+        </div>
+      </section>
+
+      {/* ── PRICING ───────────────────────────────────────────────────────────── */}
+      <section id="pricing" style={{ background: BG, borderTop: `1px solid ${BORDER}`, padding: '72px 20px 80px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+
+          {/* Heading */}
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ fontSize: 12, fontWeight: 700, color: ORANGE, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>Pricing</p>
+            <h2 style={{ fontSize: 'clamp(26px,3.5vw,40px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 12 }}>Simple pricing for UGC creation</h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.4)', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
+              Start with monthly credits. Add more anytime when you need them.
+            </p>
+          </div>
+
+          {/* Toggle */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 44 }}>
+            <div style={{ display: 'flex', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 12, padding: 4, gap: 4 }}>
+              {(['plans', 'credits'] as const).map(t => (
+                <button key={t} onClick={() => setPricingTab(t)}
+                  style={{ padding: '8px 22px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
+                    background: pricingTab === t ? (t === 'plans' ? ORANGE : LIME) : 'transparent',
+                    color: pricingTab === t ? (t === 'plans' ? '#fff' : '#0d0d0d') : 'rgba(255,255,255,0.45)',
+                    transition: 'all 0.15s' }}>
+                  {t === 'plans' ? 'Monthly Plans' : 'Credit Packs'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── MONTHLY PLANS ── */}
+          {pricingTab === 'plans' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, maxWidth: 960, margin: '0 auto' }}>
+              {[
+                { name: 'Starter',  price: 29,  credits: 300,   badge: null,           desc: 'Testing AI UGC creation',        color: 'rgba(255,255,255,0.08)',   btnColor: '#1e1e1e', btnText: '#fff', border: BORDER },
+                { name: 'Creator',  price: 99,  credits: 1500,  badge: 'Most Popular', desc: 'Consistent weekly content',       color: 'rgba(163,230,53,0.06)',    btnColor: LIME,      btnText: '#0d0d0d', border: 'rgba(163,230,53,0.35)' },
+                { name: 'Pro',      price: 199, credits: 4000,  badge: null,           desc: 'Brands running more ad tests',   color: 'rgba(255,92,0,0.05)',      btnColor: ORANGE,    btnText: '#fff', border: 'rgba(255,92,0,0.25)' },
+              ].map(plan => (
+                <div key={plan.name} style={{ background: plan.color, border: `1px solid ${plan.border}`, borderRadius: 20, padding: '28px 26px 24px', position: 'relative',
+                  boxShadow: plan.badge ? '0 0 40px rgba(163,230,53,0.08)' : 'none' }}>
+                  {plan.badge && (
+                    <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: LIME, color: '#0d0d0d', fontSize: 10, fontWeight: 800, padding: '4px 12px', borderRadius: 20, letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                      ✦ {plan.badge}
+                    </div>
+                  )}
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.55)', marginBottom: 8, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{plan.name}</div>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 6 }}>
+                    <span style={{ fontSize: 40, fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1 }}>${plan.price}</span>
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', paddingBottom: 6 }}>/mo</span>
+                  </div>
+                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 4 }}>
+                    <span style={{ color: '#fff', fontWeight: 600 }}>{plan.credits.toLocaleString()} credits</span> / month
+                  </div>
+                  <div style={{ fontSize: 12, color: ORANGE, fontWeight: 500, marginBottom: 20 }}>Best for: {plan.desc}</div>
+                  <div style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 7 }}>
+                    {[
+                      `~${Math.floor(plan.credits / 75)} video generations (75cr each)`,
+                      `~${Math.floor(plan.credits / 4)} image generations (4cr each)`,
+                      'Cancel anytime',
+                    ].map(f => (
+                      <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                        <span style={{ color: LIME, fontSize: 13, lineHeight: 1.4, flexShrink: 0 }}>✓</span>
+                        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>{f}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button onClick={() => setShowModal(true)}
+                    style={{ width: '100%', background: plan.btnColor, color: plan.btnText, border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '-0.01em', transition: 'opacity 0.15s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.85'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}>
+                    Start {plan.name}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ── CREDIT PACKS ── */}
+          {pricingTab === 'credits' && (
+            <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                { credits: 250,  price: 15,  badge: null,           savings: null },
+                { credits: 1000, price: 49,  badge: null,           savings: null },
+                { credits: 2500, price: 99,  badge: 'Most Popular', savings: '33% more credits' },
+                { credits: 5000, price: 179, badge: 'Best Value',   savings: '40% more credits' },
+              ].map(pack => (
+                <div key={pack.credits} style={{ display: 'flex', alignItems: 'center', background: '#141414', border: `1px solid ${pack.badge ? 'rgba(163,230,53,0.25)' : BORDER}`, borderRadius: 16, padding: '18px 22px', gap: 16,
+                  boxShadow: pack.badge ? '0 0 24px rgba(163,230,53,0.06)' : 'none' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                      <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{pack.credits.toLocaleString()} credits</span>
+                      {pack.badge && (
+                        <span style={{ fontSize: 10, fontWeight: 800, background: pack.badge === 'Best Value' ? ORANGE : LIME, color: pack.badge === 'Best Value' ? '#fff' : '#0d0d0d', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.05em' }}>
+                          {pack.badge}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>~{Math.floor(pack.credits / 75)} videos</span>
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>~{Math.floor(pack.credits / 4)} images</span>
+                      {pack.savings && <span style={{ fontSize: 12, color: LIME, fontWeight: 600 }}>{pack.savings}</span>}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>${pack.price}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 2 }}>one-time</div>
+                  </div>
+                  <button onClick={() => setShowModal(true)}
+                    style={{ background: LIME, color: '#0d0d0d', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0, transition: 'background 0.15s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#b6f23f'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = LIME; }}>
+                    Buy Credits
+                  </button>
+                </div>
+              ))}
+              <p style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.22)', marginTop: 8 }}>
+                Add credits anytime · Great for extra generations · No subscription required
+              </p>
+            </div>
+          )}
+
         </div>
       </section>
 

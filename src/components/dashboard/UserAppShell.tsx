@@ -7,8 +7,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   Search, FolderOpen, Rocket, LogOut, User,
   ImageIcon, Video, Package, Layers, LayoutDashboard, Menu, X,
+  Zap, CreditCard,
 } from 'lucide-react';
-import { LOGO_URL } from '@/lib/demoAssets';
+import { LOGO_URL, getCredits, INITIAL_CREDITS } from '@/lib/demoAssets';
 import { exitDemoMode } from '@/lib/demoData';
 import AssetPickerModal from './AssetPickerModal';
 
@@ -40,11 +41,15 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
   const avatarRef  = useRef<HTMLDivElement>(null);
   const drawerRef  = useRef<HTMLDivElement>(null);
 
-  const [assetsOpen,  setAssetsOpen]  = useState(false);
-  const [avatarOpen,  setAvatarOpen]  = useState(false);
-  const [drawerOpen,  setDrawerOpen]  = useState(false);
-  const [search,      setSearch]      = useState('');
-  const [mobile,      setMobile]      = useState(false);
+  const [assetsOpen,   setAssetsOpen]   = useState(false);
+  const [avatarOpen,   setAvatarOpen]   = useState(false);
+  const [drawerOpen,   setDrawerOpen]   = useState(false);
+  const [upgradeOpen,  setUpgradeOpen]  = useState(false);
+  const [upgradeTab,   setUpgradeTab]   = useState<'plans' | 'credits'>('plans');
+  const [comingSoon,   setComingSoon]   = useState(false);
+  const [search,       setSearch]       = useState('');
+  const [mobile,       setMobile]       = useState(false);
+  const [credits,      setCredits]      = useState(INITIAL_CREDITS);
 
   // Detect mobile
   useEffect(() => {
@@ -52,6 +57,14 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
     fn();
     window.addEventListener('resize', fn);
     return () => window.removeEventListener('resize', fn);
+  }, []);
+
+  // Sync demo credits from localStorage
+  useEffect(() => {
+    setCredits(getCredits());
+    const handler = () => setCredits(getCredits());
+    window.addEventListener('ugcfire:credits-updated', handler);
+    return () => window.removeEventListener('ugcfire:credits-updated', handler);
   }, []);
 
   // Close avatar dropdown on outside click
@@ -126,12 +139,19 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
             </div>
           )}
 
-          {/* Upgrade (desktop only) */}
+          {/* Credits pill + Upgrade (desktop only) */}
           {!mobile && (
-            <button style={{ background: ORANGE, color: '#fff', border: 'none', padding: '6px 13px', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
-              <Rocket size={13} strokeWidth={2} />
-              Upgrade
-            </button>
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '5px 11px', fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap' }}>
+                <Zap size={11} color={LIME} strokeWidth={2.5} />
+                {credits} credits
+              </div>
+              <button onClick={() => setUpgradeOpen(true)}
+                style={{ background: ORANGE, color: '#fff', border: 'none', padding: '6px 13px', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+                <Rocket size={13} strokeWidth={2} />
+                Upgrade
+              </button>
+            </>
           )}
 
           {/* Assets (desktop only) */}
@@ -248,6 +268,135 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
             </div>
           </div>
         </>
+      )}
+
+      {/* ── UPGRADE MODAL ───────────────────────────────────────────────────── */}
+      {upgradeOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+          onClick={e => { if (e.target === e.currentTarget) setUpgradeOpen(false); }}>
+          <div style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 22, width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+
+            {/* Header */}
+            <div style={{ padding: '24px 24px 0', borderBottom: `1px solid rgba(255,255,255,0.07)`, paddingBottom: 16 }}>
+              <button onClick={() => setUpgradeOpen(false)}
+                style={{ position: 'absolute', top: 14, right: 14, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <X size={14} color="rgba(255,255,255,0.6)" />
+              </button>
+              <h2 style={{ fontSize: 18, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 4 }}>Upgrade Plan or Buy Credits</h2>
+
+              {/* Demo usage bar */}
+              <div style={{ display: 'flex', gap: 14, marginTop: 12, flexWrap: 'wrap' }}>
+                <div style={{ background: '#1a1a1a', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 10, padding: '8px 14px', flex: 1, minWidth: 120 }}>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Current Plan</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Demo</div>
+                </div>
+                <div style={{ background: '#1a1a1a', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 10, padding: '8px 14px', flex: 1, minWidth: 120 }}>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Credits</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: LIME }}>{credits} remaining</div>
+                </div>
+                <div style={{ background: '#1a1a1a', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 10, padding: '8px 14px', flex: 1, minWidth: 140 }}>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Per generation</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)' }}>Video · 75cr &nbsp;|&nbsp; Image · 4cr</div>
+                </div>
+              </div>
+
+              {/* Tab switcher */}
+              <div style={{ display: 'flex', marginTop: 16, gap: 4 }}>
+                {(['plans', 'credits'] as const).map(t => (
+                  <button key={t} onClick={() => setUpgradeTab(t)}
+                    style={{ flex: 1, padding: '9px', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', borderRadius: 8,
+                      background: upgradeTab === t ? 'rgba(255,255,255,0.08)' : 'transparent',
+                      color: upgradeTab === t ? '#fff' : 'rgba(255,255,255,0.38)',
+                      transition: 'all 0.12s' }}>
+                    {t === 'plans' ? '🚀 Plans' : '⚡ Credit Packs'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ padding: '20px 24px 24px' }}>
+
+              {/* ── PLANS TAB ── */}
+              {upgradeTab === 'plans' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {[
+                    { name: 'Starter',  price: 29,  credits: 300,   badge: null,           border: 'rgba(255,255,255,0.08)',   btn: '#1e1e1e', btnTxt: '#fff' },
+                    { name: 'Creator',  price: 99,  credits: 1500,  badge: 'Most Popular', border: 'rgba(163,230,53,0.3)',     btn: LIME,      btnTxt: '#0d0d0d' },
+                    { name: 'Pro',      price: 199, credits: 4000,  badge: null,           border: 'rgba(255,92,0,0.22)',      btn: ORANGE,    btnTxt: '#fff' },
+                  ].map(plan => (
+                    <div key={plan.name} style={{ display: 'flex', alignItems: 'center', background: '#1a1a1a', border: `1px solid ${plan.border}`, borderRadius: 14, padding: '14px 16px', gap: 14, position: 'relative',
+                      boxShadow: plan.badge ? '0 0 20px rgba(163,230,53,0.06)' : 'none' }}>
+                      {plan.badge && (
+                        <span style={{ position: 'absolute', top: -10, left: 16, background: LIME, color: '#0d0d0d', fontSize: 9, fontWeight: 800, padding: '3px 10px', borderRadius: 20, letterSpacing: '0.06em' }}>
+                          ✦ {plan.badge}
+                        </span>
+                      )}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
+                          <span style={{ fontSize: 15, fontWeight: 800, color: '#fff' }}>{plan.name}</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{plan.credits.toLocaleString()} credits/mo</span>
+                        </div>
+                        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+                          ~{Math.floor(plan.credits / 75)} videos · ~{Math.floor(plan.credits / 4)} images · Cancel anytime
+                        </div>
+                      </div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', flexShrink: 0 }}>${plan.price}<span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.35)' }}>/mo</span></div>
+                      <button onClick={() => { setComingSoon(true); setTimeout(() => setComingSoon(false), 3200); }}
+                        style={{ background: plan.btn, color: plan.btnTxt, border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        Upgrade
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* ── CREDITS TAB ── */}
+              {upgradeTab === 'credits' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {[
+                    { credits: 250,  price: 15,  badge: null },
+                    { credits: 1000, price: 49,  badge: null },
+                    { credits: 2500, price: 99,  badge: 'Most Popular' },
+                    { credits: 5000, price: 179, badge: 'Best Value' },
+                  ].map(pack => (
+                    <div key={pack.credits} style={{ display: 'flex', alignItems: 'center', background: '#1a1a1a', border: `1px solid ${pack.badge ? 'rgba(163,230,53,0.2)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 12, padding: '12px 16px', gap: 12 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
+                          <span style={{ fontSize: 15, fontWeight: 800, color: '#fff' }}>{pack.credits.toLocaleString()} credits</span>
+                          {pack.badge && (
+                            <span style={{ fontSize: 9, fontWeight: 800, background: pack.badge === 'Best Value' ? ORANGE : LIME, color: pack.badge === 'Best Value' ? '#fff' : '#0d0d0d', padding: '2px 8px', borderRadius: 20, letterSpacing: '0.05em' }}>
+                              {pack.badge}
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+                          ~{Math.floor(pack.credits / 75)} videos · ~{Math.floor(pack.credits / 4)} images · one-time
+                        </div>
+                      </div>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', flexShrink: 0 }}>${pack.price}</div>
+                      <button onClick={() => { setComingSoon(true); setTimeout(() => setComingSoon(false), 3200); }}
+                        style={{ background: LIME, color: '#0d0d0d', border: 'none', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        Buy
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Coming soon toast */}
+              {comingSoon && (
+                <div style={{ marginTop: 16, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.25)', borderRadius: 10, padding: '12px 16px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <CreditCard size={16} color={ORANGE} style={{ marginTop: 1, flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Payments coming soon</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>Stripe will be connected after UI approval. No charges will be made yet.</div>
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ── ASSETS MODAL ────────────────────────────────────────────────────── */}

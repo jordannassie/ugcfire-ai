@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, Maximize2, X, Grid, List, Sparkles, Layers } from 'lucide-react';
 import {
   PRODUCT_IMAGES, DEMO_IMAGE_GENS, LS_IMAGE_GENS,
-  loadFromLS, saveToLS,
+  loadFromLS, saveToLS, subtractCredits,
   type ImageGeneration,
 } from '@/lib/demoAssets';
 import AssetPickerModal from '@/components/dashboard/AssetPickerModal';
@@ -52,6 +52,7 @@ export default function ImagePage() {
 
   async function handleGenerate() {
     if (generating) return;
+    subtractCredits(4 * count);
     setGenerating(true);
     await new Promise(r => setTimeout(r, 1600));
     const allImgSrcs = [...PRODUCT_IMAGES, ...DEMO_IMAGE_GENS.map(g => g.imageSrc)];

@@ -137,3 +137,21 @@ export function saveToLS<T>(key: string, data: T[]): void {
   if (typeof window === 'undefined') return;
   try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
 }
+
+// ─── Demo credits ──────────────────────────────────────────────────────────
+export const LS_CREDITS      = 'ugcfire_demo_credits';
+export const INITIAL_CREDITS = 125;
+
+export function getCredits(): number {
+  if (typeof window === 'undefined') return INITIAL_CREDITS;
+  const stored = localStorage.getItem(LS_CREDITS);
+  return stored !== null ? parseInt(stored, 10) : INITIAL_CREDITS;
+}
+
+export function subtractCredits(amount: number): number {
+  if (typeof window === 'undefined') return INITIAL_CREDITS;
+  const next = Math.max(0, getCredits() - amount);
+  localStorage.setItem(LS_CREDITS, String(next));
+  window.dispatchEvent(new Event('ugcfire:credits-updated'));
+  return next;
+}
