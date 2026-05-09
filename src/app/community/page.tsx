@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Plus, ChevronDown } from 'lucide-react';
 import CommunityPostCard from '@/components/community/CommunityPostCard';
+import PublicHeader from '@/components/public/PublicHeader';
 import { DEMO_POSTS, STATUS_COLORS, type CommunityPost } from '@/lib/creatorNetwork';
-
-const LOGO_URL = 'https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/UGCfirelog.png';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
@@ -59,25 +56,9 @@ export default function CommunityPage() {
     <div style={{ minHeight: '100vh', background: BG, color: '#f2f0eb', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
       {/* Nav */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: '#0d0d0ddd', backdropFilter: 'blur(16px)', borderBottom: `1px solid ${BORDER}`, height: 60, display: 'flex', alignItems: 'center', padding: '0 20px', gap: 16 }}>
-        <Link href="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
-          <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={28} style={{ objectFit: 'contain', height: 26, width: 'auto' }} unoptimized />
-        </Link>
-        <div style={{ display: 'flex', gap: 2, marginLeft: 8 }}>
-          {[{ label: 'Discover', href: '/discover' }, { label: 'Community', href: '/community' }].map(l => (
-            <Link key={l.label} href={l.href}
-              style={{ fontSize: 13.5, fontWeight: 600, color: l.href === '/community' ? LIME : 'rgba(255,255,255,0.5)', padding: '5px 10px', borderBottom: l.href === '/community' ? `2px solid ${LIME}` : '2px solid transparent', textDecoration: 'none' }}>
-              {l.label}
-            </Link>
-          ))}
-        </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-          <Link href="/login" style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', padding: '6px 14px', border: `1px solid ${BORDER}`, borderRadius: 8 }}>Login</Link>
-          <Link href="/signup" style={{ fontSize: 13, fontWeight: 700, color: '#0d0d0d', textDecoration: 'none', padding: '6px 14px', background: LIME, borderRadius: 8 }}>Sign up</Link>
-        </div>
-      </nav>
+      <PublicHeader activePage="community" />
 
-      <div style={{ maxWidth: 820, margin: '0 auto', padding: '40px 20px 80px' }}>
+      <div style={{ maxWidth: 820, margin: '60px auto 0', padding: '40px 20px 80px' }}>
 
         {/* Header */}
         <div style={{ marginBottom: 32 }}>

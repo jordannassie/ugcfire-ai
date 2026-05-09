@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation';
 import { enterDemoMode } from '@/lib/demoData';
 import { DEMO_CREATORS } from '@/lib/creatorNetwork';
 import {
-  ChevronDown, Lock, Search, Shield, X,
+  ChevronDown, Lock, Shield, X,
   Clock, Cpu, Maximize2, Monitor,
 } from 'lucide-react';
+import PublicHeader from '@/components/public/PublicHeader';
 
 // ─── Media assets ─────────────────────────────────────────────────────────────
 
@@ -31,15 +32,6 @@ const PRODUCT_IMAGES = [
 ];
 
 // ─── Static data ───────────────────────────────────────────────────────────────
-
-const NAV_LINKS = [
-  { label: 'Video',    href: '#video',    active: true  },
-  { label: 'Image',    href: '#image',    active: false },
-  { label: 'Examples', href: '#examples', active: false },
-  { label: 'Pricing',  href: '#pricing',  active: false },
-  { label: 'Discover', href: '/discover', active: false },
-  { label: 'Community',href: '/community',active: false },
-];
 
 const STEPS = [
   { num: 1, title: 'Upload Image',           desc: 'Add any photo or product shot.' },
@@ -103,10 +95,6 @@ export default function Home() {
         body { background: ${BG}; color: #f2f0eb; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; overflow-x: hidden; max-width: 100%; }
         ::selection { background: rgba(163,230,53,0.2); }
 
-        .nav-link { color: rgba(255,255,255,0.5); font-size: 13.5px; text-decoration: none; padding: 5px 9px; border-radius: 6px; transition: color 0.15s; font-weight: 500; white-space: nowrap; }
-        .nav-link:hover { color: #fff; }
-        .nav-link-active { color: ${ORANGE}; font-size: 13.5px; text-decoration: none; padding: 5px 9px; border-bottom: 2px solid ${ORANGE}; font-weight: 600; white-space: nowrap; }
-
         .setting-row { display: flex; align-items: center; padding: 9px 0; cursor: pointer; gap: 8px; position: relative; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .setting-row:last-child { border-bottom: none; }
 
@@ -129,14 +117,10 @@ export default function Home() {
         .ghost-scroll::-webkit-scrollbar { display: none; }
         .ghost-scroll { scrollbar-width: none; }
 
-        @media (max-width: 1100px) {
-          .nav-search { display: none !important; }
-        }
         @media (max-width: 900px) {
           .home-split { flex-direction: column !important; }
           .home-panel { width: 100% !important; min-width: 0 !important; position: relative !important; top: auto !important; height: auto !important; padding: 16px !important; }
           .home-content { padding: 24px 16px !important; }
-          .nav-links-desk { display: none !important; }
           .model-banners { grid-template-columns: 1fr !important; }
           .model-banner-left-img { width: 140px !important; }
           .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -149,40 +133,7 @@ export default function Home() {
       `}</style>
 
       {/* ── NAV ───────────────────────────────────────────────────────────────── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 60, zIndex: 100, background: '#0d0d0d', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: 4, padding: '0 16px', overflow: 'hidden', maxWidth: '100vw' }}>
-
-        <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginRight: 10, flexShrink: 0 }}>
-          <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 28, width: 'auto' }} unoptimized />
-        </a>
-
-        <div className="nav-links-desk" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-          {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} className={l.active ? 'nav-link-active' : 'nav-link'}>{l.label}</a>
-          ))}
-        </div>
-
-        <div className="nav-search" style={{ marginLeft: 'auto', marginRight: 10, display: 'flex', alignItems: 'center', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '6px 10px', gap: 7, flexShrink: 0 }}>
-          <Search size={13} color="rgba(255,255,255,0.3)" strokeWidth={2} />
-          <input
-            placeholder="Search templates, styles, assets..."
-            style={{ background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.45)', fontSize: 13, width: 160, minWidth: 0, fontFamily: 'inherit' }}
-          />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontWeight: 500, flexShrink: 0 }}>⌘K</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
-          <a href="/login"
-            style={{ color: 'rgba(255,255,255,0.65)', fontSize: 13.5, fontWeight: 500, textDecoration: 'none', padding: '7px 16px', border: `1px solid ${BORDER}`, borderRadius: 8, transition: 'all 0.15s', whiteSpace: 'nowrap' }}
-            onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = '#fff'; el.style.borderColor = 'rgba(255,255,255,0.2)'; }}
-            onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = 'rgba(255,255,255,0.65)'; el.style.borderColor = BORDER; }}
-          >Login</a>
-          <a href="/signup"
-            style={{ color: '#0d0d0d', fontSize: 13.5, fontWeight: 700, textDecoration: 'none', padding: '7px 18px', background: LIME, borderRadius: 8, transition: 'background 0.15s', whiteSpace: 'nowrap' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}
-          >Sign up</a>
-        </div>
-      </nav>
+      <PublicHeader isHomePage activePage="home" />
 
       {/* ── HERO SPLIT ────────────────────────────────────────────────────────── */}
       <div id="video" className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)', overflow: 'hidden', maxWidth: '100%' }}>

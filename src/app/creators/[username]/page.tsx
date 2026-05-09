@@ -2,13 +2,11 @@
 
 import React, { useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { use } from 'react';
-import { ArrowLeft, Globe } from 'lucide-react';
+import { ChevronRight, Globe } from 'lucide-react';
 import CreatorProjectCard from '@/components/creator/CreatorProjectCard';
+import PublicHeader from '@/components/public/PublicHeader';
 import { DEMO_CREATORS, DEMO_PROJECTS, SPECIALTY_COLORS, SPECIALTY_TEXT } from '@/lib/creatorNetwork';
-
-const LOGO_URL = 'https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/UGCfirelog.png';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
@@ -35,18 +33,17 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
     <div style={{ minHeight: '100vh', background: BG, color: '#f2f0eb', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
       {/* Nav */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: '#0d0d0ddd', backdropFilter: 'blur(16px)', borderBottom: `1px solid ${BORDER}`, height: 56, display: 'flex', alignItems: 'center', padding: '0 20px', gap: 12 }}>
-        <Link href="/discover" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13 }}>
-          <ArrowLeft size={15} />
-          Discover
-        </Link>
-        <div style={{ width: 1, height: 18, background: BORDER }} />
-        <Image src={LOGO_URL} alt="UGCFire.ai" width={100} height={26} style={{ objectFit: 'contain', height: 22, width: 'auto' }} unoptimized />
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-          <Link href="/login" style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', padding: '6px 14px', border: `1px solid ${BORDER}`, borderRadius: 8 }}>Login</Link>
-          <Link href="/signup" style={{ fontSize: 13, fontWeight: 700, color: '#0d0d0d', textDecoration: 'none', padding: '6px 14px', background: LIME, borderRadius: 8 }}>Sign up</Link>
-        </div>
-      </nav>
+      <PublicHeader activePage="creators" />
+
+      {/* Breadcrumb */}
+      <div style={{ marginTop: 60, padding: '10px 24px', display: 'flex', alignItems: 'center', gap: 6, background: '#0d0d0d', borderBottom: `1px solid ${BORDER}` }}>
+        <Link href="/discover" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
+          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.4)'; }}
+        >Discover</Link>
+        <ChevronRight size={12} color="rgba(255,255,255,0.25)" />
+        <span style={{ fontSize: 13, color: '#fff', fontWeight: 600, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>{creator.display_name}</span>
+      </div>
 
       {/* Cover banner */}
       <div style={{ height: 180, background: 'linear-gradient(135deg, rgba(163,230,53,0.08) 0%, rgba(255,92,0,0.06) 50%, rgba(163,230,53,0.04) 100%)', borderBottom: `1px solid ${BORDER}`, position: 'relative', overflow: 'hidden' }}>
