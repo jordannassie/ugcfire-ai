@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { enterDemoMode } from '@/lib/demoData';
 import {
   ChevronDown, Lock, Search, Shield, X,
-  Clock, Cpu, Maximize2, Monitor, Gift, Zap, Rocket,
+  Clock, Cpu, Maximize2, Monitor,
 } from 'lucide-react';
 
 // ─── Media assets ─────────────────────────────────────────────────────────────
@@ -60,12 +60,6 @@ const SETTING_ROWS = [
   { icon: Monitor,   label: 'Resolution',   key: 'resolution'  as const, options: ['720p', '1080p'] },
 ];
 
-const BENEFIT_CARDS = [
-  { Icon: Gift,   title: 'Start Free',             desc: 'Explore the studio and create previews before signing up.',                         link: 'No credit card required' },
-  { Icon: Zap,    title: 'Use Seedance 2.0',        desc: 'Powered by the latest Seedance model for ultra-realistic motion.',                   link: 'Pro quality by default'  },
-  { Icon: Rocket, title: 'Built for UGC Creators', desc: 'Made for TikTok, Reels, Shorts and performance-driven content.',                    link: 'Creators love it'        },
-];
-
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 
 const LIME   = '#a3e635';
@@ -79,7 +73,6 @@ const BORDER = 'rgba(255,255,255,0.07)';
 export default function Home() {
   const router = useRouter();
 
-  const [activeTab,   setActiveTab]   = useState<'create' | 'edit' | 'motion'>('create');
   const [prompt,      setPrompt]      = useState('A young woman in a city at night holding a LED skincare device. Neon lights, cinematic bokeh, UGC style, natural look.');
   const [settings,    setSettings]    = useState({ model: 'Seedance 2.0', duration: '6s', aspectRatio: '9:16', resolution: '1080p' });
   const [openSetting, setOpenSetting] = useState<string | null>(null);
@@ -103,8 +96,8 @@ export default function Home() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { background: ${BG}; color: #f2f0eb; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; overflow-x: hidden; }
+        html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
+        body { background: ${BG}; color: #f2f0eb; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; overflow-x: hidden; max-width: 100%; }
         ::selection { background: rgba(163,230,53,0.2); }
 
         .nav-link { color: rgba(255,255,255,0.5); font-size: 13.5px; text-decoration: none; padding: 5px 9px; border-radius: 6px; transition: color 0.15s; font-weight: 500; white-space: nowrap; }
@@ -133,25 +126,27 @@ export default function Home() {
         .ghost-scroll::-webkit-scrollbar { display: none; }
         .ghost-scroll { scrollbar-width: none; }
 
+        @media (max-width: 1100px) {
+          .nav-search { display: none !important; }
+        }
         @media (max-width: 900px) {
           .home-split { flex-direction: column !important; }
-          .home-panel { width: 100% !important; position: relative !important; top: auto !important; height: auto !important; padding: 16px !important; }
+          .home-panel { width: 100% !important; min-width: 0 !important; position: relative !important; top: auto !important; height: auto !important; padding: 16px !important; }
           .home-content { padding: 24px 16px !important; }
           .nav-links-desk { display: none !important; }
-          .nav-search { display: none !important; }
-          .benefit-grid { grid-template-columns: 1fr !important; }
           .model-banners { grid-template-columns: 1fr !important; }
-          .model-banner-card { min-height: auto !important; }
-          .model-banner-card .banner-inner { padding: 24px 20px 20px !important; }
-          .model-banner-card h3 { font-size: 26px !important; }
+          .model-banner-left-img { width: 140px !important; }
           .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .steps-strip { flex-direction: column !important; gap: 16px !important; }
           .step-arrow { display: none !important; }
         }
+        @media (max-width: 600px) {
+          .model-banner-left-img { width: 110px !important; }
+        }
       `}</style>
 
       {/* ── NAV ───────────────────────────────────────────────────────────────── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 60, zIndex: 100, background: '#0d0d0d', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: 4, padding: '0 16px' }}>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 60, zIndex: 100, background: '#0d0d0d', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: 4, padding: '0 16px', overflow: 'hidden', maxWidth: '100vw' }}>
 
         <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginRight: 10, flexShrink: 0 }}>
           <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 28, width: 'auto' }} unoptimized />
@@ -167,7 +162,7 @@ export default function Home() {
           <Search size={13} color="rgba(255,255,255,0.3)" strokeWidth={2} />
           <input
             placeholder="Search templates, styles, assets..."
-            style={{ background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.45)', fontSize: 13, width: 200, fontFamily: 'inherit' }}
+            style={{ background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.45)', fontSize: 13, width: 160, minWidth: 0, fontFamily: 'inherit' }}
           />
           <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.06)', padding: '2px 6px', borderRadius: 4, fontWeight: 500, flexShrink: 0 }}>⌘K</span>
         </div>
@@ -187,26 +182,18 @@ export default function Home() {
       </nav>
 
       {/* ── HERO SPLIT ────────────────────────────────────────────────────────── */}
-      <div className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)' }}>
+      <div className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)', overflow: 'hidden', maxWidth: '100%' }}>
 
         {/* ── LEFT CREATION PANEL ──────────────────────────────────────────── */}
-        <div className="home-panel" style={{ width: 296, padding: '18px 0 24px 16px', position: 'sticky', top: 60, alignSelf: 'flex-start', height: 'calc(100vh - 60px)', overflowY: 'auto', flexShrink: 0 }} onClick={() => setOpenSetting(null)}>
+        <div className="home-panel" style={{ width: 360, padding: '18px 0 24px 16px', position: 'sticky', top: 60, alignSelf: 'flex-start', height: 'calc(100vh - 60px)', overflowY: 'auto', flexShrink: 0 }} onClick={() => setOpenSetting(null)}>
           <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'visible' }}>
 
-            {/* Tabs */}
-            <div style={{ display: 'flex', borderBottom: `1px solid ${BORDER}` }}>
-              {(['Create Video', 'Edit Video', 'Motion Control'] as const).map((tab, i) => {
-                const key = (['create', 'edit', 'motion'] as const)[i];
-                return (
-                  <button key={tab} onClick={e => { e.stopPropagation(); setActiveTab(key); }}
-                    style={{ flex: 1, padding: '11px 4px', fontSize: 11, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', color: activeTab === key ? '#fff' : 'rgba(255,255,255,0.3)', borderBottom: activeTab === key ? `2px solid ${ORANGE}` : '2px solid transparent', transition: 'color 0.15s, border-color 0.15s', fontFamily: 'inherit', letterSpacing: '-0.01em' }}>
-                    {tab}
-                  </button>
-                );
-              })}
+            {/* Section label */}
+            <div style={{ padding: '11px 16px 10px', borderBottom: `1px solid ${BORDER}` }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Video</span>
             </div>
 
-            <div style={{ padding: 14 }}>
+            <div style={{ padding: 16 }}>
 
               {/* Reference Image */}
               <div style={{ marginBottom: 14 }}>
@@ -413,7 +400,7 @@ export default function Home() {
               onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 0 40px rgba(56,139,253,0.08)'; }}>
 
               {/* Left image panel */}
-              <div style={{ width: 200, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(34,211,238,0.06)', borderRight: '1px solid rgba(34,211,238,0.12)', position: 'relative', overflow: 'hidden' }}>
+              <div className="model-banner-left-img" style={{ width: 200, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(34,211,238,0.06)', borderRight: '1px solid rgba(34,211,238,0.12)', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(34,211,238,0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/seedance_2_logo_transparent_original_edges.png"
@@ -443,7 +430,7 @@ export default function Home() {
               onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 0 40px rgba(255,255,255,0.03)'; }}>
 
               {/* Left image panel */}
-              <div style={{ width: 200, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(163,230,53,0.04)', borderRight: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
+              <div className="model-banner-left-img" style={{ width: 200, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(163,230,53,0.04)', borderRight: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(163,230,53,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/GPT%202.0.png"
