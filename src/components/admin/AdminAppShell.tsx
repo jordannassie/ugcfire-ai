@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Users, Film, FolderOpen, CreditCard, LifeBuoy,
-  Search, Bell, Shield, LogOut,
+  Search, Bell, Shield, LogOut, Sparkles,
 } from 'lucide-react';
 import { LOGO_URL } from '@/lib/demoAssets';
 import { exitDemoMode } from '@/lib/demoData';
@@ -14,6 +14,7 @@ import { exitDemoMode } from '@/lib/demoData';
 const NAV = [
   { label: 'Overview',    href: '/admin',              icon: LayoutDashboard },
   { label: 'Users',       href: '/admin/users',         icon: Users           },
+  { label: 'Creators',    href: '/admin/creators',      icon: Sparkles        },
   { label: 'Generations', href: '/admin/generations',   icon: Film            },
   { label: 'Assets',      href: '/admin/assets',        icon: FolderOpen      },
   { label: 'Billing',     href: '/admin/billing',       icon: CreditCard      },

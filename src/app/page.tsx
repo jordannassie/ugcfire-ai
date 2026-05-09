@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { enterDemoMode } from '@/lib/demoData';
+import { DEMO_CREATORS } from '@/lib/creatorNetwork';
 import {
   ChevronDown, Lock, Search, Shield, X,
   Clock, Cpu, Maximize2, Monitor,
@@ -35,6 +37,8 @@ const NAV_LINKS = [
   { label: 'Image',    href: '#image',    active: false },
   { label: 'Examples', href: '#examples', active: false },
   { label: 'Pricing',  href: '#pricing',  active: false },
+  { label: 'Discover', href: '/discover', active: false },
+  { label: 'Community',href: '/community',active: false },
 ];
 
 const STEPS = [
@@ -576,6 +580,81 @@ export default function Home() {
             </div>
           )}
 
+        </div>
+      </section>
+
+      {/* ── CREATOR NETWORK ───────────────────────────────────────────────────── */}
+      <section style={{ background: 'linear-gradient(180deg, rgba(163,230,53,0.04) 0%, transparent 100%)', borderTop: `1px solid ${BORDER}`, padding: '72px 20px 80px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+
+          {/* Heading */}
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>
+              ✦ Creator Network
+            </div>
+            <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
+              Create AI ads. Build your portfolio.<br />
+              <span style={{ color: LIME }}>Get discovered.</span>
+            </h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', maxWidth: 560, margin: '0 auto 28px', lineHeight: 1.75 }}>
+              UGCFire.ai is the AI Creator Network for UGC ads, product videos, and image-to-video creators. Publish your best work, grow your portfolio, and become visible for agency opportunities.
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/signup"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
+                ✦ Join Creator Network
+              </Link>
+              <Link href="/discover"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: 600, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'background 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.1)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; }}>
+                Explore Creators →
+              </Link>
+            </div>
+          </div>
+
+          {/* Creator cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+            {DEMO_CREATORS.slice(0, 4).map(creator => (
+              <div key={creator.id} style={{ background: PANEL, border: `1px solid ${creator.featured ? 'rgba(163,230,53,0.2)' : BORDER}`, borderRadius: 18, padding: '22px 18px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', boxShadow: creator.featured ? '0 0 24px rgba(163,230,53,0.05)' : 'none' }}>
+                {/* Avatar */}
+                <div style={{ position: 'relative', marginBottom: 12 }}>
+                  {creator.available_for_work && (
+                    <div style={{ position: 'absolute', inset: -4, borderRadius: '50%', border: `2px solid ${LIME}`, boxShadow: `0 0 10px rgba(163,230,53,0.45)` }} />
+                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={creator.avatar_url || ''} alt={creator.display_name}
+                    style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', display: 'block' }} />
+                </div>
+                <div style={{ fontWeight: 800, fontSize: 14, color: '#fff', marginBottom: 2 }}>{creator.display_name}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 8 }}>@{creator.username}</div>
+                {creator.available_for_work && (
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.25)', borderRadius: 20, padding: '2px 8px', fontSize: 9.5, fontWeight: 700, color: LIME, letterSpacing: '0.04em', marginBottom: 8 }}>
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: LIME, boxShadow: `0 0 4px ${LIME}` }} />
+                    Available
+                  </div>
+                )}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center', marginBottom: 14 }}>
+                  {creator.specialties.slice(0, 2).map(s => (
+                    <span key={s} style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.5)', padding: '2px 7px', borderRadius: 20 }}>{s}</span>
+                  ))}
+                </div>
+                <Link href={`/creators/${creator.username}`}
+                  style={{ display: 'block', width: '100%', textAlign: 'center', background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 12, padding: '8px', borderRadius: 9, textDecoration: 'none' }}>
+                  View Portfolio
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 28 }}>
+            <Link href="/discover"
+              style={{ fontSize: 13, color: LIME, textDecoration: 'none', fontWeight: 600 }}>
+              See all creators →
+            </Link>
+          </div>
         </div>
       </section>
 

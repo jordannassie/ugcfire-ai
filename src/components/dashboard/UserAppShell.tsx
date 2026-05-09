@@ -15,19 +15,20 @@ import AssetPickerModal from './AssetPickerModal';
 
 // ─── Nav config ───────────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { label: 'Explore',      href: '/dashboard/video',        icon: LayoutDashboard },
   { label: 'Image',        href: '/dashboard/image',         icon: ImageIcon       },
   { label: 'Video',        href: '/dashboard/video',         icon: Video           },
   { label: 'Brand Assets', href: '/dashboard/brand-assets',  icon: Package         },
   { label: 'Studio',       href: '/dashboard/studio',        icon: Layers          },
+  { label: 'Discover',     href: '/discover',                icon: LayoutDashboard },
 ];
 
 // Bottom mobile nav — deduplicated (Explore & Video share the same href, show Video only)
 const MOBILE_NAV = [
-  { label: 'Image',        href: '/dashboard/image',         icon: ImageIcon  },
-  { label: 'Video',        href: '/dashboard/video',         icon: Video      },
-  { label: 'Brand Assets', href: '/dashboard/brand-assets',  icon: Package    },
-  { label: 'Studio',       href: '/dashboard/studio',        icon: Layers     },
+  { label: 'Image',   href: '/dashboard/image',        icon: ImageIcon       },
+  { label: 'Video',   href: '/dashboard/video',         icon: Video           },
+  { label: 'Assets',  href: '/dashboard/brand-assets',  icon: Package         },
+  { label: 'Studio',  href: '/dashboard/studio',        icon: Layers          },
+  { label: 'Discover',href: '/discover',                icon: LayoutDashboard },
 ];
 
 const ORANGE = '#FF5C00';

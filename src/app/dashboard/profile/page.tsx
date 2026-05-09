@@ -1,9 +1,20 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { isDemoMode, DEMO_COMPANY } from '@/lib/demoData'
-import { User, Building2, Mail, Globe, Camera, Check } from 'lucide-react'
+import { User, Building2, Mail, Globe, Camera, Check, Zap, ExternalLink } from 'lucide-react'
+import type { CreatorSpecialty } from '@/lib/creatorNetwork'
+
+const LIME   = '#a3e635'
+const ORANGE = '#FF5C00'
+const BG     = '#0d0d0d'
+const BORDER = 'rgba(255,255,255,0.08)'
+
+const ALL_SPECIALTIES: CreatorSpecialty[] = [
+  'Beauty', 'Fitness', 'Ecommerce', 'Food & Beverage', 'Tech', 'Fashion', 'Lifestyle', 'Gaming', 'Pets', 'Local Business',
+]
 
 const inputCls = 'w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF3B1A] text-sm'
 
@@ -12,6 +23,12 @@ export default function ProfilePage() {
   const [email, setEmail]               = useState('')
   const [companyName, setCompanyName]   = useState('')
   const [website, setWebsite]           = useState('')
+  // Creator Network fields
+  const [creatorUsername, setCreatorUsername] = useState('demo_creator')
+  const [creatorBio,      setCreatorBio]      = useState('')
+  const [specialties,     setSpecialties]     = useState<CreatorSpecialty[]>([])
+  const [availableForWork, setAvailableForWork] = useState(false)
+  const [creatorSaved,    setCreatorSaved]    = useState(false)
   const [avatarUrl, setAvatarUrl]       = useState<string | null>(null)
   const [avatarUploading, setAvatarUploading] = useState(false)
   const [saving, setSaving]             = useState(false)
@@ -262,6 +279,106 @@ export default function ProfilePage() {
           {saved ? <><Check size={15} /> Saved</> : saving ? 'Saving...' : 'Save Changes'}
         </button>
       </form>
+
+      {/* ── Creator Network Section ─────────────────────────────────────── */}
+      <div style={{ marginTop: 24, background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 18, overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${BORDER}`, background: 'linear-gradient(135deg, rgba(163,230,53,0.05) 0%, transparent 100%)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(163,230,53,0.12)', border: '1px solid rgba(163,230,53,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Zap size={15} color={LIME} />
+            </div>
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Creator Network</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>Build your public portfolio and get discovered by brands.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+          {/* Available for Work toggle — prominent */}
+          <div style={{ background: availableForWork ? 'rgba(163,230,53,0.07)' : '#1a1a1a', border: `1px solid ${availableForWork ? 'rgba(163,230,53,0.3)' : BORDER}`, borderRadius: 14, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'all 0.15s' }}
+            onClick={() => setAvailableForWork(a => !a)}>
+            {/* Toggle pill */}
+            <div style={{ width: 44, height: 24, borderRadius: 12, background: availableForWork ? LIME : 'rgba(255,255,255,0.1)', position: 'relative', flexShrink: 0, transition: 'background 0.15s' }}>
+              <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: availableForWork ? 23 : 3, transition: 'left 0.15s', boxShadow: '0 1px 4px rgba(0,0,0,0.3)' }} />
+            </div>
+            <div>
+              <p style={{ fontSize: 14, fontWeight: 700, color: availableForWork ? LIME : '#fff', marginBottom: 2 }}>
+                {availableForWork ? '✦ Available for Work' : 'Available for Work'}
+              </p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
+                Let UGCFire contact me for paid agency opportunities.
+              </p>
+            </div>
+          </div>
+
+          {/* Username */}
+          <div>
+            <label style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 6, fontWeight: 600 }}>Creator Username</label>
+            <div style={{ display: 'flex', alignItems: 'center', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, overflow: 'hidden' }}>
+              <span style={{ padding: '10px 12px', fontSize: 13, color: 'rgba(255,255,255,0.3)', borderRight: `1px solid ${BORDER}`, flexShrink: 0 }}>ugcfire.ai/creators/</span>
+              <input
+                value={creatorUsername}
+                onChange={e => setCreatorUsername(e.target.value.replace(/[^a-z0-9_]/g, ''))}
+                placeholder="your_username"
+                style={{ flex: 1, background: 'none', border: 'none', outline: 'none', padding: '10px 12px', color: '#fff', fontSize: 13, fontFamily: 'inherit' }}
+              />
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div>
+            <label style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 6, fontWeight: 600 }}>Creator Bio</label>
+            <textarea
+              value={creatorBio}
+              onChange={e => setCreatorBio(e.target.value)}
+              placeholder="I create UGC-style ads for DTC brands using AI. Specialising in beauty, skincare, and lifestyle content."
+              rows={3}
+              style={{ width: '100%', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+
+          {/* Specialties */}
+          <div>
+            <label style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 10, fontWeight: 600 }}>Specialties <span style={{ color: 'rgba(255,255,255,0.25)' }}>(pick up to 4)</span></label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {ALL_SPECIALTIES.map(s => {
+                const active = specialties.includes(s)
+                return (
+                  <button key={s} type="button"
+                    onClick={() => setSpecialties(prev => active ? prev.filter(x => x !== s) : prev.length < 4 ? [...prev, s] : prev)}
+                    style={{ padding: '5px 13px', borderRadius: 20, border: `1px solid ${active ? LIME : BORDER}`, background: active ? 'rgba(163,230,53,0.12)' : 'transparent', color: active ? LIME : 'rgba(255,255,255,0.45)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.12s' }}>
+                    {s}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Portfolio preview link */}
+          <div style={{ background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 2 }}>Public portfolio URL</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: LIME }}>ugcfire.ai/creators/{creatorUsername || 'your_username'}</p>
+            </div>
+            <Link href={`/creators/${creatorUsername || 'sophiaai'}`} target="_blank"
+              style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', padding: '6px 12px', border: `1px solid ${BORDER}`, borderRadius: 8 }}>
+              <ExternalLink size={12} />
+              Preview
+            </Link>
+          </div>
+
+          {/* Save creator profile */}
+          <button
+            type="button"
+            onClick={() => { setCreatorSaved(true); setTimeout(() => setCreatorSaved(false), 2500); }}
+            style={{ width: '100%', background: creatorSaved ? 'rgba(163,230,53,0.15)' : LIME, color: creatorSaved ? LIME : '#0d0d0d', border: creatorSaved ? `1px solid rgba(163,230,53,0.3)` : 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.15s' }}>
+            {creatorSaved ? <><Check size={15} /> Creator Profile Saved</> : 'Save Creator Profile'}
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
