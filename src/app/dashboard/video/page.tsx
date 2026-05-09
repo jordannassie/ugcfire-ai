@@ -26,7 +26,7 @@ const SETTINGS_CFG = [
 ];
 
 export default function VideoPage() {
-  const [activeTab,   setActiveTab]   = useState<'create' | 'edit' | 'motion'>('create');
+  // Tab state removed — only "Create Video" workflow shown
   const [mobileView,  setMobileView]  = useState<'history' | 'create'>('history');
   const [mobile,      setMobile]      = useState(false);
   const [prompt,      setPrompt]      = useState('');
@@ -109,18 +109,10 @@ export default function VideoPage() {
   const CreationPanel = (
     <div style={{ flex: 1, overflowY: 'auto', padding: '16px 16px' }} onClick={() => setOpenSetting(null)}>
 
-      {/* Tabs */}
+      {/* Section label */}
       {!mobile && (
-        <div style={{ display: 'flex', borderBottom: `1px solid ${BORDER}`, marginBottom: 20, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
-          {(['Create Video', 'Edit Video', 'Motion Control'] as const).map((tab, i) => {
-            const key = (['create', 'edit', 'motion'] as const)[i];
-            return (
-              <button key={tab} onClick={e => { e.stopPropagation(); setActiveTab(key); }}
-                style={{ padding: '10px 14px', fontSize: 11, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', color: activeTab === key ? '#fff' : 'rgba(255,255,255,0.3)', borderBottom: activeTab === key ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-                {tab}
-              </button>
-            );
-          })}
+        <div style={{ paddingBottom: 14, marginBottom: 4, borderBottom: `1px solid ${BORDER}`, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Video</span>
         </div>
       )}
 

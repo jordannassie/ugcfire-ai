@@ -20,8 +20,6 @@ const RATIO_OPTIONS = ['3:4', '1:1', '16:9', '9:16'];
 const COUNT_OPTIONS = [1, 2, 4, 8];
 
 export default function ImagePage() {
-  const [activeTab,      setActiveTab]      = useState<'create' | 'edit'>('create');
-  const [historyTab,     setHistoryTab]     = useState<'history' | 'inspiration'>('history');
   const [mobileView,     setMobileView]     = useState<'gallery' | 'create'>('gallery');
   const [mobile,         setMobile]         = useState(false);
   const [prompt,         setPrompt]         = useState('Hyperrealistic UGC style image of a woman wearing the product outdoors in a sunny city. Casual lifestyle shot, natural lighting, authentic look.');
@@ -110,18 +108,10 @@ export default function ImagePage() {
   // ── Creation panel ────────────────────────────────────────────────────────
   const CreationPanel = (
     <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }} onClick={() => setOpenSetting(null)}>
-      {/* Desktop tabs */}
+      {/* Section label */}
       {!mobile && (
-        <div style={{ display: 'flex', borderBottom: `1px solid ${BORDER}`, marginBottom: 14, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
-          {(['Create Image', 'Edit Image'] as const).map((tab, i) => {
-            const key = (['create', 'edit'] as const)[i];
-            return (
-              <button key={tab} onClick={e => { e.stopPropagation(); setActiveTab(key); }}
-                style={{ padding: '10px 14px', fontSize: 11, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', color: activeTab === key ? '#fff' : 'rgba(255,255,255,0.3)', borderBottom: activeTab === key ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-                {tab}
-              </button>
-            );
-          })}
+        <div style={{ paddingBottom: 14, marginBottom: 4, borderBottom: `1px solid ${BORDER}`, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Image</span>
         </div>
       )}
 
@@ -181,18 +171,8 @@ export default function ImagePage() {
   const GalleryPanel = (
     <div style={{ flex: 1, overflowY: 'auto', padding: mobile ? '12px' : '20px' }}>
       {!mobile && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <div style={{ display: 'flex' }}>
-            {(['History', 'Inspiration'] as const).map(t => {
-              const key = t.toLowerCase() as 'history' | 'inspiration';
-              return (
-                <button key={t} onClick={() => setHistoryTab(key)}
-                  style={{ padding: '8px 14px', fontSize: 13, fontWeight: historyTab === key ? 700 : 500, background: 'none', border: 'none', cursor: 'pointer', color: historyTab === key ? '#fff' : 'rgba(255,255,255,0.38)', borderBottom: historyTab === key ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-                  {t}
-                </button>
-              );
-            })}
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, padding: '0 4px' }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>History</span>
           <div style={{ display: 'flex', gap: 4 }}>
             <button onClick={() => setGridView(true)} style={{ width: 28, height: 28, borderRadius: 6, background: gridView ? '#222' : 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Grid size={13} color={gridView ? '#fff' : 'rgba(255,255,255,0.35)'} />
@@ -260,18 +240,8 @@ export default function ImagePage() {
         {CreationPanel}
       </aside>
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
-          <div style={{ display: 'flex' }}>
-            {(['History', 'Inspiration'] as const).map(t => {
-              const key = t.toLowerCase() as 'history' | 'inspiration';
-              return (
-                <button key={t} onClick={() => setHistoryTab(key)}
-                  style={{ padding: '12px 14px', fontSize: 13, fontWeight: historyTab === key ? 700 : 500, background: 'none', border: 'none', cursor: 'pointer', color: historyTab === key ? '#fff' : 'rgba(255,255,255,0.38)', borderBottom: historyTab === key ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-                  {t}
-                </button>
-              );
-            })}
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>History</span>
           <div style={{ display: 'flex', gap: 4 }}>
             <button onClick={() => setGridView(true)} style={{ width: 28, height: 28, borderRadius: 6, background: gridView ? '#222' : 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Grid size={13} color={gridView ? '#fff' : 'rgba(255,255,255,0.35)'} />

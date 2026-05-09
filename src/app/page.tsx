@@ -408,108 +408,66 @@ export default function Home() {
           <div className="model-banners" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
 
             {/* ── SEEDANCE 2.0 BANNER ── */}
-            <a href="/dashboard/video" style={{ textDecoration: 'none', display: 'block', borderRadius: 22, overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #080e1a 0%, #0c1829 45%, #060f1e 100%)', border: '1px solid rgba(56,139,253,0.22)', boxShadow: '0 0 40px rgba(56,139,253,0.08)', cursor: 'pointer', transition: 'transform 0.18s, box-shadow 0.18s' }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = '0 8px 48px rgba(56,139,253,0.2)'; }}
+            <a href="/dashboard/video" style={{ textDecoration: 'none', display: 'flex', borderRadius: 22, overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #080e1a 0%, #0c1829 45%, #060f1e 100%)', border: '1px solid rgba(56,139,253,0.22)', boxShadow: '0 0 40px rgba(56,139,253,0.08)', cursor: 'pointer', transition: 'transform 0.18s, box-shadow 0.18s', minHeight: 220 }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = '0 8px 48px rgba(56,139,253,0.22)'; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 0 40px rgba(56,139,253,0.08)'; }}>
 
-              {/* Cyan glow orb */}
-              <div style={{ position: 'absolute', top: -60, right: -40, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(34,211,238,0.14) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <div style={{ position: 'absolute', bottom: -40, left: -20, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(56,139,253,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              {/* Left image panel */}
+              <div style={{ width: 200, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(34,211,238,0.06)', borderRight: '1px solid rgba(34,211,238,0.12)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(34,211,238,0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/seedance_2_logo_transparent_original_edges.png"
+                  alt="Seedance 2.0" style={{ width: 130, height: 130, objectFit: 'contain', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 0 18px rgba(34,211,238,0.35))' }} />
+              </div>
 
-              <div style={{ padding: '36px 36px 32px', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', minHeight: 260 }}>
-                {/* Top label */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: '#22d3ee', background: 'rgba(34,211,238,0.12)', border: '1px solid rgba(34,211,238,0.25)', padding: '4px 10px', borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                    Available for everyone
-                  </span>
-                </div>
-
-                {/* Logo + headline */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/seedance_2_logo_transparent_original_edges.png"
-                    alt="Seedance 2.0"
-                    style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0 }}
-                  />
-                  <h3 style={{ fontSize: 36, fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1 }}>Seedance 2.0</h3>
-                </div>
-
-                {/* Subtext */}
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, marginBottom: 28, maxWidth: 380 }}>
+              {/* Right text */}
+              <div style={{ flex: 1, padding: '28px 28px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+                <div style={{ position: 'absolute', top: -50, right: -30, width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(56,139,253,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                <span style={{ fontSize: 10, fontWeight: 800, color: '#22d3ee', background: 'rgba(34,211,238,0.12)', border: '1px solid rgba(34,211,238,0.25)', padding: '4px 10px', borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase', alignSelf: 'flex-start', marginBottom: 14 }}>
+                  Available for everyone
+                </span>
+                <h3 style={{ fontSize: 32, fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: 10 }}>Seedance 2.0</h3>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, marginBottom: 20 }}>
                   Realistic AI video generation for UGC ads, product demos, and creator-style content.
                 </p>
-
-                {/* CTA */}
-                <div style={{ marginTop: 'auto' }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,211,238,0.12)', border: '1px solid rgba(34,211,238,0.3)', color: '#22d3ee', padding: '10px 22px', borderRadius: 10, fontSize: 14, fontWeight: 700 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Create Video
-                  </div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(34,211,238,0.12)', border: '1px solid rgba(34,211,238,0.3)', color: '#22d3ee', padding: '9px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700, alignSelf: 'flex-start' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  Create Video
                 </div>
               </div>
             </a>
 
             {/* ── GPT IMAGE 2.0 BANNER ── */}
-            <a href="/dashboard/image" style={{ textDecoration: 'none', display: 'block', borderRadius: 22, overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #0d0d0d 0%, #141414 50%, #0a0a0a 100%)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 0 40px rgba(255,255,255,0.03)', cursor: 'pointer', transition: 'transform 0.18s, box-shadow 0.18s' }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = '0 8px 48px rgba(255,255,255,0.07)'; }}
+            <a href="/dashboard/image" style={{ textDecoration: 'none', display: 'flex', borderRadius: 22, overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #0d0d0d 0%, #141414 50%, #0a0a0a 100%)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 0 40px rgba(255,255,255,0.03)', cursor: 'pointer', transition: 'transform 0.18s, box-shadow 0.18s', minHeight: 220 }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(-3px)'; el.style.boxShadow = '0 8px 48px rgba(255,255,255,0.09)'; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 0 40px rgba(255,255,255,0.03)'; }}>
 
-              {/* Metallic glow orbs */}
-              <div style={{ position: 'absolute', top: -40, right: 20, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <div style={{ position: 'absolute', bottom: -60, left: -30, width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(163,230,53,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              {/* Left image panel */}
+              <div style={{ width: 200, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(163,230,53,0.04)', borderRight: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(163,230,53,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/GPT%202.0.png"
+                  alt="GPT Image 2.0" style={{ width: 130, height: 130, objectFit: 'contain', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 0 18px rgba(163,230,53,0.3))' }} />
+              </div>
 
-              <div style={{ padding: '36px 36px 32px', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', minHeight: 260 }}>
-                {/* Top label */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: LIME, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.25)', padding: '4px 10px', borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                    New image model
-                  </span>
-                </div>
-
-                {/* Logo + headline */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/GPT%202.0.png"
-                    alt="GPT Image 2.0"
-                    style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0 }}
-                  />
-                  <h3 style={{ fontSize: 36, fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1 }}>GPT Image 2.0</h3>
-                </div>
-
-                {/* Subtext */}
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, marginBottom: 28, maxWidth: 380 }}>
+              {/* Right text */}
+              <div style={{ flex: 1, padding: '28px 28px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+                <div style={{ position: 'absolute', top: -40, right: -20, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                <span style={{ fontSize: 10, fontWeight: 800, color: LIME, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.25)', padding: '4px 10px', borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase', alignSelf: 'flex-start', marginBottom: 14 }}>
+                  New image model
+                </span>
+                <h3 style={{ fontSize: 32, fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: 10 }}>GPT Image 2.0</h3>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, marginBottom: 20 }}>
                   Generate clean product visuals, lifestyle images, apparel mockups, and UGC-style photos.
                 </p>
-
-                {/* CTA */}
-                <div style={{ marginTop: 'auto' }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.28)', color: '#a3e635', padding: '10px 22px', borderRadius: 10, fontSize: 14, fontWeight: 700 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    Create Image
-                  </div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.28)', color: '#a3e635', padding: '9px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700, alignSelf: 'flex-start' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  Create Image
                 </div>
               </div>
             </a>
 
           </div>
-        </div>
-      </section>
-
-      {/* ── BENEFIT CARDS ─────────────────────────────────────────────────────── */}
-      <section style={{ background: BG, borderTop: `1px solid ${BORDER}`, padding: '40px 20px' }}>
-        <div className="benefit-grid" style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
-          {BENEFIT_CARDS.map(({ Icon, title, desc, link }) => (
-            <div key={title} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '22px 22px 20px' }}>
-              <div style={{ width: 44, height: 44, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.18)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <Icon size={20} color={ORANGE} strokeWidth={1.75} />
-              </div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>{title}</div>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', lineHeight: 1.75, marginBottom: 10 }}>{desc}</p>
-              <span style={{ fontSize: 13, color: ORANGE, fontWeight: 600 }}>{link}</span>
-            </div>
-          ))}
         </div>
       </section>
 
