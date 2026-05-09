@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { enterDemoMode } from '@/lib/demoData';
 import { DEMO_CREATORS } from '@/lib/creatorNetwork';
 import {
   ChevronDown, Lock, Shield, X,
@@ -71,19 +70,11 @@ export default function Home() {
   const [settings,    setSettings]    = useState({ model: 'Seedance 2.0', duration: '6s', aspectRatio: '9:16', resolution: '1080p' });
   const [openSetting, setOpenSetting] = useState<string | null>(null);
   const [selectedImg, setSelectedImg] = useState(0);
-  const [showModal,   setShowModal]   = useState(false);
-  const [entering,    setEntering]    = useState<'user' | 'admin' | null>(null);
   const [pricingTab,  setPricingTab]  = useState<'plans' | 'credits'>('plans');
 
   function setSetting(key: keyof typeof settings, value: string) {
     setSettings(s => ({ ...s, [key]: value }));
     setOpenSetting(null);
-  }
-
-  function handleDemo(role: 'client' | 'admin') {
-    setEntering(role === 'admin' ? 'admin' : 'user');
-    enterDemoMode(role);
-    setTimeout(() => router.push(role === 'admin' ? '/admin' : '/dashboard/video'), 120);
   }
 
   return (
@@ -109,10 +100,6 @@ export default function Home() {
 
         .video-card { flex-shrink: 0; position: relative; border-radius: 14px; overflow: hidden; background: #111; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
         .video-card:hover { border-color: rgba(255,255,255,0.2); transform: scale(1.02); }
-
-        .modal-btn { width: 100%; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 12px 16px; cursor: pointer; transition: all 0.15s; text-align: left; color: #fff; font-size: 14px; font-weight: 600; font-family: inherit; }
-        .modal-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
-        .modal-btn:disabled { opacity: 0.5; cursor: default; pointer-events: none; }
 
         .ghost-scroll::-webkit-scrollbar { display: none; }
         .ghost-scroll { scrollbar-width: none; }
@@ -234,7 +221,7 @@ export default function Home() {
               </div>
 
               {/* Generate */}
-              <button className="gen-btn" onClick={e => { e.stopPropagation(); setShowModal(true); }} style={{ marginBottom: 10 }}>
+              <button className="gen-btn" onClick={e => { e.stopPropagation(); router.push('/signup'); }} style={{ marginBottom: 10 }}>
                 ✦ Generate
               </button>
 
@@ -476,7 +463,7 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
-                  <button onClick={() => setShowModal(true)}
+                  <button onClick={() => router.push("/signup")}
                     style={{ width: '100%', background: plan.btnColor, color: plan.btnText, border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '-0.01em', transition: 'opacity 0.15s' }}
                     onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.85'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}>
@@ -517,7 +504,7 @@ export default function Home() {
                     <div style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>${pack.price}</div>
                     <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 2 }}>one-time</div>
                   </div>
-                  <button onClick={() => setShowModal(true)}
+                  <button onClick={() => router.push("/signup")}
                     style={{ background: LIME, color: '#0d0d0d', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0, transition: 'background 0.15s' }}
                     onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#b6f23f'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = LIME; }}>
@@ -643,75 +630,6 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* ── GENERATE MODAL ────────────────────────────────────────────────────── */}
-      {showModal && (
-        <div
-          style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'rgba(0,0,0,0.78)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
-          onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
-        >
-          <div style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 22, padding: '36px 32px', width: '100%', maxWidth: 400, position: 'relative' }}>
-
-            {/* Close */}
-            <button onClick={() => setShowModal(false)}
-              style={{ position: 'absolute', top: 14, right: 14, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <X size={14} color="rgba(255,255,255,0.6)" />
-            </button>
-
-            {/* Header */}
-            <div style={{ textAlign: 'center', marginBottom: 24 }}>
-              <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 26, width: 'auto', margin: '0 auto 16px' }} unoptimized />
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 6, letterSpacing: '-0.02em' }}>
-                Create an account to generate
-              </h2>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>Start free. No credit card required.</p>
-            </div>
-
-            {/* Demo buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 18 }}>
-              <button className="modal-btn" onClick={() => handleDemo('client')} disabled={entering !== null}>
-                <span style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,92,0,0.12)', border: '1px solid rgba(255,92,0,0.25)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>👤</span>
-                <div style={{ flex: 1 }}>
-                  <div>{entering === 'user' ? 'Entering…' : 'Demo User'}</div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.32)', fontWeight: 400, marginTop: 1 }}>Explore the client dashboard</div>
-                </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-
-              <button className="modal-btn" onClick={() => handleDemo('admin')} disabled={entering !== null}
-                style={{ borderColor: 'rgba(255,92,0,0.2)' }}>
-                <span style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.2)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>⚡</span>
-                <div style={{ flex: 1 }}>
-                  <div>{entering === 'admin' ? 'Entering…' : 'Demo Admin'}</div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.32)', fontWeight: 400, marginTop: 1 }}>Explore the admin command center</div>
-                </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-            </div>
-
-            {/* Divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>or continue with</span>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.07)' }} />
-            </div>
-
-            {/* Auth buttons */}
-            <div style={{ display: 'flex', gap: 10 }}>
-              <a href="/signup"
-                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, borderRadius: 10, padding: '11px 0', textDecoration: 'none', transition: 'background 0.15s' }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#b6f23f')}
-                onMouseLeave={e => (e.currentTarget.style.background = LIME)}
-              >Sign up</a>
-              <a href="/login"
-                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: 600, fontSize: 14, borderRadius: 10, padding: '11px 0', textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'background 0.15s' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
-              >Login</a>
-            </div>
-
-          </div>
-        </div>
-      )}
     </>
   );
 }
