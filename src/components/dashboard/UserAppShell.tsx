@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Search, FolderOpen, Rocket } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Search, FolderOpen, Rocket, LogOut, User } from 'lucide-react';
 import { LOGO_URL } from '@/lib/demoAssets';
+import { exitDemoMode } from '@/lib/demoData';
 import AssetPickerModal from './AssetPickerModal';
 
 const NAV_LINKS = [
@@ -22,9 +23,28 @@ const BG     = '#0d0d0d';
 const BORDER = 'rgba(255,255,255,0.07)';
 
 export default function UserAppShell({ children }: { children: React.ReactNode }) {
-  const pathname  = usePathname();
-  const [assetsOpen, setAssetsOpen] = useState(false);
+  const pathname   = usePathname();
+  const router     = useRouter();
+  const avatarRef  = useRef<HTMLDivElement>(null);
+  const [assetsOpen,  setAssetsOpen]  = useState(false);
+  const [avatarOpen,  setAvatarOpen]  = useState(false);
   const [search, setSearch] = useState('');
+
+  // Close avatar dropdown on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (avatarRef.current && !avatarRef.current.contains(e.target as Node)) {
+        setAvatarOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  function handleLogout() {
+    exitDemoMode();
+    router.push('/');
+  }
 
   function isActive(href: string) {
     if (href === '/dashboard/video' && (pathname === '/dashboard' || pathname === '/dashboard/video')) return true;
@@ -95,9 +115,55 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
             Assets
           </button>
 
-          {/* Avatar */}
-          <div style={{ width: 30, height: 30, borderRadius: '50%', background: LIME, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-            <span style={{ fontSize: 12, fontWeight: 800, color: '#0d0d0d', lineHeight: 1 }}>D</span>
+          {/* Avatar + dropdown */}
+          <div ref={avatarRef} style={{ position: 'relative', flexShrink: 0 }}>
+            <div
+              onClick={() => setAvatarOpen(o => !o)}
+              style={{ width: 30, height: 30, borderRadius: '50%', background: LIME, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', border: avatarOpen ? '2px solid rgba(163,230,53,0.5)' : '2px solid transparent', transition: 'border-color 0.12s' }}>
+              <span style={{ fontSize: 12, fontWeight: 800, color: '#0d0d0d', lineHeight: 1 }}>D</span>
+            </div>
+
+            {avatarOpen && (
+              <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, overflow: 'hidden', minWidth: 180, boxShadow: '0 8px 32px rgba(0,0,0,0.6)', zIndex: 200 }}>
+                {/* User info */}
+                <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: LIME, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 11, fontWeight: 800, color: '#0d0d0d' }}>D</span>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>Demo User</p>
+                      <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.2 }}>demo@ugcfire.ai</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Menu items */}
+                <div style={{ padding: '6px' }}>
+                  <button
+                    onClick={() => { setAvatarOpen(false); }}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'inherit', textAlign: 'left' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}
+                  >
+                    <User size={14} strokeWidth={1.75} />
+                    Profile
+                  </button>
+
+                  <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '4px 0' }} />
+
+                  <button
+                    onClick={handleLogout}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontSize: 13, fontFamily: 'inherit', textAlign: 'left' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(239,68,68,0.08)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}
+                  >
+                    <LogOut size={14} strokeWidth={1.75} />
+                    Log out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </nav>
