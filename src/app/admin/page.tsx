@@ -1,243 +1,195 @@
-'use client'
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
-import { statusColor } from '@/lib/data'
-import { Upload, GitPullRequestArrow, MessageSquare, Film } from 'lucide-react'
-import type { ActivityLog } from '@/lib/types'
-import { isDemoMode, DEMO_ADMIN_STATS, DEMO_ACTIVITY_LOGS } from '@/lib/demoData'
+'use client';
 
-interface StatCard {
-  label: string
-  value: string | number
-  sub?: string
-  accent?: boolean
-  highlight?: boolean
-}
+import React from 'react';
+import { Users, Video, ImageIcon, DollarSign, TrendingUp, Activity, Zap, CheckCircle2, UserPlus } from 'lucide-react';
 
-function StatCardUI({ label, value, sub, accent, highlight }: StatCard) {
+const ORANGE = '#FF5C00';
+const LIME   = '#a3e635';
+const BORDER = 'rgba(255,255,255,0.08)';
+const CARD   = '#141414';
+
+// ─── Mock data ────────────────────────────────────────────────────────────────
+
+const STATS = [
+  { label: 'Total Users',             value: '24,583',  trend: '12.5% vs last 30 days',  icon: Users,       color: 'rgba(99,102,241,0.15)',  iconColor: '#818cf8' },
+  { label: 'Videos Generated Today',  value: '1,248',   trend: '18.7% vs yesterday',     icon: Video,       color: 'rgba(255,92,0,0.15)',   iconColor: ORANGE    },
+  { label: 'Images Generated Today',  value: '3,682',   trend: '15.3% vs yesterday',     icon: ImageIcon,   color: 'rgba(163,230,53,0.12)', iconColor: LIME      },
+  { label: 'Monthly Revenue',         value: '$48,290', trend: '22.1% vs last month',    icon: DollarSign,  color: 'rgba(234,179,8,0.12)',  iconColor: '#eab308' },
+];
+
+const ACTIVITY = [
+  { icon: UserPlus,   label: 'Sarah Johnson',      detail: 'New user signed up',            time: '2m ago',  amount: null    },
+  { icon: Video,      label: 'Video generated',    detail: 'by @mike_creates',              time: '4m ago',  amount: null    },
+  { icon: ImageIcon,  label: 'Image generated',    detail: 'by @outdoor_life',              time: '7m ago',  amount: null    },
+  { icon: DollarSign, label: 'Payment received',   detail: 'from Pro Plan — Monthly',       time: '11m ago', amount: '$29.00'},
+  { icon: Activity,   label: 'Support ticket',     detail: 'created by @james_wilson',      time: '18m ago', amount: null    },
+];
+
+const SYSTEM = [
+  { label: 'API',     status: 'Operational' },
+  { label: 'Queue',   status: 'Operational' },
+  { label: 'Storage', status: 'Operational' },
+  { label: 'Billing', status: 'Operational' },
+];
+
+const PLANS = [
+  { label: 'Pro Plan',      count: 12540, pct: 51, color: LIME    },
+  { label: 'Creator Plan',  count: 7862,  pct: 32, color: ORANGE  },
+  { label: 'Starter Plan',  count: 3421,  pct: 14, color: '#eab308'},
+  { label: 'Enterprise',    count: 760,   pct: 3,  color: '#8b5cf6'},
+];
+
+const NEW_USERS = [
+  { name: 'Sarah Johnson', email: 'sarah.j@example.com',    time: '2m ago',  color: '#8b5cf6' },
+  { name: 'Mike Chen',     email: 'mike.chen@example.com',  time: '6m ago',  color: '#06b6d4' },
+  { name: 'Alex Rivera',   email: 'alex.rivera@example.com',time: '14m ago', color: '#22c55e' },
+  { name: 'Jessica Lee',   email: 'jessica.lee@example.com',time: '22m ago', color: ORANGE    },
+];
+
+// ─── Components ───────────────────────────────────────────────────────────────
+
+function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div className={`bg-[#111] border border-white/10 rounded-xl p-6 ${highlight ? 'border-l-4 border-l-[#FF3B1A]' : ''}`}>
-      <p className="text-white/40 text-xs uppercase font-semibold tracking-wider mb-2">{label}</p>
-      <p className={`text-3xl font-bold ${accent ? 'text-[#FF3B1A]' : 'text-white'}`}>{value}</p>
-      {sub && <p className="text-white/30 text-xs mt-1">{sub}</p>}
+    <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, ...style }}>
+      {children}
     </div>
-  )
+  );
 }
 
-interface ProductionItem {
-  id: string
-  title: string
-  company_name: string
-  media_type: string
-  uploaded_at: string
+function SectionHeader({ title, action }: { title: string; action?: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px 12px', borderBottom: `1px solid ${BORDER}` }}>
+      <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{title}</span>
+      {action && <button style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>{action}</button>}
+    </div>
+  );
 }
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AdminOverviewPage() {
-  const [stats, setStats] = useState({
-    totalClients: 0,
-    activeSubscriptions: 0,
-    readyForReview: 0,
-    openRevisions: 0,
-    deliveredThisMonth: 0,
-    mockMrr: 0,
-    unreadMessages: 0,
-    clientUploadsWaiting: 0,
-  })
-  const [recentActivity, setRecentActivity] = useState<(ActivityLog & { company_name?: string })[]>([])
-  const [productionQueue, setProductionQueue] = useState<ProductionItem[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function load() {
-      if (isDemoMode()) {
-        setStats(DEMO_ADMIN_STATS)
-        setRecentActivity(DEMO_ACTIVITY_LOGS.map(l => ({ ...l })) as (ActivityLog & { company_name?: string })[])
-        setProductionQueue([])
-        setLoading(false)
-        return
-      }
-      const supabase = createClient()
-      const monthStart = new Date()
-      monthStart.setDate(1)
-      monthStart.setHours(0, 0, 0, 0)
-
-      const [
-        { count: totalClients },
-        { count: activeSubscriptions },
-        { count: readyForReview },
-        { count: openRevisions },
-        { count: deliveredThisMonth },
-        { count: unreadMessages },
-        { count: clientUploadsWaiting },
-        { data: billingData },
-        { data: activityData },
-        { data: productionData },
-      ] = await Promise.all([
-        supabase.from('companies').select('*', { count: 'exact', head: true }),
-        supabase.from('billing_records').select('*', { count: 'exact', head: true }).eq('billing_status', 'active_mock'),
-        supabase.from('content_items').select('*', { count: 'exact', head: true }).eq('status', 'ready_for_review').is('deleted_at', null),
-        supabase.from('content_revisions').select('*', { count: 'exact', head: true }).eq('status', 'open'),
-        supabase.from('content_items').select('*', { count: 'exact', head: true }).eq('status', 'delivered').gte('delivered_at', monthStart.toISOString()),
-        supabase.from('messages').select('*', { count: 'exact', head: true }).is('read_at', null).eq('sender_role', 'client'),
-        supabase.from('client_uploads').select('*', { count: 'exact', head: true }).eq('status', 'submitted'),
-        supabase.from('billing_records').select('plan_id, plans(price_monthly)').eq('billing_status', 'active_mock'),
-        supabase.from('activity_logs').select('*, companies(name)').order('created_at', { ascending: false }).limit(10),
-        supabase.from('content_items')
-          .select('id, title, media_type, uploaded_at, company_id, companies(name)')
-          .eq('status', 'in_production')
-          .is('deleted_at', null)
-          .order('uploaded_at', { ascending: false })
-          .limit(8),
-      ])
-
-      let mockMrr = 0
-      if (billingData) {
-        for (const rec of billingData as { plan_id: string | null; plans: { price_monthly: number } | null }[]) {
-          if (rec.plans?.price_monthly) mockMrr += rec.plans.price_monthly
-        }
-      }
-
-      const activity = (activityData ?? []).map((a: { companies?: { name?: string } | null } & ActivityLog) => ({
-        ...a,
-        company_name: (a.companies as { name?: string } | null)?.name ?? '—',
-      }))
-
-      const queue = (productionData ?? []).map((p: { companies?: { name?: string } | null } & ProductionItem) => ({
-        ...p,
-        company_name: (p.companies as { name?: string } | null)?.name ?? '—',
-      }))
-
-      setStats({
-        totalClients: totalClients ?? 0,
-        activeSubscriptions: activeSubscriptions ?? 0,
-        readyForReview: readyForReview ?? 0,
-        openRevisions: openRevisions ?? 0,
-        deliveredThisMonth: deliveredThisMonth ?? 0,
-        mockMrr,
-        unreadMessages: unreadMessages ?? 0,
-        clientUploadsWaiting: clientUploadsWaiting ?? 0,
-      })
-      setRecentActivity(activity as (ActivityLog & { company_name?: string })[])
-      setProductionQueue(queue as ProductionItem[])
-      setLoading(false)
-    }
-    load()
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-white/40 text-sm">Loading overview...</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="space-y-8">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Admin Overview</h1>
-          <p className="text-white/40 text-sm mt-1">UGCFire command center — real-time platform snapshot</p>
-        </div>
-        <div className="flex gap-2 flex-wrap">
-          <Link href="/admin/uploads"
-            className="flex items-center gap-2 bg-[#FF3B1A] text-white font-bold px-4 py-2 rounded-lg hover:bg-[#e02e10] transition text-sm">
-            <Upload size={14} />
-            Upload Content
-          </Link>
-          <Link href="/admin/revisions"
-            className="flex items-center gap-2 border border-white/10 text-white/70 px-4 py-2 rounded-lg hover:border-[#FF3B1A] hover:text-white transition text-sm">
-            <GitPullRequestArrow size={14} />
-            View Revisions
-            {stats.openRevisions > 0 && (
-              <span className="bg-[#FF3B1A] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{stats.openRevisions}</span>
-            )}
-          </Link>
-          <Link href="/admin/support"
-            className="flex items-center gap-2 border border-white/10 text-white/70 px-4 py-2 rounded-lg hover:border-[#FF3B1A] hover:text-white transition text-sm">
-            <MessageSquare size={14} />
-            View Messages
-            {stats.unreadMessages > 0 && (
-              <span className="bg-[#FF3B1A] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{stats.unreadMessages}</span>
-            )}
-          </Link>
-        </div>
+    <div style={{ padding: '28px 24px', maxWidth: 1400 }}>
+
+      {/* Heading */}
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Admin Dashboard</h1>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>Monitor your platform at a glance.</p>
       </div>
 
-      {/* Stat grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCardUI label="Total Clients" value={stats.totalClients} />
-        <StatCardUI label="Active Subscriptions" value={stats.activeSubscriptions} accent highlight />
-        <StatCardUI label="Ready for Review" value={stats.readyForReview} sub="content items" highlight />
-        <StatCardUI label="Open Revisions" value={stats.openRevisions} />
-        <StatCardUI label="Delivered This Month" value={stats.deliveredThisMonth} sub="content items" />
-        <StatCardUI label="Mock MRR" value={`$${stats.mockMrr.toLocaleString()}`} accent sub="active plans" highlight />
-        <StatCardUI label="Unread Messages" value={stats.unreadMessages} sub="from clients" />
-        <StatCardUI label="Uploads Waiting" value={stats.clientUploadsWaiting} sub="client submissions" />
+      {/* ── ROW 1: STAT CARDS ─────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
+        {STATS.map(s => (
+          <Card key={s.label} style={{ padding: '18px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{s.label}</p>
+              <div style={{ width: 34, height: 34, borderRadius: 9, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <s.icon size={16} color={s.iconColor} strokeWidth={1.75} />
+              </div>
+            </div>
+            <p style={{ fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>{s.value}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <TrendingUp size={12} color='#22c55e' strokeWidth={2.5} />
+              <span style={{ fontSize: 12, color: '#22c55e', fontWeight: 600 }}>{s.trend}</span>
+            </div>
+          </Card>
+        ))}
       </div>
 
-      {/* Production Queue */}
-      <div className="bg-[#111] border border-white/10 rounded-xl p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Film size={16} className="text-[#FF3B1A]" />
-          <h2 className="text-white font-semibold">In Production</h2>
-          <span className="text-white/30 text-xs">{productionQueue.length} items across all clients</span>
-        </div>
-        {productionQueue.length === 0 ? (
-          <p className="text-white/30 text-sm py-4 text-center">No content currently in production</p>
-        ) : (
-          <div className="space-y-2">
-            {productionQueue.map(item => (
-              <div key={item.id} className="flex items-center justify-between gap-4 py-2.5 border-b border-white/5 last:border-0">
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full shrink-0">in_production</span>
-                  <span className="text-white text-sm font-medium truncate">{item.title}</span>
+      {/* ── ROW 2: ACTIVITY + SYSTEM ──────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 14, marginBottom: 20 }}>
+
+        {/* Recent Activity */}
+        <Card>
+          <SectionHeader title="Recent Activity" action="View all" />
+          <div>
+            {ACTIVITY.map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < ACTIVITY.length - 1 ? `1px solid rgba(255,255,255,0.05)` : 'none' }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: '#1e1e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <item.icon size={14} color="rgba(255,255,255,0.5)" strokeWidth={1.75} />
                 </div>
-                <div className="flex items-center gap-4 shrink-0">
-                  <span className="text-white/40 text-xs">{item.company_name}</span>
-                  <span className="text-xs bg-white/10 text-white/50 px-2 py-0.5 rounded-full">{item.media_type}</span>
-                  <span className="text-white/30 text-xs whitespace-nowrap">{new Date(item.uploaded_at).toLocaleDateString()}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{item.label}</span>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginLeft: 6 }}>{item.detail}</span>
+                </div>
+                {item.amount && (
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#22c55e', flexShrink: 0 }}>{item.amount}</span>
+                )}
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', flexShrink: 0 }}>{item.time}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* System Status */}
+        <Card>
+          <SectionHeader title="System Status" />
+          <div style={{ padding: '8px 18px 16px' }}>
+            {SYSTEM.map((s, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < SYSTEM.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 5px rgba(34,197,94,0.5)' }} />
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{s.label}</span>
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: LIME }}>{s.status}</span>
+              </div>
+            ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 14, padding: '10px 12px', background: 'rgba(34,197,94,0.06)', borderRadius: 9, border: '1px solid rgba(34,197,94,0.15)' }}>
+              <CheckCircle2 size={14} color='#22c55e' strokeWidth={2} />
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#22c55e' }}>All systems operational</span>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* ── ROW 3: SUBSCRIPTION + NEWEST USERS ──────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 14 }}>
+
+        {/* Subscription Breakdown */}
+        <Card>
+          <SectionHeader title="Subscription Breakdown" action="View all" />
+          <div style={{ padding: '14px 18px 18px' }}>
+            {PLANS.map((p, i) => (
+              <div key={i} style={{ marginBottom: i < PLANS.length - 1 ? 18 : 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 7 }}>
+                  <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.75)' }}>{p.label}</span>
+                  <div style={{ display: 'flex', gap: 12 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{p.count.toLocaleString()}</span>
+                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', minWidth: 32, textAlign: 'right' }}>({p.pct}%)</span>
+                  </div>
+                </div>
+                <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 6, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${p.pct}%`, background: p.color, borderRadius: 6, transition: 'width 0.4s ease' }} />
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </Card>
+
+        {/* Newest Users */}
+        <Card>
+          <SectionHeader title="Newest Users" action="View all" />
+          <div>
+            {NEW_USERS.map((u, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 18px', borderBottom: i < NEW_USERS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: u.color + '33', border: `1px solid ${u.color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: u.color }}>{u.name[0]}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>{u.name}</p>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.33)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</p>
+                </div>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', flexShrink: 0 }}>{u.time}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
 
-      {/* Recent Activity */}
-      <div className="bg-[#111] border border-white/10 rounded-xl p-6">
-        <h2 className="text-white font-semibold mb-4">Recent Activity</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr>
-                <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left pr-4">Event</th>
-                <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left pr-4">Message</th>
-                <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left pr-4">Company</th>
-                <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left pr-4">Actor</th>
-                <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentActivity.length === 0 && (
-                <tr><td colSpan={5} className="py-6 text-center text-white/30 text-sm">No activity yet</td></tr>
-              )}
-              {recentActivity.map(log => (
-                <tr key={log.id}>
-                  <td className="py-3 border-b border-white/5 pr-4">
-                    <span className={`text-xs px-2 py-1 rounded-full ${statusColor(log.event_type)}`}>{log.event_type}</span>
-                  </td>
-                  <td className="py-3 border-b border-white/5 text-white/70 pr-4 max-w-xs truncate">{log.event_message}</td>
-                  <td className="py-3 border-b border-white/5 text-white/70 pr-4">{log.company_name}</td>
-                  <td className="py-3 border-b border-white/5 text-white/40 pr-4 text-xs">{log.actor_role ?? '—'}</td>
-                  <td className="py-3 border-b border-white/5 text-white/40 text-xs whitespace-nowrap">{new Date(log.created_at).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Footer */}
+      <p style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.18)', marginTop: 32, paddingBottom: 8 }}>
+        © 2026 UGCFire.ai · All rights reserved.
+      </p>
     </div>
-  )
+  );
 }
