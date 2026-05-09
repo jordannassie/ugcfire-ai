@@ -99,7 +99,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', background: BG, overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: BG, overflow: 'hidden' }}>
 
       {/* ── TOP NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{ height: mobile ? 52 : 52, background: BG, borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', padding: '0 14px', gap: mobile ? 0 : 2, flexShrink: 0, zIndex: 100 }}>
@@ -231,7 +231,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
       </nav>
 
       {/* ── CONTENT ─────────────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflow: 'hidden', paddingBottom: mobile ? 56 : 0 }}>
+      <div style={{ flex: 1, overflow: 'visible', paddingBottom: mobile ? 56 : 0 }}>
         {children}
       </div>
 
