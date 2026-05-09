@@ -22,12 +22,23 @@ function MediaCard({ project, featured = false }: {
   const [muted,     setMuted]     = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  function onEnter() { if (project.media_type === 'video') videoRef.current?.play().catch(() => {}); }
+  function onEnter() {
+    if (project.media_type !== 'video' || !videoRef.current) return;
+    const vid = videoRef.current;
+    vid.muted = false;
+    setMuted(false);
+    vid.play().catch(() => {
+      vid.muted = true;
+      setMuted(true);
+      vid.play().catch(() => {});
+    });
+  }
   function onLeave() {
-    if (project.media_type === 'video' && videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
+    if (project.media_type !== 'video' || !videoRef.current) return;
+    videoRef.current.muted = true;
+    setMuted(true);
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
   }
   function toggleMute(e: React.MouseEvent) {
     e.stopPropagation();

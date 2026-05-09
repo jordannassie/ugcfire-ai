@@ -77,9 +77,23 @@ function PortCard({ item, published, featured, onTogglePublish, onSetFeatured }:
     e.stopPropagation();
     setMuted(m => { if (videoRef.current) videoRef.current.muted = !m; return !m; });
   }
-  function onEnter() { if (item.kind === 'video') videoRef.current?.play().catch(() => {}); }
+  function onEnter() {
+    if (item.kind !== 'video' || !videoRef.current) return;
+    const vid = videoRef.current;
+    vid.muted = false;
+    setMuted(false);
+    vid.play().catch(() => {
+      vid.muted = true;
+      setMuted(true);
+      vid.play().catch(() => {});
+    });
+  }
   function onLeave() {
-    if (item.kind === 'video' && videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
+    if (item.kind !== 'video' || !videoRef.current) return;
+    videoRef.current.muted = true;
+    setMuted(true);
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
   }
 
   return (
