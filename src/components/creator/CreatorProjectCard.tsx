@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import { Volume2, VolumeX } from 'lucide-react';
 import { CreatorProject } from '@/lib/creatorNetwork';
 
 const LIME   = '#a3e635';
@@ -14,20 +15,45 @@ interface Props {
 }
 
 export default function CreatorProjectCard({ project, showCreator = true }: Props) {
-  const [liked, setLiked] = useState(false);
+  const [liked,  setLiked]  = useState(false);
+  const [muted,  setMuted]  = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  function toggleMute(e: React.MouseEvent) {
+    e.stopPropagation();
+    setMuted(m => {
+      if (videoRef.current) videoRef.current.muted = !m;
+      return !m;
+    });
+  }
+
+  function onCardMouseEnter() {
+    if (project.media_type === 'video') videoRef.current?.play().catch(() => {});
+  }
+  function onCardMouseLeave() {
+    if (project.media_type === 'video' && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  }
 
   return (
-    <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.15s, border-color 0.15s' }}
-      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.16)'; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = BORDER; }}>
+    <div
+      style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'border-color 0.15s' }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.16)'; onCardMouseEnter(); }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = BORDER; onCardMouseLeave(); }}>
 
       {/* Thumbnail / video */}
       <div style={{ position: 'relative', aspectRatio: '9/14', overflow: 'hidden' }}>
         {project.media_type === 'video' ? (
           <video
+            ref={videoRef}
             src={project.media_url}
             poster={project.thumbnail_url}
-            muted autoPlay loop playsInline
+            muted={muted}
+            loop
+            playsInline
+            preload="metadata"
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         ) : (
@@ -35,27 +61,35 @@ export default function CreatorProjectCard({ project, showCreator = true }: Prop
           <img src={project.thumbnail_url} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         )}
 
-        {/* Overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%)', pointerEvents: 'none' }} />
+        {/* Gradient overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 55%)', pointerEvents: 'none' }} />
 
-        {/* Media type badge */}
-        <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', borderRadius: 8, padding: '3px 8px', fontSize: 10, fontWeight: 700, color: '#fff' }}>
-          {project.media_type === 'video' ? '▶ Video' : '🖼 Image'}
+        {/* Top-right: type pill + mute button */}
+        <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5 }}>
+          <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', borderRadius: 8, padding: '3px 8px', fontSize: 10, fontWeight: 700, color: '#fff' }}>
+            {project.media_type === 'video' ? '▶ Video' : '🖼 Image'}
+          </span>
+          {project.media_type === 'video' && (
+            <button onClick={toggleMute}
+              style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              {muted ? <VolumeX size={12} color="rgba(255,255,255,0.75)" /> : <Volume2 size={12} color="#fff" />}
+            </button>
+          )}
         </div>
 
-        {/* Stats */}
+        {/* Bottom stats + heart */}
         <div style={{ position: 'absolute', bottom: 8, left: 10, right: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: 10 }}>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 3 }}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               {project.views >= 1000 ? `${(project.views / 1000).toFixed(1)}k` : project.views}
             </span>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 3 }}>
+            <span style={{ fontSize: 11, color: liked ? '#f43f5e' : 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 3 }}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill={liked ? '#f43f5e' : 'none'} stroke={liked ? '#f43f5e' : 'currentColor'} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
               {project.likes + (liked ? 1 : 0)}
             </span>
           </div>
-          <button onClick={() => setLiked(l => !l)}
+          <button onClick={e => { e.stopPropagation(); setLiked(l => !l); }}
             style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill={liked ? '#f43f5e' : 'none'} stroke={liked ? '#f43f5e' : 'rgba(255,255,255,0.7)'} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           </button>

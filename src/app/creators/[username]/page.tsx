@@ -3,31 +3,35 @@
 import React, { useState, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { use } from 'react';
-import { ChevronRight, Heart, Eye, Play } from 'lucide-react';
+import { ChevronRight, Heart, Eye, Play, Volume2, VolumeX } from 'lucide-react';
 import PublicHeader from '@/components/public/PublicHeader';
 import { DEMO_CREATORS, DEMO_PROJECTS, SPECIALTY_COLORS, SPECIALTY_TEXT } from '@/lib/creatorNetwork';
 
-// ─── Design tokens ──────────────────────────────────────────────────────────
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
 const BG     = '#0d0d0d';
 const BORDER = 'rgba(255,255,255,0.07)';
 
-// ─── Portfolio media card ────────────────────────────────────────────────────
+// ─── MediaCard — used for both featured hero and portfolio grid ───────────────
 function MediaCard({ project, featured = false }: {
-  project: { id: string; title: string; thumbnail_url: string; media_url: string; media_type: 'video' | 'image'; views: number; likes: number; tags: string[] };
+  project: { id: string; title: string; thumbnail_url: string; media_url: string; media_type: 'video' | 'image'; views: number; likes: number };
   featured?: boolean;
 }) {
-  const [liked,    setLiked]    = useState(false);
-  const [likeCount,setLikeCount]= useState(project.likes);
-  const videoRef  = useRef<HTMLVideoElement>(null);
+  const [liked,     setLiked]     = useState(false);
+  const [likeCount, setLikeCount] = useState(project.likes);
+  const [muted,     setMuted]     = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  function onMouseEnter() { if (project.media_type === 'video') videoRef.current?.play().catch(() => {}); }
-  function onMouseLeave() {
+  function onEnter() { if (project.media_type === 'video') videoRef.current?.play().catch(() => {}); }
+  function onLeave() {
     if (project.media_type === 'video' && videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
+  }
+  function toggleMute(e: React.MouseEvent) {
+    e.stopPropagation();
+    setMuted(m => { if (videoRef.current) videoRef.current.muted = !m; return !m; });
   }
   function toggleLike(e: React.MouseEvent) {
     e.stopPropagation();
@@ -35,36 +39,50 @@ function MediaCard({ project, featured = false }: {
     setLikeCount(c => liked ? c - 1 : c + 1);
   }
 
+  const radius = featured ? 20 : 14;
+
   return (
     <div
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      style={{ position: 'relative', borderRadius: featured ? 20 : 14, overflow: 'hidden', background: '#111', cursor: 'pointer', aspectRatio: featured ? 'unset' : '3/4', height: featured ? '100%' : 'auto' }}>
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      style={{ position: 'relative', borderRadius: radius, overflow: 'hidden', background: '#111', cursor: 'pointer', width: '100%', height: '100%' }}>
 
-      {/* Media */}
       {project.media_type === 'video' ? (
-        <video ref={videoRef} src={project.media_url} muted loop playsInline preload="metadata"
+        <video
+          ref={videoRef}
+          src={project.media_url}
           poster={project.thumbnail_url}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          muted={muted}
+          loop
+          playsInline
+          preload="metadata"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
       ) : (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img src={project.thumbnail_url} alt={project.title}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       )}
 
-      {/* Top-right type pill */}
-      <div style={{ position: 'absolute', top: 10, right: 10 }}>
+      {/* Top-right controls */}
+      <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
         {project.media_type === 'video' && (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', borderRadius: 20, padding: '3px 9px', fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.04em' }}>
-            <Play size={8} fill="#fff" /> VIDEO
-          </span>
+          <>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', borderRadius: 20, padding: '3px 9px', fontSize: 10, fontWeight: 700, color: '#fff' }}>
+              <Play size={8} fill="#fff" /> VIDEO
+            </span>
+            <button onClick={toggleMute}
+              style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              {muted ? <VolumeX size={13} color="rgba(255,255,255,0.8)" /> : <Volume2 size={13} color="#fff" />}
+            </button>
+          </>
         )}
       </div>
 
       {/* Bottom overlay */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.75) 0%, transparent 100%)', padding: featured ? '40px 20px 20px' : '28px 12px 12px' }}>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.78) 0%, transparent 100%)', padding: featured ? '44px 16px 16px' : '28px 12px 10px' }}>
         {featured && (
-          <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8, letterSpacing: '-0.01em' }}>{project.title}</p>
+          <p style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8, letterSpacing: '-0.01em', lineHeight: 1.3 }}>{project.title}</p>
         )}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -76,7 +94,7 @@ function MediaCard({ project, featured = false }: {
             </span>
           </div>
           <button onClick={toggleLike}
-            style={{ width: 28, height: 28, borderRadius: '50%', background: liked ? 'rgba(248,113,113,0.2)' : 'rgba(255,255,255,0.1)', backdropFilter: 'blur(4px)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+            style={{ width: 28, height: 28, borderRadius: '50%', background: liked ? 'rgba(248,113,113,0.2)' : 'rgba(255,255,255,0.12)', backdropFilter: 'blur(4px)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <Heart size={13} fill={liked ? '#f87171' : 'none'} color={liked ? '#f87171' : '#fff'} />
           </button>
         </div>
@@ -92,7 +110,6 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
   const projects = useMemo(() => DEMO_PROJECTS.filter(p => p.creator_username === username), [username]);
 
   const featuredProject = projects[0] ?? null;
-  const portfolioProjects = projects.slice(1);   // rest shown in grid; first is hero
 
   if (!creator) {
     return (
@@ -109,28 +126,25 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; }
-        .follow-btn:hover { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
-        .invite-btn:hover { background: #b6f23f !important; }
-        .port-thumb { transition: transform 0.3s; }
-        .port-thumb:hover { transform: scale(1.03); }
-        @media (max-width: 900px) {
-          .creator-hero { flex-direction: column !important; }
-          .creator-left { max-width: 100% !important; }
-          .creator-right { height: 320px !important; min-height: 0 !important; }
-          .port-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        .follow-btn:hover  { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
+        .invite-btn:hover  { background: #b6f23f !important; }
+        @media (max-width: 860px) {
+          .creator-hero  { flex-direction: column !important; gap: 32px !important; }
+          .creator-left  { max-width: 100% !important; }
+          .featured-wrap { max-width: 100% !important; height: 340px !important; margin: 0 auto !important; }
+          .port-grid     { grid-template-columns: repeat(2, 1fr) !important; }
         }
-        @media (max-width: 540px) {
+        @media (max-width: 480px) {
           .port-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
 
-      {/* ── HEADER ────────────────────────────────────────────────────────── */}
       <PublicHeader activePage="creators" />
 
-      {/* ── BREADCRUMB ────────────────────────────────────────────────────── */}
+      {/* Breadcrumb */}
       <div style={{ marginTop: 60, padding: '10px 28px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: `1px solid ${BORDER}` }}>
         <Link href="/discover"
-          style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.12s' }}
+          style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}
           onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.4)'; }}>
           Discover
@@ -139,13 +153,13 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
         <span style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{creator.display_name}</span>
       </div>
 
-      {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '52px 28px 0' }}>
-        <div className="creator-hero" style={{ display: 'flex', gap: 48, alignItems: 'flex-start', marginBottom: 72 }}>
+      <div style={{ maxWidth: 1140, margin: '0 auto', padding: '52px 28px 80px' }}>
 
-          {/* ── LEFT: Identity ─────────────────────────────────────────── */}
-          <div className="creator-left" style={{ maxWidth: 320, flexShrink: 0 }}>
+        {/* ── HERO ─────────────────────────────────────────────────────── */}
+        <div className="creator-hero" style={{ display: 'flex', gap: 56, alignItems: 'flex-start', marginBottom: 72 }}>
 
+          {/* Left: Identity */}
+          <div className="creator-left" style={{ maxWidth: 300, flexShrink: 0 }}>
             {/* Avatar */}
             <div style={{ position: 'relative', width: 96, height: 96, marginBottom: 20 }}>
               {creator.available_for_work && (
@@ -162,8 +176,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
               )}
             </div>
 
-            {/* Name */}
-            <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4, lineHeight: 1.1 }}>{creator.display_name}</h1>
+            <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4, lineHeight: 1.1 }}>{creator.display_name}</h1>
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>@{creator.username}</p>
 
             {/* Pills */}
@@ -196,12 +209,12 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
             {/* Stats */}
             <div style={{ display: 'flex', gap: 24, marginBottom: 28, borderTop: `1px solid ${BORDER}`, paddingTop: 20 }}>
               {[
-                { label: 'Projects',     value: creator.projects_count },
-                { label: 'Followers',    value: creator.followers >= 1000 ? `${(creator.followers / 1000).toFixed(1)}k` : creator.followers },
-                { label: 'Since',        value: new Date(creator.joined_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) },
+                { label: 'Projects',  value: creator.projects_count },
+                { label: 'Followers', value: creator.followers >= 1000 ? `${(creator.followers / 1000).toFixed(1)}k` : creator.followers },
+                { label: 'Since',     value: new Date(creator.joined_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) },
               ].map(s => (
                 <div key={s.label}>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{s.value}</div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 3 }}>{s.label}</div>
                 </div>
               ))}
@@ -211,25 +224,26 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {creator.available_for_work && (
                 <Link href="/signup" className="invite-btn"
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', transition: 'background 0.15s', textAlign: 'center' }}>
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', transition: 'background 0.15s' }}>
                   ✦ Invite to Project
                 </Link>
               )}
               <Link href="/signup" className="follow-btn"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.65)', fontWeight: 600, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'all 0.15s', textAlign: 'center' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.65)', fontWeight: 600, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'all 0.15s' }}>
                 Follow
               </Link>
             </div>
           </div>
 
-          {/* ── RIGHT: Featured Project ──────────────────────────────────── */}
-          <div className="creator-right" style={{ flex: 1, minWidth: 0, minHeight: 480 }}>
+          {/* Right: Featured project — constrained to portrait frame */}
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
             {featuredProject ? (
-              <div style={{ height: '100%', minHeight: 420 }}>
+              /* Constrained portrait frame: max 420px wide, 520px tall for vertical 9:16 */
+              <div className="featured-wrap" style={{ width: '100%', maxWidth: 420, height: 520, position: 'relative' }}>
                 <MediaCard project={featuredProject} featured />
               </div>
             ) : (
-              <div style={{ height: '100%', minHeight: 420, border: `1px dashed rgba(255,255,255,0.12)`, borderRadius: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'rgba(255,255,255,0.02)' }}>
+              <div className="featured-wrap" style={{ width: '100%', maxWidth: 420, height: 520, border: `1px dashed rgba(255,255,255,0.12)`, borderRadius: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'rgba(255,255,255,0.02)' }}>
                 <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>＋</div>
                 <p style={{ fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.35)' }}>Add Featured Project</p>
                 <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>Choose one of your projects to highlight it</p>
@@ -238,22 +252,22 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
           </div>
         </div>
 
-        {/* ── PORTFOLIO ──────────────────────────────────────────────────── */}
+        {/* ── PORTFOLIO GRID ─────────────────────────────────────────────── */}
         {projects.length > 0 && (
           <div style={{ marginBottom: 80 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', margin: 0 }}>
-                Portfolio
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.25)', marginLeft: 8 }}>{projects.length}</span>
-              </h2>
-            </div>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 24, margin: '0 0 24px' }}>
+              Portfolio
+              <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.25)', marginLeft: 8 }}>{projects.length}</span>
+            </h2>
 
-            {/* Show featured as first item too + rest */}
             <div className="port-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
               {projects.map(p => (
-                <div key={p.id} className="port-thumb">
-                  <MediaCard project={p} />
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 8, fontWeight: 500, lineHeight: 1.4, paddingLeft: 2 }}>{p.title}</p>
+                <div key={p.id} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {/* Fixed card height for consistent grid */}
+                  <div style={{ height: 280, borderRadius: 14, overflow: 'hidden' }}>
+                    <MediaCard project={p} />
+                  </div>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 500, lineHeight: 1.4, paddingLeft: 2 }}>{p.title}</p>
                 </div>
               ))}
             </div>
