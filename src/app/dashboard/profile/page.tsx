@@ -287,6 +287,11 @@ export default function ProfilePage() {
                   Available for Work
                 </span>
               </div>
+              {availableForWork && (
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', lineHeight: 1.4 }}>
+                  Let UGCFire contact me for paid agency opportunities.
+                </span>
+              )}
 
               {/* Specialties */}
               {specialties.slice(0, 3).map(s => (

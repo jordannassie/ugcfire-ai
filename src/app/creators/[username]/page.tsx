@@ -182,7 +182,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
             {/* Pills */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
               {creator.available_for_work && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.3)', borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 700, color: LIME }}>
+                <span title="This creator is open to UGCFire agency opportunities." style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.3)', borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 700, color: LIME }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: LIME, boxShadow: `0 0 6px ${LIME}` }} />
                   Available for Work
                 </span>
@@ -222,16 +222,15 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
 
             {/* CTAs */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {creator.available_for_work && (
-                <Link href="/signup" className="invite-btn"
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', transition: 'background 0.15s' }}>
-                  ✦ Invite to Project
-                </Link>
-              )}
-              <Link href="/signup" className="follow-btn"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.65)', fontWeight: 600, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'all 0.15s' }}>
+              <Link href="/signup" className="invite-btn"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 20px', borderRadius: 12, textDecoration: 'none', transition: 'background 0.15s' }}>
                 Follow
               </Link>
+              {creator.available_for_work && (
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.5 }}>
+                  This creator is open to UGCFire agency opportunities.
+                </p>
+              )}
             </div>
           </div>
 
