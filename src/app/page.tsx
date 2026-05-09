@@ -141,6 +141,10 @@ export default function Home() {
           .nav-search { display: none !important; }
           .benefit-grid { grid-template-columns: 1fr !important; }
           .model-banners { grid-template-columns: 1fr !important; }
+          .model-banner-card { min-height: auto !important; }
+          .model-banner-card .banner-inner { padding: 24px 20px 20px !important; }
+          .model-banner-card h3 { font-size: 26px !important; }
+          .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .steps-strip { flex-direction: column !important; gap: 16px !important; }
           .step-arrow { display: none !important; }
         }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Folder, Image as ImageIcon, User, Star, Plus, X } from 'lucide-react';
 import { ALL_DEMO_ASSETS, PRODUCT_IMAGES, UGC_IMAGES, LS_BRAND_ASSETS, loadFromLS, saveToLS } from '@/lib/demoAssets';
 
@@ -20,7 +20,15 @@ const FOLDERS = [
 export default function BrandAssetsPage() {
   const [uploads,  setUploads]  = useState<string[]>(() => loadFromLS<string>(LS_BRAND_ASSETS, []));
   const [selected, setSelected] = useState<string | null>(null);
+  const [mobile,   setMobile]   = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth < 768);
+    fn();
+    window.addEventListener('resize', fn);
+    return () => window.removeEventListener('resize', fn);
+  }, []);
 
   function handleFiles(files: FileList | null) {
     if (!files) return;
@@ -35,7 +43,7 @@ export default function BrandAssetsPage() {
   const allAssets = [...uploads, ...ALL_DEMO_ASSETS];
 
   return (
-    <div style={{ height: '100%', overflowY: 'auto', padding: '28px 28px', background: BG }}>
+    <div style={{ height: '100%', overflowY: 'auto', padding: mobile ? '16px' : '28px', background: BG }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
@@ -54,7 +62,7 @@ export default function BrandAssetsPage() {
       </div>
 
       {/* Folder cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12, marginBottom: 28 }}>
         {FOLDERS.map(folder => (
           <div key={folder.label} style={{ background: folder.color, border: `1px solid ${folder.border}`, borderRadius: 14, padding: '16px 18px', cursor: 'pointer', transition: 'opacity 0.15s' }}
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.85'; }}
@@ -92,7 +100,7 @@ export default function BrandAssetsPage() {
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{allAssets.length} items</span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(3, 1fr)' : 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8 }}>
         {/* Upload card */}
         <div
           onClick={() => fileRef.current?.click()}

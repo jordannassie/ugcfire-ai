@@ -21,6 +21,14 @@ export default function StudioPage() {
   const [search,   setSearch]   = useState('');
   const [items,    setItems]    = useState<GenItem[]>([]);
   const [liked,    setLiked]    = useState<Set<string>>(new Set());
+  const [mobile,   setMobile]   = useState(false);
+
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth < 768);
+    fn();
+    window.addEventListener('resize', fn);
+    return () => window.removeEventListener('resize', fn);
+  }, []);
 
   useEffect(() => {
     const videos = loadFromLS<VideoGeneration>(LS_VIDEO_GENS, DEMO_VIDEO_GENS).map(g => ({ ...g, kind: 'video' as const }));
@@ -47,7 +55,7 @@ export default function StudioPage() {
   });
 
   return (
-    <div style={{ height: '100%', overflowY: 'auto', padding: '28px 28px', background: BG }}>
+    <div style={{ height: '100%', overflowY: 'auto', padding: mobile ? '16px' : '28px', background: BG }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
@@ -56,7 +64,7 @@ export default function StudioPage() {
       </div>
 
       {/* Controls */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, gap: 12, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: mobile ? 'flex-start' : 'center', flexDirection: mobile ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, gap: 12 }}>
 
         {/* Tabs */}
         <div style={{ display: 'flex', background: '#111', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 3, gap: 2 }}>
@@ -92,7 +100,7 @@ export default function StudioPage() {
 
       {/* Grid */}
       {filtered.length > 0 ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap: mobile ? 8 : 12 }}>
           {filtered.map(item => (
             <div key={item.id} style={{ borderRadius: 14, overflow: 'hidden', background: PANEL, border: `1px solid ${BORDER}`, cursor: 'pointer', transition: 'border-color 0.15s', position: 'relative' }}
               onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.2)'; }}
@@ -101,7 +109,7 @@ export default function StudioPage() {
               {/* Media */}
               {item.kind === 'video' ? (
                 <div style={{ position: 'relative' }}>
-                  <video src={(item as VideoGeneration).videoSrc} muted autoPlay loop playsInline style={{ width: '100%', height: 240, objectFit: 'cover', display: 'block' }} />
+                  <video src={(item as VideoGeneration).videoSrc} muted autoPlay loop playsInline style={{ width: '100%', height: mobile ? 160 : 240, objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.7 }}>
                       <Play size={12} color="#fff" fill="#fff" />
@@ -110,7 +118,7 @@ export default function StudioPage() {
                 </div>
               ) : (
                 /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={(item as ImageGeneration).imageSrc} alt="" style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }} />
+                <img src={(item as ImageGeneration).imageSrc} alt="" style={{ width: '100%', height: mobile ? 140 : 200, objectFit: 'cover', display: 'block' }} />
               )}
 
               {/* Card footer */}
