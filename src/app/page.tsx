@@ -33,12 +33,6 @@ const PRODUCT_IMAGES = [
 
 // ─── Static data ───────────────────────────────────────────────────────────────
 
-const STEPS = [
-  { num: 1, title: 'Upload Image',           desc: 'Add any photo or product shot.' },
-  { num: 2, title: 'Choose Motion / Style',  desc: 'Pick a preset or describe the vibe you want.' },
-  { num: 3, title: 'Generate Video',         desc: 'Preview, download, and publish to your creator portfolio.' },
-];
-
 const VIDEO_CARD_DATA = [
   { src: UGC_VIDEOS[0], badge: 'UGC Demo', quote: 'Realistic. Relatable.\nMade for conversion.' },
   { src: UGC_VIDEOS[1], badge: null,        quote: 'My go-to serum\nfor glass skin ✨' },
@@ -112,8 +106,6 @@ export default function Home() {
           .model-banners { grid-template-columns: 1fr !important; }
           .model-banner-left-img { width: 140px !important; }
           .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .steps-strip { flex-direction: column !important; gap: 16px !important; }
-          .step-arrow { display: none !important; }
         }
         @media (max-width: 600px) {
           .model-banner-left-img { width: 110px !important; }
@@ -245,7 +237,7 @@ export default function Home() {
           <div style={{ float: 'right', display: 'flex', alignItems: 'center', gap: 10, background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '10px 14px', marginBottom: 8, marginLeft: 16, flexShrink: 0 }}>
             <Shield size={18} color={ORANGE} strokeWidth={1.5} />
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>No credit card</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>Creator profiles are free</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginTop: 1 }}>Start building your AI creator portfolio.</div>
             </div>
           </div>
@@ -296,64 +288,63 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Steps strip */}
-          <div className="steps-strip" style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 14, padding: '18px 22px', marginBottom: 28, display: 'flex', alignItems: 'flex-start' }}>
-            {STEPS.map((step, i) => (
-              <React.Fragment key={step.num}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 11, flex: 1 }}>
-                  <div style={{ width: 27, height: 27, borderRadius: '50%', background: ORANGE, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{step.num}</span>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{step.title}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', lineHeight: 1.5, maxWidth: 160 }}>{step.desc}</div>
-                  </div>
-                </div>
-                {i < STEPS.length - 1 && (
-                  <div className="step-arrow" style={{ display: 'flex', alignItems: 'center', padding: '4px 14px', flexShrink: 0 }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
+        </div>
+      </div>
+
+      {/* ── FEATURED AI AD WORK ───────────────────────────────────────────────── */}
+      <section id="examples" style={{ background: '#060606', borderTop: `1px solid ${BORDER}`, padding: '56px 24px 64px' }}>
+        <div style={{ maxWidth: 1300, margin: '0 auto' }}>
+
+          {/* Heading */}
+          <div style={{ marginBottom: 32, textAlign: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,92,0,0.08)', border: '1px solid rgba(255,92,0,0.18)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
+              ✦ Portfolio Work
+            </div>
+            <h2 style={{ fontSize: 'clamp(24px,3vw,38px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 10 }}>
+              Featured AI Ad Work
+            </h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', maxWidth: 560, margin: '0 auto', lineHeight: 1.75 }}>
+              Publish UGC-style image and video ads like these to your AI creator portfolio and get considered for paid UGCFire brand projects.
+            </p>
           </div>
 
-          {/* Video gallery */}
-          <div id="examples" className="ghost-scroll" style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8, alignItems: 'flex-start' }}>
+          {/* Video cards — full-width horizontal scroll, wider cards */}
+          <div className="ghost-scroll" style={{ display: 'flex', gap: 14, overflowX: 'auto', paddingBottom: 10, alignItems: 'flex-start' }}>
             {VIDEO_CARD_DATA.map((card, i) => (
-              <div key={i} className="video-card" style={{ width: 155, flexShrink: 0 }}>
+              <div key={i} className="video-card" style={{ width: 200, flexShrink: 0 }}>
                 {card.badge && (
-                  <div style={{ position: 'absolute', top: 8, left: 8, zIndex: 3, background: ORANGE, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20, letterSpacing: '0.04em' }}>
+                  <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 3, background: ORANGE, color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.04em' }}>
                     {card.badge}
                   </div>
                 )}
-                <HoverVideoPreview src={card.src} autoPlay loop style={{ height: 264 }} />
+                <HoverVideoPreview src={card.src} autoPlay loop style={{ height: 340 }} />
                 {card.quote && (
-                  <div style={{ position: 'absolute', top: card.badge ? 38 : 10, left: 10, right: 10, fontSize: 11, fontWeight: 600, color: '#fff', lineHeight: 1.45, textShadow: '0 1px 6px rgba(0,0,0,0.7)', whiteSpace: 'pre-line', pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', top: card.badge ? 42 : 12, left: 12, right: 12, fontSize: 12, fontWeight: 600, color: '#fff', lineHeight: 1.45, textShadow: '0 1px 6px rgba(0,0,0,0.7)', whiteSpace: 'pre-line', pointerEvents: 'none' }}>
                     {card.quote}
                   </div>
                 )}
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)', padding: '24px 8px 8px', pointerEvents: 'none' }}>
-                  <div style={{ display: 'flex', gap: 5 }}>
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.75)', background: 'rgba(0,0,0,0.45)', padding: '2px 6px', borderRadius: 4, fontWeight: 500 }}>{settings.duration}</span>
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.75)', background: 'rgba(0,0,0,0.45)', padding: '2px 6px', borderRadius: 4, fontWeight: 500 }}>{settings.aspectRatio}</span>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)', padding: '28px 10px 10px', pointerEvents: 'none' }}>
+                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.8)', background: 'rgba(0,0,0,0.5)', padding: '2px 7px', borderRadius: 4, fontWeight: 600 }}>{settings.duration}</span>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.8)', background: 'rgba(0,0,0,0.5)', padding: '2px 7px', borderRadius: 4, fontWeight: 600 }}>{settings.aspectRatio}</span>
                   </div>
                 </div>
               </div>
             ))}
-            {/* Play all */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, paddingLeft: 8, gap: 8, cursor: 'pointer' }}>
-              <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#1a1a1a', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.65)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap', fontWeight: 500 }}>Play all</span>
-            </div>
+          </div>
+
+          {/* CTA below */}
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <Link href="/signup?intent=creator"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 26px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
+              ✦ Create Your Free Creator Profile
+            </Link>
           </div>
 
         </div>
-      </div>
+      </section>
 
       {/* ── MODEL BANNERS ─────────────────────────────────────────────────────── */}
       <section id="image" style={{ background: '#060606', borderTop: `1px solid ${BORDER}`, padding: '56px 20px' }}>
