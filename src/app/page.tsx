@@ -106,6 +106,7 @@ export default function Home() {
           .model-banners { grid-template-columns: 1fr !important; }
           .model-banner-left-img { width: 140px !important; }
           .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .agency-cards { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 600px) {
           .model-banner-left-img { width: 110px !important; }
@@ -340,6 +341,95 @@ export default function Home() {
               onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
               ✦ Create Your Free Creator Profile
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── AGENCY NETWORK ────────────────────────────────────────────────────── */}
+      <section style={{ background: BG, borderTop: `1px solid ${BORDER}`, padding: '72px 24px 80px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+
+          {/* Heading */}
+          <div style={{ textAlign: 'center', marginBottom: 52 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.08)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>
+              ✦ CREATOR NETWORK
+            </div>
+            <h2 style={{ fontSize: 'clamp(26px,3.5vw,44px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
+              UGCFire connects AI creators<br />to brand campaigns.
+            </h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', maxWidth: 600, margin: '0 auto', lineHeight: 1.8 }}>
+              Build your portfolio on UGCFire.ai. When brands come to UGCFire.com for UGC-style ads, our team selects creators from the network to produce paid campaign work.
+            </p>
+          </div>
+
+          {/* Office image */}
+          <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', marginBottom: 52, maxHeight: 420 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/images/office.png"
+              alt="UGCFire agency network"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: 260, maxHeight: 420 }}
+            />
+            {/* Gradient overlay */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)' }} />
+            {/* Caption */}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '28px 32px' }}>
+              <p style={{ fontSize: 'clamp(14px,1.4vw,18px)', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.4 }}>
+                Brands come to UGCFire.&nbsp; Creators join UGCFire.ai.&nbsp; We connect both sides.
+              </p>
+            </div>
+          </div>
+
+          {/* 3 cards */}
+          <div className="agency-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 48 }}>
+            {[
+              {
+                num: '01',
+                title: 'Build Your Portfolio',
+                desc: 'Upload AI ad work made anywhere or create new image and video ads with UGCFire tools.',
+                color: LIME,
+              },
+              {
+                num: '02',
+                title: 'Turn On Open to Work',
+                desc: 'Let UGCFire know you are available for paid brand ad projects.',
+                color: LIME,
+              },
+              {
+                num: '03',
+                title: 'Get Selected for Campaigns',
+                desc: 'UGCFire matches vetted AI creators with brand campaigns and manages the workflow.',
+                color: ORANGE,
+              },
+            ].map(card => (
+              <div key={card.num} style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '28px 24px' }}>
+                <div style={{ fontSize: 11, fontWeight: 800, color: card.color, letterSpacing: '0.1em', marginBottom: 12 }}>{card.num}</div>
+                <h3 style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1.3 }}>{card.title}</h3>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', lineHeight: 1.7 }}>{card.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Supporting line */}
+          <p style={{ textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.32)', maxWidth: 540, margin: '0 auto 36px', lineHeight: 1.7 }}>
+            Your portfolio is your proof. The better your AI ad work looks, the more likely you are to be selected for future UGCFire brand projects.
+          </p>
+
+          {/* CTAs */}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/signup?intent=creator"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 26px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
+              ✦ Create Your Free Creator Profile
+            </Link>
+            <Link href="/discover"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: 600, fontSize: 14, padding: '12px 26px', borderRadius: 10, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'background 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.1)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; }}>
+              Explore AI Creators →
             </Link>
           </div>
 
