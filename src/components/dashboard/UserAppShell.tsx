@@ -206,7 +206,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
                   {[
                     { icon: User,      label: 'View profile',      href: '/dashboard/profile' },
                     { icon: CreditCard, label: 'Manage account',   href: '/dashboard/profile?tab=account' },
-                    { icon: Zap,       label: 'Join our community',href: '/community' },
+                    { icon: Zap,       label: 'Browse opportunities', href: '/opportunities' },
                   ].map(item => (
                     <button key={item.label}
                       onClick={() => { setAvatarOpen(false); router.push(item.href); }}

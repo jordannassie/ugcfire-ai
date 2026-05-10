@@ -15,7 +15,7 @@ const BORDER   = 'rgba(255,255,255,0.07)';
 
 // ─── Nav definition ────────────────────────────────────────────────────────
 const NAV_ITEMS = [
-  { key: 'create',       label: 'Create',       href: '/dashboard/create', group: 'core'    },
+  { key: 'create',       label: 'Studio',       href: '/dashboard/studio', group: 'core'    },
   { key: 'creators',     label: 'Creators',     href: '/creators',         group: 'network' },
   { key: 'opportunities',label: 'Opportunities',href: '/opportunities',    group: 'network' },
   { key: 'hire',         label: 'Hire',         href: '/hire',             group: 'brand'   },

@@ -313,7 +313,7 @@ export default function Home() {
               </>
             ) : (
               <>
-                <Link href="/dashboard/create"
+                <Link href="/dashboard/studio"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 15, padding: '13px 28px', borderRadius: 11, textDecoration: 'none', transition: 'background 0.15s', boxShadow: '0 4px 24px rgba(163,230,53,0.25)' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
@@ -538,7 +538,7 @@ export default function Home() {
                 ))}
               </div>
               <div style={{ marginTop: 16 }}>
-                <Link href="/dashboard/create"
+                <Link href="/dashboard/studio"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 13, padding: '10px 20px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.15s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
@@ -613,7 +613,7 @@ export default function Home() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: 36 }}>
-            <Link href="/dashboard/create"
+            <Link href="/dashboard/studio"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '12px 26px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
               onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
@@ -845,7 +845,7 @@ export default function Home() {
           </p>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/dashboard/create"
+            <Link href="/dashboard/studio"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 15, padding: '13px 30px', borderRadius: 11, textDecoration: 'none', transition: 'background 0.15s', boxShadow: '0 4px 24px rgba(163,230,53,0.25)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
@@ -993,7 +993,7 @@ export default function Home() {
               </p>
             </div>
             {[
-              { title: 'Platform', links: [['Create', '/dashboard/create'], ['Creators', '/creators'], ['Opportunities', '/opportunities'], ['Hire', '/hire'], ['Pricing', '/pricing']] },
+              { title: 'Platform', links: [['Studio', '/dashboard/studio'], ['Creators', '/creators'], ['Opportunities', '/opportunities'], ['Hire', '/hire'], ['Pricing', '/pricing']] },
               { title: 'Social',   links: [['Instagram', 'https://www.instagram.com/ugcfire'], ['TikTok', 'https://www.tiktok.com/@ugcfire'], ['X', 'https://x.com/ugcfire']] },
               { title: 'Legal',    links: [['Terms of Service', '/terms'], ['Privacy Policy', '/privacy']] },
             ].map(col => (

@@ -26,26 +26,22 @@ export default function HirePage() {
       <main style={{ paddingTop: 60, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 24px' }}>
         <div style={{ maxWidth: 600, width: '100%', textAlign: 'center' }}>
 
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,92,0,0.08)', border: '1px solid rgba(255,92,0,0.18)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 24 }}>
-            Coming Soon
-          </div>
-
           <h1 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 16 }}>
             Post a Project
           </h1>
 
           <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75, marginBottom: 36 }}>
-            The brand project marketplace is launching soon. Post projects and connect with vetted AI creators who make brand-ready ads, videos, and graphics.
+            Connect with vetted AI creators who make brand-ready ads, videos, and graphics. UGCFire manages quality from brief to final delivery.
           </p>
 
           <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '28px 24px', marginBottom: 36 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>What you&apos;ll be able to do:</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 12 }}>What you get:</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, textAlign: 'left' }}>
               {[
                 'Post projects with budgets and deliverables',
-                'Browse AI creator portfolios',
-                'Review and approve ad work',
-                'Manage brand campaigns end-to-end',
+                'Browse and invite AI creator profiles',
+                'Review and approve ad work before payment',
+                'Managed delivery — UGCFire ensures quality',
               ].map(item => (
                 <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ color: LIME, fontSize: 14, flexShrink: 0 }}>✓</span>
@@ -56,13 +52,13 @@ export default function HirePage() {
           </div>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/creators"
+            <Link href="/client/post-project"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 24px', borderRadius: 10, textDecoration: 'none' }}>
-              Browse Creators Now
+              Post a Project
             </Link>
-            <Link href="/"
+            <Link href="/creators"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.07)', color: '#fff', fontWeight: 600, fontSize: 14, padding: '12px 24px', borderRadius: 10, textDecoration: 'none', border: `1px solid ${BORDER}` }}>
-              ← Back to Home
+              Browse Creators
             </Link>
           </div>
 
