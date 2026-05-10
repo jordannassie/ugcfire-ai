@@ -41,12 +41,23 @@ const VIDEO_CARD_DATA = [
   { src: UGC_VIDEOS[4], badge: null,        quote: 'Hydration that\nactually lasts.' },
 ];
 
-const SETTING_ROWS = [
+const HERO_BG_VIDEO = 'https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/video/hf_20260507_203840_ec73ef26-f3ba-4189-8046-bb42475960aa.mp4';
+
+const VIDEO_SETTING_ROWS = [
   { icon: Cpu,       label: 'Model',        key: 'model'       as const, options: ['Seedance 2.0', 'Seedance 1.0'] },
   { icon: Clock,     label: 'Duration',     key: 'duration'    as const, options: ['4s', '6s', '8s', '12s'] },
   { icon: Maximize2, label: 'Aspect Ratio', key: 'aspectRatio' as const, options: ['9:16', '16:9', '1:1'] },
   { icon: Monitor,   label: 'Resolution',   key: 'resolution'  as const, options: ['720p', '1080p'] },
 ];
+
+const IMAGE_SETTING_ROWS = [
+  { icon: Cpu,       label: 'Model',        key: 'imgModel'       as const, options: ['GPT Image 2.0'] },
+  { icon: Maximize2, label: 'Aspect Ratio', key: 'imgAspectRatio' as const, options: ['1:1', '9:16', '16:9', '4:3'] },
+  { icon: Monitor,   label: 'Quality',      key: 'imgQuality'     as const, options: ['Standard', 'HD'] },
+];
+
+const VIDEO_PROMPT = 'A young woman in a city at night holding a skincare device. Neon lights, cinematic bokeh, UGC style, natural look.';
+const IMAGE_PROMPT = 'A realistic UGC-style product photo of a skincare serum on a bathroom counter, natural morning light, iPhone photo look.';
 
 // ─── Design tokens ─────────────────────────────────────────────────────────────
 
@@ -61,15 +72,28 @@ const BORDER = 'rgba(255,255,255,0.07)';
 export default function Home() {
   const router = useRouter();
 
-  const [prompt,      setPrompt]      = useState('A young woman in a city at night holding a LED skincare device. Neon lights, cinematic bokeh, UGC style, natural look.');
-  const [settings,    setSettings]    = useState({ model: 'Seedance 2.0', duration: '6s', aspectRatio: '9:16', resolution: '1080p' });
-  const [openSetting, setOpenSetting] = useState<string | null>(null);
-  const [selectedImg, setSelectedImg] = useState(0);
-  const [pricingTab,  setPricingTab]  = useState<'plans' | 'credits'>('plans');
+  const [genMode,       setGenMode]       = useState<'video' | 'image'>('video');
+  const [prompt,        setPrompt]        = useState(VIDEO_PROMPT);
+  const [settings,      setSettings]      = useState({ model: 'Seedance 2.0', duration: '6s', aspectRatio: '9:16', resolution: '1080p' });
+  const [imgSettings,   setImgSettings]   = useState({ imgModel: 'GPT Image 2.0', imgAspectRatio: '1:1', imgQuality: 'HD' });
+  const [openSetting,   setOpenSetting]   = useState<string | null>(null);
+  const [selectedImg,   setSelectedImg]   = useState(0);
+  const [pricingTab,    setPricingTab]    = useState<'plans' | 'credits'>('plans');
 
   function setSetting(key: keyof typeof settings, value: string) {
     setSettings(s => ({ ...s, [key]: value }));
     setOpenSetting(null);
+  }
+
+  function setImgSetting(key: keyof typeof imgSettings, value: string) {
+    setImgSettings(s => ({ ...s, [key]: value }));
+    setOpenSetting(null);
+  }
+
+  function switchMode(m: 'video' | 'image') {
+    setGenMode(m);
+    setOpenSetting(null);
+    setPrompt(m === 'video' ? VIDEO_PROMPT : IMAGE_PROMPT);
   }
 
   return (
@@ -117,15 +141,39 @@ export default function Home() {
       <PublicHeader isHomePage activePage="home" />
 
       {/* ── HERO SPLIT ────────────────────────────────────────────────────────── */}
-      <div id="video" className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)', overflow: 'hidden', maxWidth: '100%' }}>
+      <div id="video" className="home-split" style={{ display: 'flex', paddingTop: 60, minHeight: 'calc(100vh - 60px)', overflow: 'hidden', maxWidth: '100%', position: 'relative' }}>
+
+        {/* Hero background video */}
+        <video
+          src={HERO_BG_VIDEO}
+          autoPlay muted loop playsInline
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.18, zIndex: 0, pointerEvents: 'none' }}
+        />
+        {/* Dark gradient overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.72) 100%)', zIndex: 1, pointerEvents: 'none' }} />
 
         {/* ── LEFT CREATION PANEL ──────────────────────────────────────────── */}
-        <div className="home-panel" style={{ width: 360, padding: '18px 0 24px 16px', position: 'sticky', top: 60, alignSelf: 'flex-start', height: 'calc(100vh - 60px)', overflowY: 'auto', flexShrink: 0 }} onClick={() => setOpenSetting(null)}>
+        <div className="home-panel" style={{ width: 360, padding: '18px 0 24px 16px', position: 'sticky', top: 60, alignSelf: 'flex-start', height: 'calc(100vh - 60px)', overflowY: 'auto', flexShrink: 0, zIndex: 2 }} onClick={() => setOpenSetting(null)}>
           <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'visible' }}>
 
+            {/* Video / Image toggle */}
+            <div style={{ display: 'flex', gap: 4, padding: '10px 10px 0' }}>
+              {(['video', 'image'] as const).map(m => (
+                <button key={m} onClick={e => { e.stopPropagation(); switchMode(m); }}
+                  style={{ flex: 1, padding: '7px 0', borderRadius: 8, border: 'none', fontSize: 11, fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit', textTransform: 'uppercase', letterSpacing: '0.06em',
+                    background: genMode === m ? (m === 'video' ? ORANGE : LIME) : 'transparent',
+                    color: genMode === m ? (m === 'video' ? '#fff' : '#0d0d0d') : 'rgba(255,255,255,0.35)',
+                  }}>
+                  {m === 'video' ? '▶ Video' : '⬛ Image'}
+                </button>
+              ))}
+            </div>
+
             {/* Section label */}
-            <div style={{ padding: '11px 16px 10px', borderBottom: `1px solid ${BORDER}` }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Video</span>
+            <div style={{ padding: '10px 16px 9px', borderBottom: `1px solid ${BORDER}` }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: genMode === 'video' ? ORANGE : LIME, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                {genMode === 'video' ? 'Create Video Ad' : 'Create Image Ad'}
+              </span>
             </div>
 
             <div style={{ padding: 16 }}>
@@ -133,11 +181,12 @@ export default function Home() {
               {/* Reference Image */}
               <div style={{ marginBottom: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)' }}>Reference Image</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)' }}>
+                    {genMode === 'video' ? 'Reference Image' : 'Product / Reference Image'}
+                  </span>
                   <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: 'rgba(255,255,255,0.4)', flexShrink: 0 }}>?</span>
                 </div>
                 <div style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
-                  {/* Upload slot */}
                   <div style={{ width: 50, height: 50, border: '1.5px dashed rgba(255,255,255,0.18)', borderRadius: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, background: 'rgba(255,255,255,0.02)' }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
@@ -145,14 +194,12 @@ export default function Home() {
                     </svg>
                     <span style={{ fontSize: 8, color: 'rgba(255,255,255,0.22)', marginTop: 3, textAlign: 'center', lineHeight: 1.3 }}>Upload<br/>PNG, JPG</span>
                   </div>
-                  {/* Thumbnails */}
                   {PRODUCT_IMAGES.map((src, i) => (
                     <div key={i} onClick={e => { e.stopPropagation(); setSelectedImg(i); }}
-                      style={{ width: 50, height: 50, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: selectedImg === i ? `2px solid ${ORANGE}` : '2px solid transparent', flexShrink: 0, position: 'relative' }}>
+                      style={{ width: 50, height: 50, borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: selectedImg === i ? `2px solid ${genMode === 'video' ? ORANGE : LIME}` : '2px solid transparent', flexShrink: 0, position: 'relative' }}>
                       <Image src={src} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
                       {selectedImg === i && (
-                        <div
-                          onClick={e => { e.stopPropagation(); setSelectedImg(-1); }}
+                        <div onClick={e => { e.stopPropagation(); setSelectedImg(-1); }}
                           style={{ position: 'absolute', top: -5, right: -5, width: 14, height: 14, borderRadius: '50%', background: '#0d0d0d', border: `1px solid rgba(255,255,255,0.2)`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}>
                           <X size={8} color="rgba(255,255,255,0.6)" />
                         </div>
@@ -187,43 +234,70 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Settings */}
+              {/* Settings — conditional on mode */}
               <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 4, marginBottom: 14 }}>
-                {SETTING_ROWS.map(row => (
-                  <div key={row.key} style={{ position: 'relative' }}>
-                    <div className="setting-row"
-                      onClick={e => { e.stopPropagation(); setOpenSetting(openSetting === row.key ? null : row.key); }}>
-                      <row.icon size={13} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
-                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', flex: 1 }}>{row.label}</span>
-                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>{settings[row.key]}</span>
-                      <ChevronDown size={13} color="rgba(255,255,255,0.3)"
-                        style={{ transition: 'transform 0.15s', transform: openSetting === row.key ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }} />
-                    </div>
-                    {openSetting === row.key && (
-                      <div className="setting-dropdown" onClick={e => e.stopPropagation()}>
-                        {row.options.map(opt => (
-                          <div key={opt}
-                            className={`setting-option${settings[row.key] === opt ? ' setting-option-selected' : ''}`}
-                            onClick={() => setSetting(row.key, opt)}>
-                            {opt}
-                          </div>
-                        ))}
+                {genMode === 'video'
+                  ? VIDEO_SETTING_ROWS.map(row => (
+                    <div key={row.key} style={{ position: 'relative' }}>
+                      <div className="setting-row"
+                        onClick={e => { e.stopPropagation(); setOpenSetting(openSetting === row.key ? null : row.key); }}>
+                        <row.icon size={13} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
+                        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', flex: 1 }}>{row.label}</span>
+                        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>{settings[row.key]}</span>
+                        <ChevronDown size={13} color="rgba(255,255,255,0.3)"
+                          style={{ transition: 'transform 0.15s', transform: openSetting === row.key ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }} />
                       </div>
-                    )}
-                  </div>
-                ))}
+                      {openSetting === row.key && (
+                        <div className="setting-dropdown" onClick={e => e.stopPropagation()}>
+                          {row.options.map(opt => (
+                            <div key={opt}
+                              className={`setting-option${settings[row.key] === opt ? ' setting-option-selected' : ''}`}
+                              onClick={() => setSetting(row.key, opt)}>
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                  : IMAGE_SETTING_ROWS.map(row => (
+                    <div key={row.key} style={{ position: 'relative' }}>
+                      <div className="setting-row"
+                        onClick={e => { e.stopPropagation(); setOpenSetting(openSetting === row.key ? null : row.key); }}>
+                        <row.icon size={13} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
+                        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', flex: 1 }}>{row.label}</span>
+                        <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>{imgSettings[row.key]}</span>
+                        <ChevronDown size={13} color="rgba(255,255,255,0.3)"
+                          style={{ transition: 'transform 0.15s', transform: openSetting === row.key ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }} />
+                      </div>
+                      {openSetting === row.key && (
+                        <div className="setting-dropdown" onClick={e => e.stopPropagation()}>
+                          {row.options.map(opt => (
+                            <div key={opt}
+                              className={`setting-option${imgSettings[row.key] === opt ? ' setting-option-selected' : ''}`}
+                              onClick={() => setImgSetting(row.key, opt)}>
+                              {opt}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                }
               </div>
 
               {/* Generate */}
-              <button className="gen-btn" onClick={e => { e.stopPropagation(); router.push('/signup'); }} style={{ marginBottom: 10 }}>
-                ✦ Generate
+              <button className="gen-btn"
+                onClick={e => { e.stopPropagation(); router.push(genMode === 'video' ? '/signup?mode=video' : '/signup?mode=image'); }}
+                style={{ marginBottom: 10, background: genMode === 'video' ? LIME : LIME }}>
+                {genMode === 'video' ? '▶ Generate Video' : '⬛ Generate Image'}
               </button>
 
               {/* Note */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
                 <Lock size={11} color="rgba(255,255,255,0.2)" style={{ marginTop: 1, flexShrink: 0 }} />
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', lineHeight: 1.5 }}>
-                  You&apos;ll be prompted to sign up when you click Generate.
+                  You&apos;ll be prompted to sign up when you generate.
                 </span>
               </div>
 
@@ -232,7 +306,7 @@ export default function Home() {
         </div>
 
         {/* ── RIGHT CONTENT ────────────────────────────────────────────────── */}
-        <div className="home-content" style={{ flex: 1, padding: '32px 28px 48px', minWidth: 0 }}>
+        <div className="home-content" style={{ flex: 1, padding: '32px 28px 48px', minWidth: 0, position: 'relative', zIndex: 2 }}>
 
           {/* Trust badge */}
           <div style={{ float: 'right', display: 'flex', alignItems: 'center', gap: 10, background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '10px 14px', marginBottom: 8, marginLeft: 16, flexShrink: 0 }}>
