@@ -376,10 +376,10 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
             <div>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>
-                Portfolio
+                Your Work
                 <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.3)', marginLeft: 6 }}>{allItems.length}</span>
               </h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Build your AI ads portfolio so brands and UGCFire can see your style.</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Add your best AI ads to your profile. Your profile is your portfolio.</p>
             </div>
             <div style={{ display: 'flex', gap: 4 }}>
               {(['all', 'videos', 'images'] as const).map(t => (
@@ -393,14 +393,14 @@ export default function ProfilePage() {
 
           {filteredItems.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '56px 20px', borderRadius: 16, border: `1px dashed rgba(255,255,255,0.08)` }}>
-              <div style={{ fontSize: 32, marginBottom: 12 }}>🔥</div>
+              <div style={{ fontSize: 32, marginBottom: 12 }}>+</div>
               <p style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Ready to show your work?</p>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', maxWidth: 360, margin: '0 auto 20px', lineHeight: 1.6 }}>
-                Build your AI ads portfolio with image ads, video ads, product concepts, and UGC-style creatives.
+                Showcase your best AI ads so brands and UGCFire can see your style. Your profile is your portfolio.
               </p>
-              <Link href="/dashboard/video"
+              <Link href="/dashboard/studio"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, borderRadius: 10, textDecoration: 'none' }}>
-                ✦ Generate your first video
+                Generate your first video
               </Link>
             </div>
           ) : (

@@ -3,11 +3,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import AppFooter from '@/components/shared/AppFooter';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Search, FolderOpen, Rocket, LogOut, User,
   ImageIcon, Video, Package, Layers, LayoutDashboard, Menu, X,
-  Zap, CreditCard,
+  Zap, CreditCard, Briefcase, MessageSquare, DollarSign, ClipboardList, Clapperboard,
 } from 'lucide-react';
 import { LOGO_URL, getCredits, INITIAL_CREDITS } from '@/lib/demoAssets';
 import { exitDemoMode } from '@/lib/demoData';
@@ -15,20 +16,21 @@ import AssetPickerModal from './AssetPickerModal';
 
 // ─── Nav config ───────────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { label: 'Image',        href: '/dashboard/image',         icon: ImageIcon       },
-  { label: 'Video',        href: '/dashboard/video',         icon: Video           },
-  { label: 'Brand Assets', href: '/dashboard/brand-assets',  icon: Package         },
-  { label: 'Studio',       href: '/dashboard/studio',        icon: Layers          },
-  { label: 'Discover',     href: '/discover',                icon: LayoutDashboard },
+  { label: 'Studio',        href: '/dashboard/studio',        icon: Clapperboard    },
+  { label: 'Profile',       href: '/dashboard/profile',       icon: User            },
+  { label: 'Opportunities', href: '/opportunities',           icon: Briefcase       },
+  { label: 'Applications',  href: '/dashboard/applications',  icon: ClipboardList   },
+  { label: 'Projects',      href: '/dashboard/projects',      icon: LayoutDashboard },
+  { label: 'Messages',      href: '/dashboard/messages',      icon: MessageSquare   },
+  { label: 'Earnings',      href: '/dashboard/earnings',      icon: DollarSign      },
 ];
 
-// Bottom mobile nav — deduplicated (Explore & Video share the same href, show Video only)
 const MOBILE_NAV = [
-  { label: 'Image',   href: '/dashboard/image',        icon: ImageIcon       },
-  { label: 'Video',   href: '/dashboard/video',         icon: Video           },
-  { label: 'Assets',  href: '/dashboard/brand-assets',  icon: Package         },
-  { label: 'Studio',  href: '/dashboard/studio',        icon: Layers          },
-  { label: 'Discover',href: '/discover',                icon: LayoutDashboard },
+  { label: 'Studio',   href: '/dashboard/studio',        icon: Clapperboard  },
+  { label: 'Work',     href: '/opportunities',           icon: Briefcase     },
+  { label: 'Applied',  href: '/dashboard/applications',  icon: ClipboardList },
+  { label: 'Messages', href: '/dashboard/messages',      icon: MessageSquare },
+  { label: 'Earnings', href: '/dashboard/earnings',      icon: DollarSign    },
 ];
 
 const ORANGE = '#FF5C00';
@@ -94,7 +96,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
   }
 
   function isActive(href: string) {
-    if (href === '/dashboard/video' && (pathname === '/dashboard' || pathname === '/dashboard/video')) return true;
+    if (href === '/dashboard/studio' && (pathname === '/dashboard' || pathname === '/dashboard/studio' || pathname === '/dashboard/create')) return true;
     return pathname === href || pathname.startsWith(href + '/');
   }
 
@@ -113,7 +115,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
         )}
 
         {/* Logo */}
-        <Link href="/dashboard/video" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginRight: mobile ? 'auto' : 14, flexShrink: 0 }}>
+        <Link href="/dashboard/studio" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginRight: mobile ? 'auto' : 14, flexShrink: 0 }}>
           <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={28} style={{ objectFit: 'contain', height: 26, width: 'auto' }} unoptimized />
         </Link>
 
@@ -231,8 +233,9 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
       </nav>
 
       {/* ── CONTENT ─────────────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflow: 'visible', paddingBottom: mobile ? 56 : 0 }}>
-        {children}
+      <div style={{ flex: 1, overflow: 'visible', paddingBottom: mobile ? 56 : 0, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1 }}>{children}</div>
+        {!mobile && <AppFooter />}
       </div>
 
       {/* ── MOBILE BOTTOM NAV ───────────────────────────────────────────────── */}
@@ -336,7 +339,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
                       background: upgradeTab === t ? 'rgba(255,255,255,0.08)' : 'transparent',
                       color: upgradeTab === t ? '#fff' : 'rgba(255,255,255,0.38)',
                       transition: 'all 0.12s' }}>
-                    {t === 'plans' ? '🚀 Plans' : '⚡ Credit Packs'}
+                    {t === 'plans' ? 'Plans' : 'Credit Packs'}
                   </button>
                 ))}
               </div>
@@ -356,7 +359,7 @@ export default function UserAppShell({ children }: { children: React.ReactNode }
                       boxShadow: plan.badge ? '0 0 20px rgba(163,230,53,0.06)' : 'none' }}>
                       {plan.badge && (
                         <span style={{ position: 'absolute', top: -10, left: 16, background: LIME, color: '#0d0d0d', fontSize: 9, fontWeight: 800, padding: '3px 10px', borderRadius: 20, letterSpacing: '0.06em' }}>
-                          ✦ {plan.badge}
+                          {plan.badge}
                         </span>
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>

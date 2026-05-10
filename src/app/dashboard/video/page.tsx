@@ -217,7 +217,7 @@ export default function VideoPage() {
       {/* Generate */}
       <button onClick={e => { e.stopPropagation(); handleGenerate(); }} disabled={generating}
         style={{ width: '100%', background: generating ? '#7aaa28' : LIME, color: '#0d0d0d', border: 'none', borderRadius: 10, padding: '13px', fontSize: 15, fontWeight: 800, cursor: generating ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', marginBottom: 8, letterSpacing: '-0.01em', transition: 'background 0.15s' }}>
-        {generating ? <><Sparkles size={16} />Generating…</> : `Generate ✦ 75`}
+        {generating ? <><Sparkles size={16} strokeWidth={2} />Generating…</> : 'Generate Video'}
       </button>
       <p style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.22)', marginBottom: 8 }}>1 generation ≈ 1 credit</p>
     </div>
@@ -306,7 +306,7 @@ export default function VideoPage() {
           {(['history', 'create'] as const).map(v => (
             <button key={v} onClick={() => setMobileView(v)}
               style={{ flex: 1, padding: '12px', fontSize: 13, fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', color: mobileView === v ? '#fff' : 'rgba(255,255,255,0.4)', borderBottom: mobileView === v ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-              {v === 'history' ? '▶  My Videos' : '✦  Create Video Ad'}
+              {v === 'history' ? 'My Videos' : 'Create Video Ad'}
             </button>
           ))}
         </div>

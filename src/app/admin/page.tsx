@@ -1,195 +1,243 @@
 'use client';
 
 import React from 'react';
-import { Users, Video, ImageIcon, DollarSign, TrendingUp, Activity, Zap, CheckCircle2, UserPlus } from 'lucide-react';
+import Link from 'next/link';
+import {
+  Briefcase, ClipboardList, Upload, DollarSign, AlertTriangle,
+  UserCheck, TrendingUp, Activity, Shield, CheckCircle,
+} from 'lucide-react';
+import {
+  MOCK_PROJECTS, ADMIN_PAYMENTS, ADMIN_DISPUTES, ADMIN_ACTIVITY, ADMIN_CLIENTS,
+} from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const BORDER = 'rgba(255,255,255,0.08)';
-const CARD   = '#141414';
+const PANEL  = '#141414';
+const BORDER = 'rgba(255,255,255,0.07)';
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const STATS = [
-  { label: 'Total Users',             value: '24,583',  trend: '12.5% vs last 30 days',  icon: Users,       color: 'rgba(99,102,241,0.15)',  iconColor: '#818cf8' },
-  { label: 'Videos Generated Today',  value: '1,248',   trend: '18.7% vs yesterday',     icon: Video,       color: 'rgba(255,92,0,0.15)',   iconColor: ORANGE    },
-  { label: 'Images Generated Today',  value: '3,682',   trend: '15.3% vs yesterday',     icon: ImageIcon,   color: 'rgba(163,230,53,0.12)', iconColor: LIME      },
-  { label: 'Monthly Revenue',         value: '$48,290', trend: '22.1% vs last month',    icon: DollarSign,  color: 'rgba(234,179,8,0.12)',  iconColor: '#eab308' },
-];
-
-const ACTIVITY = [
-  { icon: UserPlus,   label: 'Sarah Johnson',      detail: 'New user signed up',            time: '2m ago',  amount: null    },
-  { icon: Video,      label: 'Video generated',    detail: 'by @mike_creates',              time: '4m ago',  amount: null    },
-  { icon: ImageIcon,  label: 'Image generated',    detail: 'by @outdoor_life',              time: '7m ago',  amount: null    },
-  { icon: DollarSign, label: 'Payment received',   detail: 'from Pro Plan — Monthly',       time: '11m ago', amount: '$29.00'},
-  { icon: Activity,   label: 'Support ticket',     detail: 'created by @james_wilson',      time: '18m ago', amount: null    },
-];
-
-const SYSTEM = [
-  { label: 'API',     status: 'Operational' },
-  { label: 'Queue',   status: 'Operational' },
-  { label: 'Storage', status: 'Operational' },
-  { label: 'Billing', status: 'Operational' },
-];
-
-const PLANS = [
-  { label: 'Pro Plan',      count: 12540, pct: 51, color: LIME    },
-  { label: 'Creator Plan',  count: 7862,  pct: 32, color: ORANGE  },
-  { label: 'Starter Plan',  count: 3421,  pct: 14, color: '#eab308'},
-  { label: 'Enterprise',    count: 760,   pct: 3,  color: '#8b5cf6'},
-];
-
-const NEW_USERS = [
-  { name: 'Sarah Johnson', email: 'sarah.j@example.com',    time: '2m ago',  color: '#8b5cf6' },
-  { name: 'Mike Chen',     email: 'mike.chen@example.com',  time: '6m ago',  color: '#06b6d4' },
-  { name: 'Alex Rivera',   email: 'alex.rivera@example.com',time: '14m ago', color: '#22c55e' },
-  { name: 'Jessica Lee',   email: 'jessica.lee@example.com',time: '22m ago', color: ORANGE    },
-];
-
-// ─── Components ───────────────────────────────────────────────────────────────
-
-function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-  return (
-    <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, ...style }}>
-      {children}
-    </div>
-  );
-}
-
-function SectionHeader({ title, action }: { title: string; action?: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px 12px', borderBottom: `1px solid ${BORDER}` }}>
-      <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{title}</span>
-      {action && <button style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>{action}</button>}
-    </div>
-  );
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+export const dynamic = 'force-dynamic';
 
 export default function AdminOverviewPage() {
+  const allApplicants   = MOCK_PROJECTS.flatMap(p => p.applicants);
+  const allSubmissions  = MOCK_PROJECTS.flatMap(p => p.submissions);
+  const pendingApps     = allApplicants.filter(a => a.status === 'Applied').length;
+  const pendingSubmissions = allSubmissions.filter(s => s.status === 'Pending').length;
+  const activeProjects  = MOCK_PROJECTS.filter(p => ['In Progress','Submitted','Creators Invited'].includes(p.status)).length;
+  const escrowTotal     = ADMIN_PAYMENTS.filter(p => p.escrowStatus === 'Funded' || p.escrowStatus === 'In Review').reduce((s, p) => s + p.projectBudget, 0);
+  const payoutsDue      = ADMIN_PAYMENTS.filter(p => p.payoutStatus === 'Pending').reduce((s, p) => s + p.creatorPayout, 0);
+  const openDisputes    = ADMIN_DISPUTES.filter(d => d.status === 'Open' || d.status === 'In Review').length;
+
+  const STATS = [
+    { label: 'Active Projects',       value: String(activeProjects),     icon: Briefcase,     color: ORANGE,   href: '/admin/projects'     },
+    { label: 'Pending Applications',  value: String(pendingApps),        icon: ClipboardList, color: '#22d3ee',href: '/admin/applications'  },
+    { label: 'Pending Submissions',   value: String(pendingSubmissions),  icon: Upload,        color: LIME,     href: '/admin/submissions'  },
+    { label: 'Escrow Balance',        value: `$${escrowTotal.toLocaleString()}`, icon: DollarSign, color: '#22d3ee', href: '/admin/payments' },
+    { label: 'Creator Payouts Due',   value: `$${payoutsDue.toLocaleString()}`,  icon: TrendingUp, color: LIME,  href: '/admin/payments'     },
+    { label: 'Open Disputes',         value: String(openDisputes),       icon: AlertTriangle, color: '#ef4444',href: '/admin/disputes'      },
+  ];
+
+  const QUICK_ACTIONS = [
+    { label: 'Review Applications',  href: '/admin/applications',  color: '#22d3ee', bg: 'rgba(34,211,238,0.08)',  border: 'rgba(34,211,238,0.2)'  },
+    { label: 'Review Submissions',   href: '/admin/submissions',   color: LIME,      bg: 'rgba(163,230,53,0.07)', border: 'rgba(163,230,53,0.2)'  },
+    { label: 'Release Payments',     href: '/admin/payments',      color: LIME,      bg: 'rgba(163,230,53,0.07)', border: 'rgba(163,230,53,0.2)'  },
+    { label: 'Resolve Disputes',     href: '/admin/disputes',      color: '#ef4444', bg: 'rgba(239,68,68,0.07)',  border: 'rgba(239,68,68,0.18)'  },
+  ];
+
+  const recentProjects     = MOCK_PROJECTS.slice(0, 4);
+  const recentApplicants   = allApplicants.filter(a => a.status === 'Applied').slice(0, 3);
+  const recentSubmissions  = allSubmissions.filter(s => s.status === 'Pending').slice(0, 3);
+  const paymentQueue       = ADMIN_PAYMENTS.filter(p => p.payoutStatus === 'Pending').slice(0, 3);
+
   return (
-    <div style={{ padding: '28px 24px', maxWidth: 1400 }}>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+        .stat-card { background: ${PANEL}; border-radius: 14px; padding: 18px; text-decoration: none; display: block; transition: border-color 0.15s, transform 0.12s; }
+        .stat-card:hover { transform: translateY(-1px); }
+        .section-card { background: ${PANEL}; border: 1px solid ${BORDER}; border-radius: 16px; overflow: hidden; }
+        @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+        @media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr) !important; } .two-col { grid-template-columns: 1fr !important; } }
+      `}</style>
 
-      {/* Heading */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Admin Dashboard</h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>Monitor your platform at a glance.</p>
-      </div>
+      <div style={{ padding: '28px 24px 48px', maxWidth: 1200, margin: '0 auto' }}>
 
-      {/* ── ROW 1: STAT CARDS ─────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
-        {STATS.map(s => (
-          <Card key={s.label} style={{ padding: '18px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{s.label}</p>
-              <div style={{ width: 34, height: 34, borderRadius: 9, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <s.icon size={16} color={s.iconColor} strokeWidth={1.75} />
-              </div>
-            </div>
-            <p style={{ fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>{s.value}</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <TrendingUp size={12} color='#22c55e' strokeWidth={2.5} />
-              <span style={{ fontSize: 12, color: '#22c55e', fontWeight: 600 }}>{s.trend}</span>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* ── ROW 2: ACTIVITY + SYSTEM ──────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 14, marginBottom: 20 }}>
-
-        {/* Recent Activity */}
-        <Card>
-          <SectionHeader title="Recent Activity" action="View all" />
-          <div>
-            {ACTIVITY.map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < ACTIVITY.length - 1 ? `1px solid rgba(255,255,255,0.05)` : 'none' }}>
-                <div style={{ width: 32, height: 32, borderRadius: 9, background: '#1e1e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <item.icon size={14} color="rgba(255,255,255,0.5)" strokeWidth={1.75} />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{item.label}</span>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginLeft: 6 }}>{item.detail}</span>
-                </div>
-                {item.amount && (
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#22c55e', flexShrink: 0 }}>{item.amount}</span>
-                )}
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', flexShrink: 0 }}>{item.time}</span>
-              </div>
-            ))}
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: '#818cf8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 12 }}>
+            <Shield size={10} strokeWidth={2} /> Admin Command Center
           </div>
-        </Card>
+          <h1 style={{ fontSize: 'clamp(20px, 2.5vw, 28px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>
+            Marketplace Overview
+          </h1>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>
+            UGCFire controls quality before work reaches the client. Review applications, approve submissions, and release payments.
+          </p>
+        </div>
 
-        {/* System Status */}
-        <Card>
-          <SectionHeader title="System Status" />
-          <div style={{ padding: '8px 18px 16px' }}>
-            {SYSTEM.map((s, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < SYSTEM.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 5px rgba(34,197,94,0.5)' }} />
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>{s.label}</span>
+        {/* Stats grid */}
+        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 12, marginBottom: 28 }}>
+          {STATS.map(s => (
+            <Link key={s.label} href={s.href} className="stat-card" style={{ border: `1px solid ${BORDER}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <div style={{ width: 30, height: 30, borderRadius: 8, background: `${s.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <s.icon size={14} color={s.color} strokeWidth={1.75} />
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 600, color: LIME }}>{s.status}</span>
               </div>
-            ))}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 14, padding: '10px 12px', background: 'rgba(34,197,94,0.06)', borderRadius: 9, border: '1px solid rgba(34,197,94,0.15)' }}>
-              <CheckCircle2 size={14} color='#22c55e' strokeWidth={2} />
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#22c55e' }}>All systems operational</span>
+              <div style={{ fontSize: 26, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.value}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', lineHeight: 1.4 }}>{s.label}</div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Quality framing banner */}
+        <div style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.18)', borderRadius: 14, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28, flexWrap: 'wrap' }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(99,102,241,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Shield size={17} color="#818cf8" strokeWidth={1.75} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
+              UGCFire controls quality before work reaches the client.
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+              Every submission is reviewed by the admin team before delivery. This makes UGCFire a managed marketplace — not an open, unmoderated platform.
             </div>
           </div>
-        </Card>
-      </div>
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            {QUICK_ACTIONS.map(a => (
+              <Link key={a.label} href={a.href} style={{ fontSize: 11, fontWeight: 700, background: a.bg, border: `1px solid ${a.border}`, color: a.color, borderRadius: 8, padding: '6px 12px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                {a.label}
+              </Link>
+            ))}
+          </div>
+        </div>
 
-      {/* ── ROW 3: SUBSCRIPTION + NEWEST USERS ──────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 14 }}>
+        {/* Main sections */}
+        <div className="two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
 
-        {/* Subscription Breakdown */}
-        <Card>
-          <SectionHeader title="Subscription Breakdown" action="View all" />
-          <div style={{ padding: '14px 18px 18px' }}>
-            {PLANS.map((p, i) => (
-              <div key={i} style={{ marginBottom: i < PLANS.length - 1 ? 18 : 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 7 }}>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.75)' }}>{p.label}</span>
-                  <div style={{ display: 'flex', gap: 12 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{p.count.toLocaleString()}</span>
-                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', minWidth: 32, textAlign: 'right' }}>({p.pct}%)</span>
+          {/* Recent Projects */}
+          <div className="section-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Recent Projects</h2>
+              <Link href="/admin/projects" style={{ fontSize: 12, color: ORANGE, textDecoration: 'none', fontWeight: 600 }}>View all →</Link>
+            </div>
+            {recentProjects.map((p, i) => {
+              const sc: Record<string, string> = { 'Posted': 'rgba(255,255,255,0.4)', 'Creators Invited': '#22d3ee', 'In Progress': LIME, 'Submitted': ORANGE, 'Approved': '#6366f1', 'Completed': LIME };
+              return (
+                <Link key={p.id} href={`/admin/projects/${p.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < recentProjects.length - 1 ? `1px solid ${BORDER}` : undefined, textDecoration: 'none', transition: 'background 0.1s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <span style={{ fontSize: 18, flexShrink: 0 }}>{p.icon}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{p.brandName} · ${p.budget}</div>
                   </div>
-                </div>
-                <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 6, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${p.pct}%`, background: p.color, borderRadius: 6, transition: 'width 0.4s ease' }} />
-                </div>
-              </div>
-            ))}
+                  <span style={{ fontSize: 9, fontWeight: 700, color: sc[p.status], background: `${sc[p.status]}14`, padding: '2px 8px', borderRadius: 20, border: `1px solid ${sc[p.status]}25`, flexShrink: 0 }}>{p.status}</span>
+                </Link>
+              );
+            })}
           </div>
-        </Card>
 
-        {/* Newest Users */}
-        <Card>
-          <SectionHeader title="Newest Users" action="View all" />
-          <div>
-            {NEW_USERS.map((u, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 18px', borderBottom: i < NEW_USERS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: u.color + '33', border: `1px solid ${u.color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: u.color }}>{u.name[0]}</span>
-                </div>
+          {/* Pending Applications */}
+          <div className="section-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Pending Applications</h2>
+              <Link href="/admin/applications" style={{ fontSize: 12, color: '#22d3ee', textDecoration: 'none', fontWeight: 600 }}>Review →</Link>
+            </div>
+            {recentApplicants.length === 0 ? (
+              <div style={{ padding: '28px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>No pending applications.</div>
+            ) : recentApplicants.map((a, i) => {
+              const proj = MOCK_PROJECTS.find(p => p.applicants.some(ap => ap.id === a.id));
+              return (
+                <Link key={a.id} href="/admin/applications" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < recentApplicants.length - 1 ? `1px solid ${BORDER}` : undefined, textDecoration: 'none', transition: 'background 0.1s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: `${a.color}20`, border: `1.5px solid ${a.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: a.color, flexShrink: 0 }}>{a.initials}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{a.name}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{proj?.title ?? 'Unknown project'}</div>
+                  </div>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: '#22d3ee', background: 'rgba(34,211,238,0.1)', padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>New</span>
+                </Link>
+              );
+            })}
+          </div>
+
+        </div>
+
+        <div className="two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
+
+          {/* Submissions needing review */}
+          <div className="section-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Submissions to Review</h2>
+              <Link href="/admin/submissions" style={{ fontSize: 12, color: LIME, textDecoration: 'none', fontWeight: 600 }}>Review →</Link>
+            </div>
+            {recentSubmissions.length === 0 ? (
+              <div style={{ padding: '28px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>No pending submissions.</div>
+            ) : recentSubmissions.map((s, i) => {
+              const proj = MOCK_PROJECTS.find(p => p.submissions.some(sub => sub.id === s.id));
+              return (
+                <Link key={s.id} href="/admin/submissions" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < recentSubmissions.length - 1 ? `1px solid ${BORDER}` : undefined, textDecoration: 'none', transition: 'background 0.1s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#1a1a2e,#16213e)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0, color: 'rgba(255,255,255,0.4)' }}>▶</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.title}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{s.creatorName} · {proj?.title ?? ''}</div>
+                  </div>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.1)', padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>Pending</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Payment queue */}
+          <div className="section-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Payment Queue</h2>
+              <Link href="/admin/payments" style={{ fontSize: 12, color: LIME, textDecoration: 'none', fontWeight: 600 }}>Manage →</Link>
+            </div>
+            {paymentQueue.map((pay, i) => (
+              <Link key={pay.id} href="/admin/payments" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < paymentQueue.length - 1 ? `1px solid ${BORDER}` : undefined, textDecoration: 'none', transition: 'background 0.1s' }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: LIME, flexShrink: 0 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', lineHeight: 1.2 }}>{u.name}</p>
-                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.33)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</p>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pay.projectTitle}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{pay.creatorName} · ${pay.creatorPayout} payout</div>
                 </div>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', flexShrink: 0 }}>{u.time}</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: LIME, flexShrink: 0 }}>${pay.creatorPayout}</span>
+              </Link>
+            ))}
+          </div>
+
+        </div>
+
+        {/* Platform Activity */}
+        <div className="section-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
+            <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Activity size={14} color={LIME} strokeWidth={2} />
+              Platform Activity
+            </h2>
+          </div>
+          <div style={{ padding: '8px 0' }}>
+            {ADMIN_ACTIVITY.map((act, i) => (
+              <div key={act.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 18px', borderBottom: i < ADMIN_ACTIVITY.length - 1 ? `1px solid rgba(255,255,255,0.04)` : undefined }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: act.color, flexShrink: 0, marginTop: 5 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: act.color }}>{act.message}</span>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginLeft: 6 }}>{act.detail}</span>
+                </div>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0, whiteSpace: 'nowrap' }}>{act.time}</span>
               </div>
             ))}
           </div>
-        </Card>
-      </div>
+        </div>
 
-      {/* Footer */}
-      <p style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.18)', marginTop: 32, paddingBottom: 8 }}>
-        © 2026 UGCFire.ai · All rights reserved.
-      </p>
-    </div>
+      </div>
+    </>
   );
 }

@@ -50,7 +50,7 @@ export default function DiscoverPage() {
       {/* Hero */}
       <div style={{ background: 'linear-gradient(180deg, rgba(163,230,53,0.06) 0%, transparent 100%)', borderBottom: `1px solid ${BORDER}`, padding: '48px 24px 40px', textAlign: 'center', marginTop: 60 }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>
-          ✦ Creator Network
+          Creator Network
         </div>
         <h1 style={{ fontSize: 'clamp(28px,4vw,48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
           Explore AI Creators
@@ -83,7 +83,7 @@ export default function DiscoverPage() {
                   background: view === v ? LIME : 'transparent',
                   color: view === v ? '#0d0d0d' : 'rgba(255,255,255,0.45)',
                   transition: 'all 0.12s' }}>
-                {v === 'projects' ? '🎬 Projects' : '👤 Creators'}
+                {v === 'projects' ? 'Projects' : 'Creators'}
               </button>
             ))}
           </div>

@@ -77,7 +77,7 @@ export default function CreatorProjectCard({ project, showCreator = true }: Prop
         {/* Top-right: type pill + mute button */}
         <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5 }}>
           <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', borderRadius: 8, padding: '3px 8px', fontSize: 10, fontWeight: 700, color: '#fff' }}>
-            {project.media_type === 'video' ? '▶ Video' : '🖼 Image'}
+            {project.media_type === 'video' ? 'Video' : 'Image'}
           </span>
           {project.media_type === 'video' && (
             <button onClick={toggleMute}

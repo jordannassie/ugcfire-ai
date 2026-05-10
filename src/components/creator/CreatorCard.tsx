@@ -58,7 +58,7 @@ export default function CreatorCard({ creator, adminActions, onSave, onFeature, 
           )}
           {creator.featured && (
             <div style={{ position: 'absolute', bottom: -2, right: -2, width: 20, height: 20, borderRadius: '50%', background: ORANGE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, border: '2px solid #0d0d0d' }}>
-              ✦
+              Featured
             </div>
           )}
         </div>

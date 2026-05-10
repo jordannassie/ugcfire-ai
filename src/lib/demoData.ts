@@ -10,27 +10,41 @@ export const DEMO_COOKIE_NAME  = 'ugcfire_demo_mode'
 export const DEMO_ROLE_COOKIE  = 'ugcfire_demo_role'
 export const DEMO_EMAIL_KEY    = 'ugcfire_demo_user_email'
 export const DEMO_COMPANY_KEY  = 'ugcfire_demo_company'
+export const DEMO_NAME_KEY     = 'ugcfire_demo_user_name'
+
+export type DemoRole = 'creator' | 'client' | 'admin'
 
 export function isDemoMode(): boolean {
   if (typeof window === 'undefined') return false
   return localStorage.getItem(DEMO_COOKIE_NAME) === 'true'
 }
 
-export function getDemoRole(): 'client' | 'admin' | null {
+export function getDemoRole(): DemoRole | null {
   if (typeof window === 'undefined') return null
   const role = localStorage.getItem(DEMO_ROLE_COOKIE)
-  if (role === 'admin' || role === 'client') return role
+  if (role === 'creator' || role === 'admin' || role === 'client') return role
   return null
 }
 
-export function enterDemoMode(role: 'client' | 'admin') {
-  const email  = role === 'admin' ? 'admin@ugcfire.com' : 'demo@ugcfire.com'
-  const company = role === 'admin' ? 'UGCFire Admin' : 'Demo Brand'
+export function getDemoUserName(): string {
+  if (typeof window === 'undefined') return 'Demo User'
+  return localStorage.getItem(DEMO_NAME_KEY) ?? 'Demo User'
+}
+
+const ROLE_META: Record<DemoRole, { email: string; company: string; name: string }> = {
+  creator: { email: 'creator@ugcfire.ai', company: 'Independent Creator', name: 'Demo Creator' },
+  client:  { email: 'demo@ugcfire.ai',    company: 'Demo Brand',           name: 'Demo Client'  },
+  admin:   { email: 'admin@ugcfire.ai',   company: 'UGCFire Admin',        name: 'UGCFire Admin'},
+}
+
+export function enterDemoMode(role: DemoRole) {
+  const meta = ROLE_META[role]
 
   localStorage.setItem(DEMO_COOKIE_NAME,  'true')
   localStorage.setItem(DEMO_ROLE_COOKIE,  role)
-  localStorage.setItem(DEMO_EMAIL_KEY,    email)
-  localStorage.setItem(DEMO_COMPANY_KEY,  company)
+  localStorage.setItem(DEMO_EMAIL_KEY,    meta.email)
+  localStorage.setItem(DEMO_COMPANY_KEY,  meta.company)
+  localStorage.setItem(DEMO_NAME_KEY,     meta.name)
 
   // Also set cookies so middleware can read them for SSR route guard
   const maxAge = 60 * 60 * 8 // 8 hours
@@ -43,6 +57,7 @@ export function exitDemoMode() {
   localStorage.removeItem(DEMO_ROLE_COOKIE)
   localStorage.removeItem(DEMO_EMAIL_KEY)
   localStorage.removeItem(DEMO_COMPANY_KEY)
+  localStorage.removeItem(DEMO_NAME_KEY)
 
   const expired = 'expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/'
   document.cookie = `${DEMO_COOKIE_NAME}=; ${expired}`
@@ -1213,4 +1228,300 @@ export const DEMO_ALL_CONTENT = [
   { id: 'content-northstar-1', company_id: 'company-northstar', company_name: 'NorthStar Roofing', title: 'Before / After Roof Reveal', description: 'Drone and ground-level before/after of completed job', media_type: 'video', status: 'delivered', week_label: 'Week 1 - May 2026', content_type: 'Before / After', file_url: DEMO_VIDEO_URL, thumbnail_url: null, can_showcase: false, uploaded_by: 'user-admin', uploaded_at: '2026-04-15T08:00:00Z', approved_at: '2026-04-16T10:00:00Z', delivered_at: '2026-04-17T08:00:00Z', deleted_at: null, created_at: '2026-04-15T08:00:00Z' },
   { id: 'content-northstar-2', company_id: 'company-northstar', company_name: 'NorthStar Roofing', title: 'Customer Testimonial Video', description: 'On-site testimonial from satisfied homeowner', media_type: 'video', status: 'revision_requested', week_label: 'Week 2 - May 2026', content_type: 'Testimonial', file_url: DEMO_VIDEO_URL, thumbnail_url: null, can_showcase: false, uploaded_by: 'user-admin', uploaded_at: '2026-04-22T08:00:00Z', approved_at: null, delivered_at: null, deleted_at: null, created_at: '2026-04-22T08:00:00Z' },
   { id: 'content-northstar-3', company_id: 'company-northstar', company_name: 'NorthStar Roofing', title: 'Emergency Repair Photo Ad', description: 'Storm damage service static ad for local targeting', media_type: 'photo', status: 'ready_for_review', week_label: 'Week 2 - May 2026', content_type: 'Ad Creative', file_url: DEMO_PHOTO_URL, thumbnail_url: null, can_showcase: false, uploaded_by: 'user-admin', uploaded_at: '2026-04-27T09:30:00Z', approved_at: null, delivered_at: null, deleted_at: null, created_at: '2026-04-27T09:30:00Z' },
+]
+
+// ─── Mock Marketplace Projects ───────────────────────────────────────────────
+
+export type ProjectStatus = 'Posted' | 'Creators Invited' | 'In Progress' | 'Submitted' | 'Approved' | 'Completed'
+export type EscrowStatus  = 'Not Funded' | 'Funded' | 'In Review' | 'Released'
+
+export interface MockApplicant {
+  id: string; name: string; role: string; initials: string; color: string;
+  skills: string[]; portfolioCount: number; message: string;
+  status: 'Applied' | 'Shortlisted' | 'Invited' | 'Declined';
+}
+
+export interface MockSubmission {
+  id: string; creatorName: string; creatorInitials: string; creatorColor: string;
+  title: string; notes: string; status: 'Pending' | 'Approved' | 'Revision Requested';
+  submittedAt: string;
+}
+
+export interface MockProject {
+  id: string; title: string; brandName: string; brandInitials: string; brandColor: string;
+  category: string; contentType: string; description: string;
+  budget: number; creatorPayMin: number; creatorPayMax: number; platformFee: number;
+  deadline: string; daysLeft: number;
+  status: ProjectStatus; escrowStatus: EscrowStatus;
+  deliverables: string[]; skills: string[]; brief: string;
+  assets: { name: string; type: string }[];
+  applicants: MockApplicant[];
+  submissions: MockSubmission[];
+  icon: string;
+}
+
+const ORANGE = '#FF5C00'
+const LIME   = '#a3e635'
+
+export const MOCK_PROJECTS: MockProject[] = [
+  {
+    id: 'proj-1',
+    title: 'Skincare TikTok Ad Pack',
+    brandName: 'GlowCo Beauty',
+    brandInitials: 'GC',
+    brandColor: '#f472b6',
+    category: 'Beauty & Skincare',
+    contentType: 'AI Video Ads',
+    description: 'We need 3 UGC-style TikTok ads for our new vitamin C serum. Casual, relatable tone — think everyday person discovering the product.',
+    budget: 450,
+    creatorPayMin: 130,
+    creatorPayMax: 180,
+    platformFee: 45,
+    deadline: 'May 17, 2026',
+    daysLeft: 7,
+    status: 'In Progress',
+    escrowStatus: 'Funded',
+    deliverables: ['3 × 30–60s UGC-style TikTok videos', '3 × thumbnail images', 'Raw files + captions'],
+    skills: ['UGC Video', 'TikTok Ads', 'Skincare Knowledge'],
+    brief: `Brand: GlowCo Beauty — Vitamin C Glow Serum\n\nCampaign Goal: Drive awareness and first-time purchases among women aged 22–35 on TikTok and Instagram Reels.\n\nTone: Casual, authentic, relatable. Think everyday person stumbling across this product and genuinely loving it — not polished influencer content.\n\nHook ideas:\n- "I stopped using my $80 serum for this $24 one"\n- "Dermatologists don't want you to know about this"\n- "Day 7 update — here's what happened to my dark spots"\n\nDo NOT use: clinical claims, before/after medical comparisons, competitor mentions.\n\nDeliverables: 3 videos at 9:16, 30–60 seconds each. Include captions and hook text overlay for at least 2 of the 3.`,
+    assets: [
+      { name: 'GlowCo_Primary_Logo.png', type: 'PNG' },
+      { name: 'Product_Hero_Shot.jpg', type: 'JPG' },
+      { name: 'Brand_Colors_Guide.pdf', type: 'PDF' },
+    ],
+    applicants: [
+      { id: 'ap-1', name: 'Alex Rivera', role: 'AI Ad Creator', initials: 'AR', color: LIME, skills: ['UGC Video', 'Product Ads'], portfolioCount: 24, message: 'I specialize in exactly this style — casual TikTok hooks that convert. My last skincare project got 2.4M views.', status: 'Shortlisted' },
+      { id: 'ap-2', name: 'Maya Chen', role: 'AI Visual Designer', initials: 'MC', color: '#22d3ee', skills: ['TikTok Ads', 'Lifestyle'], portfolioCount: 18, message: 'Huge fan of the GlowCo brand aesthetic. I can deliver authentic-feeling content that matches your vibe.', status: 'Invited' },
+      { id: 'ap-3', name: 'Riley Park', role: 'AI Image Specialist', initials: 'RP', color: '#a855f7', skills: ['Skincare', 'UGC Style'], portfolioCount: 15, message: 'I have experience with beauty brands and understand the language that resonates with your target demo.', status: 'Applied' },
+    ],
+    submissions: [
+      { id: 'sub-1', creatorName: 'Alex Rivera', creatorInitials: 'AR', creatorColor: LIME, title: 'Hook Draft v1 — "I stopped using my $80 serum"', notes: 'First pass at the opening hook. Happy to adjust pacing or swap the overlay text.', status: 'Pending', submittedAt: 'May 10, 2026' },
+      { id: 'sub-2', creatorName: 'Maya Chen', creatorInitials: 'MC', creatorColor: '#22d3ee', title: 'Day-in-the-life routine angle', notes: 'Went with a more lifestyle-forward approach for variation.', status: 'Revision Requested', submittedAt: 'May 9, 2026' },
+    ],
+    icon: '✨',
+  },
+  {
+    id: 'proj-2',
+    title: 'Coffee Brand Product Visuals',
+    brandName: 'Roast & Co.',
+    brandInitials: 'RC',
+    brandColor: '#b45309',
+    category: 'Food & Beverage',
+    contentType: 'AI Image Ads',
+    description: 'Product photography pack for a premium cold brew brand. Minimal, moody, high-contrast aesthetic.',
+    budget: 320,
+    creatorPayMin: 90,
+    creatorPayMax: 140,
+    platformFee: 32,
+    deadline: 'May 20, 2026',
+    daysLeft: 10,
+    status: 'Creators Invited',
+    escrowStatus: 'Funded',
+    deliverables: ['8 × product lifestyle images', '4 × flat-lay shots', 'White-background cutouts'],
+    skills: ['Product Photography', 'AI Image Generation', 'Minimalist Aesthetic'],
+    brief: `Brand: Roast & Co. — Premium Cold Brew Coffee\n\nWe need a full product visual pack for our new seasonal cold brew line (3 flavors: Original Black, Caramel, Oat Milk Vanilla).\n\nAesthetic: Dark, moody, premium. Think VSCO-grade lifestyle — condensation on glass, dramatic lighting, clean backgrounds.\n\nSettings: Kitchen countertop, outdoor café table, studio white. Mix of settings.\n\nDo: High contrast, rich shadows, close-up product details.\nDon't: Bright or pastel tones, cluttered compositions, stock-photo vibes.\n\nDeliverables: 8 lifestyle images + 4 flat-lays + white-bg cutouts for e-commerce. All at 4:5 and 1:1.`,
+    assets: [
+      { name: 'Roast_Logo_Dark.svg', type: 'SVG' },
+      { name: 'Product_Reference.jpg', type: 'JPG' },
+    ],
+    applicants: [
+      { id: 'ap-4', name: 'Sam Torres', role: 'AI Content Strategist', initials: 'ST', color: ORANGE, skills: ['Product Shots', 'Flat Lay'], portfolioCount: 22, message: 'I love moody food & beverage aesthetics. Portfolio has 3 cold brew projects.', status: 'Invited' },
+      { id: 'ap-5', name: 'Casey Morgan', role: 'AI Image Specialist', initials: 'CM', color: '#f59e0b', skills: ['Minimalism', 'Product'], portfolioCount: 9, message: 'Available immediately. Minimal aesthetic is my default style.', status: 'Applied' },
+    ],
+    submissions: [],
+    icon: '☕',
+  },
+  {
+    id: 'proj-3',
+    title: 'Fitness App AI UGC Videos',
+    brandName: 'CoreFit App',
+    brandInitials: 'CF',
+    brandColor: LIME,
+    category: 'Health & Fitness',
+    contentType: 'UGC-Style Ads',
+    description: 'Conversion-focused short-form video ads for a fitness app. Real results, authentic hooks.',
+    budget: 600,
+    creatorPayMin: 175,
+    creatorPayMax: 250,
+    platformFee: 60,
+    deadline: 'May 15, 2026',
+    daysLeft: 5,
+    status: 'Submitted',
+    escrowStatus: 'In Review',
+    deliverables: ['5 × 15–45s video ads', 'At least 2 with hook overlays', 'Vertical 9:16 format'],
+    skills: ['UGC Video', 'Fitness Content', 'Direct Response'],
+    brief: `Brand: CoreFit App — Fitness & Workout Tracking\n\nGoal: Drive app installs from fitness enthusiasts aged 18–40. Platform: TikTok, Instagram Reels.\n\nAngle: Real people who would use this app. Not gym influencers — everyday fitness beginners or intermediate users.\n\nHook angles to explore:\n- "I tried every fitness app and deleted them all until this"\n- "This app paid for itself in 3 weeks"\n- "Why I stopped going to the gym (and still got results)"\n\nStyle: Phone screen recordings welcome. Walk through app features naturally. Raw, lo-fi is OK.\n\nDeliverables: 5 videos. Mix of hooks. 9:16 format only.`,
+    assets: [
+      { name: 'CoreFit_Brand_Kit.pdf', type: 'PDF' },
+      { name: 'App_Screenshots.png', type: 'PNG' },
+    ],
+    applicants: [
+      { id: 'ap-6', name: 'Jordan Kim', role: 'AI Video Creator', initials: 'JK', color: '#a855f7', skills: ['Direct Response', 'Fitness'], portfolioCount: 31, message: 'Direct response hooks are my specialty. Delivered 6 fitness brand projects last month.', status: 'Shortlisted' },
+    ],
+    submissions: [
+      { id: 'sub-3', creatorName: 'Jordan Kim', creatorInitials: 'JK', creatorColor: '#a855f7', title: 'Hook Set A — "I tried every fitness app"', notes: 'Three variations of the hook — different pace and overlay text. Let me know which resonates.', status: 'Pending', submittedAt: 'May 10, 2026' },
+      { id: 'sub-4', creatorName: 'Jordan Kim', creatorInitials: 'JK', creatorColor: '#a855f7', title: 'App walkthrough tutorial ad', notes: 'Screen recording style, casual narration. Tested two opening frames.', status: 'Approved', submittedAt: 'May 8, 2026' },
+    ],
+    icon: '💪',
+  },
+  {
+    id: 'proj-4',
+    title: 'Supplement Brand Launch Ads',
+    brandName: 'PureForm',
+    brandInitials: 'PF',
+    brandColor: '#6366f1',
+    category: 'Health & Nutrition',
+    contentType: 'AI Video Ads',
+    description: 'Launch campaign for a new pre-workout supplement. High-energy, direct-response style.',
+    budget: 800,
+    creatorPayMin: 240,
+    creatorPayMax: 340,
+    platformFee: 80,
+    deadline: 'May 22, 2026',
+    daysLeft: 12,
+    status: 'Posted',
+    escrowStatus: 'Not Funded',
+    deliverables: ['4 × 30s video ads', '2 × 60s deep-dive videos', 'Static ad versions'],
+    skills: ['High-energy Video', 'Direct Response', 'Supplement Industry'],
+    brief: `Brand: PureForm — Pre-Workout Supplement\n\nProduct launch campaign for SURGE Pre-Workout. Target: gym-goers 20–35 who are tired of under-dosed supplements.\n\nTone: Confident, energetic, results-focused. Not bro-gym cringe — think clean, scientific edge with lifestyle appeal.\n\nAngles:\n- Performance comparison (without naming competitors)\n- Ingredient transparency ("Most pre-workouts hide behind proprietary blends...")\n- Day-in-the-life using SURGE\n\nFormat: Mix of 30s punchy ads and one longer 60s breakdown video.\n\nBudget is flexible for the right creator.`,
+    assets: [
+      { name: 'SURGE_Product_Images.zip', type: 'ZIP' },
+      { name: 'PureForm_Brand_Guide.pdf', type: 'PDF' },
+    ],
+    applicants: [],
+    submissions: [],
+    icon: '⚡',
+  },
+  {
+    id: 'proj-5',
+    title: 'Local Restaurant Short-Form Ads',
+    brandName: 'Harvest Table',
+    brandInitials: 'HT',
+    brandColor: '#f97316',
+    category: 'Food & Beverage',
+    contentType: 'UGC-Style Ads',
+    description: 'Authentic-feeling social ads for a farm-to-table restaurant. Local audience, warm vibe.',
+    budget: 280,
+    creatorPayMin: 80,
+    creatorPayMax: 120,
+    platformFee: 28,
+    deadline: 'May 24, 2026',
+    daysLeft: 14,
+    status: 'Creators Invited',
+    escrowStatus: 'Funded',
+    deliverables: ['4 × short-form videos', '6 × social image posts', 'Story formats'],
+    skills: ['Food Content', 'Lifestyle Video', 'Local Marketing'],
+    brief: `Brand: Harvest Table Restaurant — Durham, NC\n\nFarm-to-table restaurant promoting their new summer menu and dinner reservation experience.\n\nAudience: Local Durham residents, food lovers 28–50, health-conscious diners.\n\nVibe: Warm, earthy, inviting. Think Sunday afternoon, natural light, rustic wood tables.\n\nContent needed:\n- Menu reveal / food highlights\n- Behind-the-scenes kitchen clip\n- "Why we source locally" story beat\n- Reservation CTA content\n\nDeliverables: 4 videos (15–30s) + 6 social image posts. Include summer colors — warm oranges, greens.`,
+    assets: [
+      { name: 'Harvest_Logo.png', type: 'PNG' },
+      { name: 'Menu_Summer_2026.pdf', type: 'PDF' },
+    ],
+    applicants: [
+      { id: 'ap-7', name: 'Alex Rivera', role: 'AI Ad Creator', initials: 'AR', color: LIME, skills: ['Food Content', 'Lifestyle'], portfolioCount: 24, message: 'Love the farm-to-table concept. Warm lifestyle content is in my top portfolio pieces.', status: 'Invited' },
+    ],
+    submissions: [],
+    icon: '🌿',
+  },
+  {
+    id: 'proj-6',
+    title: 'SaaS Explainer Video Concepts',
+    brandName: 'ToolHive',
+    brandInitials: 'TH',
+    brandColor: '#22d3ee',
+    category: 'Software & SaaS',
+    contentType: 'AI Video Ads',
+    description: 'Clear, engaging explainer videos for a B2B project management SaaS tool.',
+    budget: 950,
+    creatorPayMin: 280,
+    creatorPayMax: 400,
+    platformFee: 95,
+    deadline: 'May 28, 2026',
+    daysLeft: 18,
+    status: 'Approved',
+    escrowStatus: 'Released',
+    deliverables: ['3 × 60–90s explainer videos', '1 × 30s social cut', 'Captions + thumbnails'],
+    skills: ['SaaS Explainers', 'Screen Recording', 'B2B Marketing'],
+    brief: `Brand: ToolHive — B2B Project Management Platform\n\nWe need explainer videos that communicate our value prop clearly without being boring. Target: startup ops leads, project managers, team leads at 10–200 person companies.\n\nKey messages:\n- "Stop juggling 6 tools — ToolHive replaces them all"\n- Time-to-value: 10-minute onboarding\n- Integrates with Slack, Notion, GitHub\n\nStyle: Screen-share walkthroughs with talking-head or voiceover. Clean, professional but approachable.\n\nDeliverables: 3 longer explainers + 1 punchy 30s version for paid social.`,
+    assets: [
+      { name: 'ToolHive_Brand_Kit.pdf', type: 'PDF' },
+      { name: 'App_Demo_Access.txt', type: 'TXT' },
+    ],
+    applicants: [
+      { id: 'ap-8', name: 'Jordan Kim', role: 'AI Video Creator', initials: 'JK', color: '#a855f7', skills: ['SaaS', 'Explainer'], portfolioCount: 31, message: 'B2B SaaS explainers are my niche. Happy to share samples.', status: 'Invited' },
+    ],
+    submissions: [
+      { id: 'sub-5', creatorName: 'Jordan Kim', creatorInitials: 'JK', creatorColor: '#a855f7', title: 'Full Explainer — "Stop juggling 6 tools"', notes: 'Final version with captions and thumbnail. Ready for review.', status: 'Approved', submittedAt: 'May 6, 2026' },
+      { id: 'sub-6', creatorName: 'Jordan Kim', creatorInitials: 'JK', creatorColor: '#a855f7', title: '30s Social Cut', notes: 'Punchy version optimized for TikTok / LinkedIn.', status: 'Approved', submittedAt: 'May 7, 2026' },
+    ],
+    icon: '💻',
+  },
+]
+
+export function getProjectById(id: string): MockProject | undefined {
+  return MOCK_PROJECTS.find(p => p.id === id)
+}
+
+// ─── Admin Marketplace Mock Data ─────────────────────────────────────────────
+
+export interface AdminClient {
+  id: string; brandName: string; contactName: string; contactEmail: string;
+  activeProjects: number; totalSpend: number; paymentStatus: 'Current' | 'Pending' | 'Overdue';
+  lastActivity: string; initials: string; color: string;
+}
+
+export interface AdminPayment {
+  id: string; projectId: string; projectTitle: string;
+  clientName: string; creatorName: string;
+  projectBudget: number; creatorPayout: number; platformFee: number;
+  escrowStatus: EscrowStatus; payoutStatus: 'Pending' | 'Released' | 'On Hold' | 'Refunded';
+  date: string;
+}
+
+export interface AdminDispute {
+  id: string; projectId: string; projectTitle: string;
+  clientName: string; creatorName: string;
+  issueType: 'Revision Requested' | 'Client Rejected' | 'Late Delivery' | 'Payment Hold' | 'Quality Review';
+  amountAtRisk: number; status: 'Open' | 'In Review' | 'Resolved' | 'Escalated';
+  lastMessage: string; createdAt: string;
+}
+
+export interface AdminActivity {
+  id: string; type: 'project' | 'application' | 'submission' | 'payment' | 'dispute' | 'creator';
+  message: string; detail: string; time: string; color: string;
+}
+
+export const ADMIN_CLIENTS: AdminClient[] = [
+  { id: 'client-1', brandName: 'GlowCo Beauty',  contactName: 'Sarah Kim',    contactEmail: 'sarah@glowco.com',   activeProjects: 2, totalSpend: 770,   paymentStatus: 'Current', lastActivity: '2 hours ago',   initials: 'GC', color: '#f472b6' },
+  { id: 'client-2', brandName: 'Roast & Co.',    contactName: 'Marco Lima',   contactEmail: 'marco@roastco.com',  activeProjects: 1, totalSpend: 320,   paymentStatus: 'Current', lastActivity: '1 day ago',     initials: 'RC', color: '#b45309' },
+  { id: 'client-3', brandName: 'CoreFit App',    contactName: 'Tyler Brown',  contactEmail: 'tyler@corefit.app',  activeProjects: 1, totalSpend: 600,   paymentStatus: 'Pending', lastActivity: '3 hours ago',   initials: 'CF', color: '#a3e635' },
+  { id: 'client-4', brandName: 'PureForm',       contactName: 'Jessica Chen', contactEmail: 'jess@pureform.co',   activeProjects: 1, totalSpend: 800,   paymentStatus: 'Current', lastActivity: '5 hours ago',   initials: 'PF', color: '#6366f1' },
+  { id: 'client-5', brandName: 'Harvest Table',  contactName: 'David Park',   contactEmail: 'david@harvesttable.com', activeProjects: 1, totalSpend: 280, paymentStatus: 'Current', lastActivity: '1 day ago',   initials: 'HT', color: '#f97316' },
+  { id: 'client-6', brandName: 'ToolHive',       contactName: 'Anika Shah',   contactEmail: 'anika@toolhive.io',  activeProjects: 0, totalSpend: 950,   paymentStatus: 'Current', lastActivity: '3 days ago',    initials: 'TH', color: '#22d3ee' },
+]
+
+export const ADMIN_PAYMENTS: AdminPayment[] = [
+  { id: 'pay-1', projectId: 'proj-6', projectTitle: 'SaaS Explainer Videos',    clientName: 'ToolHive',      creatorName: 'Jordan Kim',  projectBudget: 950, creatorPayout: 340, platformFee: 95, escrowStatus: 'Released',   payoutStatus: 'Released', date: 'May 8, 2026'  },
+  { id: 'pay-2', projectId: 'proj-3', projectTitle: 'Fitness App AI UGC Videos', clientName: 'CoreFit App',  creatorName: 'Jordan Kim',  projectBudget: 600, creatorPayout: 250, platformFee: 60, escrowStatus: 'In Review',  payoutStatus: 'Pending',  date: 'May 10, 2026' },
+  { id: 'pay-3', projectId: 'proj-1', projectTitle: 'Skincare TikTok Ad Pack',   clientName: 'GlowCo Beauty',creatorName: 'Alex Rivera', projectBudget: 450, creatorPayout: 180, platformFee: 45, escrowStatus: 'Funded',     payoutStatus: 'On Hold',  date: 'May 10, 2026' },
+  { id: 'pay-4', projectId: 'proj-5', projectTitle: 'Local Restaurant Ads',      clientName: 'Harvest Table',creatorName: 'Alex Rivera', projectBudget: 280, creatorPayout: 120, platformFee: 28, escrowStatus: 'Funded',     payoutStatus: 'Pending',  date: 'May 9, 2026'  },
+  { id: 'pay-5', projectId: 'proj-2', projectTitle: 'Coffee Brand Visuals',      clientName: 'Roast & Co.', creatorName: 'Sam Torres',  projectBudget: 320, creatorPayout: 140, platformFee: 32, escrowStatus: 'Funded',     payoutStatus: 'Pending',  date: 'May 8, 2026'  },
+  { id: 'pay-6', projectId: 'proj-4', projectTitle: 'Supplement Brand Ads',      clientName: 'PureForm',    creatorName: '—',           projectBudget: 800, creatorPayout: 340, platformFee: 80, escrowStatus: 'Not Funded', payoutStatus: 'Pending',  date: 'May 5, 2026'  },
+]
+
+export const ADMIN_DISPUTES: AdminDispute[] = [
+  { id: 'disp-1', projectId: 'proj-1', projectTitle: 'Skincare TikTok Ad Pack',   clientName: 'GlowCo Beauty', creatorName: 'Maya Chen',  issueType: 'Revision Requested', amountAtRisk: 130, status: 'Open',      lastMessage: 'Client requesting color grading changes on draft 2.', createdAt: 'May 10, 2026' },
+  { id: 'disp-2', projectId: 'proj-3', projectTitle: 'Fitness App AI UGC Videos', clientName: 'CoreFit App',   creatorName: 'Jordan Kim', issueType: 'Client Rejected',     amountAtRisk: 250, status: 'In Review', lastMessage: 'Client says the screen recording quality is too low.', createdAt: 'May 9, 2026'  },
+  { id: 'disp-3', projectId: 'proj-2', projectTitle: 'Coffee Brand Visuals',      clientName: 'Roast & Co.', creatorName: 'Sam Torres', issueType: 'Late Delivery',       amountAtRisk: 140, status: 'In Review', lastMessage: 'Creator missed deadline by 2 days without notice.', createdAt: 'May 8, 2026'  },
+  { id: 'disp-4', projectId: 'proj-5', projectTitle: 'Local Restaurant Ads',      clientName: 'Harvest Table',creatorName: 'Alex Rivera',issueType: 'Quality Review',      amountAtRisk: 80,  status: 'Resolved',  lastMessage: 'Admin reviewed — quality meets standard. Approved.', createdAt: 'May 7, 2026'  },
+]
+
+export const ADMIN_ACTIVITY: AdminActivity[] = [
+  { id: 'act-1', type: 'submission', message: 'New submission',      detail: 'Jordan Kim submitted "Fitness App Hook Set A" for CoreFit App',         time: '12m ago',  color: '#FF5C00'  },
+  { id: 'act-2', type: 'application',message: 'New application',    detail: 'Riley Park applied to "Skincare TikTok Ad Pack" (GlowCo Beauty)',        time: '28m ago',  color: '#22d3ee'  },
+  { id: 'act-3', type: 'payment',    message: 'Escrow funded',       detail: 'CoreFit App funded escrow $600 for Fitness App AI UGC Videos',           time: '1h ago',   color: '#a3e635'  },
+  { id: 'act-4', type: 'dispute',    message: 'Dispute opened',      detail: 'GlowCo Beauty requested revision on Skincare TikTok Ad Pack',            time: '2h ago',   color: '#ef4444'  },
+  { id: 'act-5', type: 'creator',    message: 'Creator joined',      detail: 'Casey Morgan completed profile and turned on Open to Work',              time: '3h ago',   color: '#a3e635'  },
+  { id: 'act-6', type: 'project',    message: 'Project posted',      detail: 'PureForm posted "Supplement Brand Launch Ads" — $800 budget',           time: '5h ago',   color: '#FF5C00'  },
+  { id: 'act-7', type: 'payment',    message: 'Payout released',     detail: 'Jordan Kim received $340 payout for SaaS Explainer Videos',             time: '1d ago',   color: '#a3e635'  },
+  { id: 'act-8', type: 'application',message: 'Application shortlisted', detail: 'Alex Rivera shortlisted for Skincare TikTok Ad Pack',              time: '1d ago',   color: '#22d3ee'  },
 ]

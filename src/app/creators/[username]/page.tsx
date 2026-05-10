@@ -200,7 +200,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
               )}
               {creator.featured && (
                 <span style={{ fontSize: 11, fontWeight: 700, background: 'rgba(255,92,0,0.1)', color: ORANGE, padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(255,92,0,0.2)' }}>
-                  ✦ Featured
+                  Featured
                 </span>
               )}
             </div>

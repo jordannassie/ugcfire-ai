@@ -102,10 +102,10 @@ export default function SignupPage() {
             {/* Feature list */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { icon: '✦', color: LIME,   text: 'Upload AI ad work made anywhere' },
-                { icon: '✦', color: LIME,   text: 'Create video and image ads with UGCFire tools' },
-                { icon: '✦', color: ORANGE, text: 'Build a public AI creator portfolio' },
-                { icon: '✦', color: ORANGE, text: 'Turn on Open to Work for paid brand projects' },
+                { icon: '—', color: LIME,   text: 'Upload AI ad work made anywhere' },
+                { icon: '—', color: LIME,   text: 'Create video and image ads with UGCFire tools' },
+                { icon: '—', color: ORANGE, text: 'Build a public AI creator portfolio' },
+                { icon: '—', color: ORANGE, text: 'Turn on Open to Work for paid brand projects' },
               ].map(f => (
                 <div key={f.text} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                   <span style={{ color: f.color, fontSize: 13, fontWeight: 800, marginTop: 1, flexShrink: 0 }}>{f.icon}</span>
@@ -136,8 +136,8 @@ export default function SignupPage() {
               onClick={() => handleDemo('client')}
               disabled={entering !== null}
               style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(163,230,53,0.06)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 14, padding: '16px 18px', cursor: 'pointer', fontFamily: 'inherit', marginBottom: 10, textAlign: 'left' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(163,230,53,0.12)', border: '1px solid rgba(163,230,53,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                👤
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(163,230,53,0.12)', border: '1px solid rgba(163,230,53,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 18, color: LIME, fontWeight: 800 }}>
+                C
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
@@ -153,8 +153,8 @@ export default function SignupPage() {
               onClick={() => handleDemo('admin')}
               disabled={entering !== null}
               style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, background: 'rgba(255,92,0,0.05)', border: '1px solid rgba(255,92,0,0.2)', borderRadius: 14, padding: '16px 18px', cursor: 'pointer', fontFamily: 'inherit', marginBottom: 24, textAlign: 'left' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                ⚡
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(255,92,0,0.1)', border: '1px solid rgba(255,92,0,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 18, color: ORANGE, fontWeight: 800 }}>
+                A
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>

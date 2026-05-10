@@ -166,7 +166,7 @@ export default function ImagePage() {
       {/* Generate */}
       <button onClick={e => { e.stopPropagation(); handleGenerate(); }} disabled={generating}
         style={{ width: '100%', background: generating ? '#7aaa28' : LIME, color: '#0d0d0d', border: 'none', borderRadius: 10, padding: '13px', fontSize: 15, fontWeight: 800, cursor: generating ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', letterSpacing: '-0.01em', transition: 'background 0.15s' }}>
-        {generating ? <><Sparkles size={16} />Generating…</> : `Generate ✦ ${count}`}
+        {generating ? <><Sparkles size={16} strokeWidth={2} />Generating…</> : `Generate ${count} Image${count > 1 ? 's' : ''}`}
       </button>
     </div>
   );
@@ -212,7 +212,7 @@ export default function ImagePage() {
           {(['gallery', 'create'] as const).map(v => (
             <button key={v} onClick={() => setMobileView(v)}
               style={{ flex: 1, padding: '12px', fontSize: 13, fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', color: mobileView === v ? '#fff' : 'rgba(255,255,255,0.4)', borderBottom: mobileView === v ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-              {v === 'gallery' ? '🖼  My Images' : '✦  Create Image Ad'}
+              {v === 'gallery' ? 'My Images' : 'Create Image Ad'}
             </button>
           ))}
         </div>

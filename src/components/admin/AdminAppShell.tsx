@@ -6,19 +6,36 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Users, Film, FolderOpen, CreditCard, LifeBuoy,
-  Search, Bell, Shield, LogOut, Sparkles,
+  Search, Bell, Shield, LogOut, Sparkles, Briefcase, ClipboardList,
+  Upload, DollarSign, AlertTriangle, UserCheck,
 } from 'lucide-react';
+import AppFooter from '@/components/shared/AppFooter';
 import { LOGO_URL } from '@/lib/demoAssets';
 import { exitDemoMode } from '@/lib/demoData';
 
-const NAV = [
-  { label: 'Overview',    href: '/admin',              icon: LayoutDashboard },
-  { label: 'Users',       href: '/admin/users',         icon: Users           },
-  { label: 'Creators',    href: '/admin/creators',      icon: Sparkles        },
-  { label: 'Generations', href: '/admin/generations',   icon: Film            },
-  { label: 'Assets',      href: '/admin/assets',        icon: FolderOpen      },
-  { label: 'Billing',     href: '/admin/billing',       icon: CreditCard      },
-  { label: 'Support',     href: '/admin/support',       icon: LifeBuoy        },
+const NAV_SECTIONS = [
+  {
+    label: 'Marketplace',
+    items: [
+      { label: 'Overview',      href: '/admin',                icon: LayoutDashboard },
+      { label: 'Projects',      href: '/admin/projects',       icon: Briefcase       },
+      { label: 'Applications',  href: '/admin/applications',   icon: ClipboardList   },
+      { label: 'Submissions',   href: '/admin/submissions',    icon: Upload          },
+      { label: 'Creators',      href: '/admin/creators',       icon: UserCheck       },
+      { label: 'Clients',       href: '/admin/clients',        icon: Users           },
+      { label: 'Payments',      href: '/admin/payments',       icon: DollarSign      },
+      { label: 'Disputes',      href: '/admin/disputes',       icon: AlertTriangle   },
+    ],
+  },
+  {
+    label: 'Platform',
+    items: [
+      { label: 'Generations',   href: '/admin/generations',    icon: Film            },
+      { label: 'Assets',        href: '/admin/assets',         icon: FolderOpen      },
+      { label: 'Billing',       href: '/admin/billing',        icon: CreditCard      },
+      { label: 'Support',       href: '/admin/support',        icon: LifeBuoy        },
+    ],
+  },
 ];
 
 const ORANGE  = '#FF5C00';
@@ -65,27 +82,34 @@ export default function AdminAppShell({ children }: { children: React.ReactNode 
         </div>
 
         {/* Nav items */}
-        <nav style={{ flex: 1, padding: '10px 8px', overflowY: 'auto' }}>
-          {NAV.map(item => {
-            const active = isActive(item.href);
-            return (
-              <Link key={item.label} href={item.href}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '9px 10px', borderRadius: 9, marginBottom: 2,
-                  textDecoration: 'none',
-                  background: active ? 'rgba(255,255,255,0.05)' : 'transparent',
-                  borderLeft: active ? `3px solid ${ORANGE}` : '3px solid transparent',
-                  color: active ? '#fff' : 'rgba(255,255,255,0.45)',
-                  fontSize: 13.5, fontWeight: active ? 600 : 400,
-                  transition: 'all 0.12s',
-                  fontFamily: 'inherit',
-                }}>
-                <item.icon size={15} strokeWidth={1.75} color={active ? ORANGE : 'rgba(255,255,255,0.38)'} />
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav style={{ flex: 1, padding: '8px 8px', overflowY: 'auto' }}>
+          {NAV_SECTIONS.map(section => (
+            <div key={section.label} style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.22)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>
+                {section.label}
+              </div>
+              {section.items.map(item => {
+                const active = isActive(item.href);
+                return (
+                  <Link key={item.label} href={item.href}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '8px 10px', borderRadius: 9, marginBottom: 1,
+                      textDecoration: 'none',
+                      background: active ? 'rgba(255,255,255,0.05)' : 'transparent',
+                      borderLeft: active ? `3px solid ${ORANGE}` : '3px solid transparent',
+                      color: active ? '#fff' : 'rgba(255,255,255,0.45)',
+                      fontSize: 13, fontWeight: active ? 600 : 400,
+                      transition: 'all 0.12s',
+                      fontFamily: 'inherit',
+                    }}>
+                    <item.icon size={14} strokeWidth={1.75} color={active ? ORANGE : 'rgba(255,255,255,0.38)'} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* Usage card */}
@@ -174,8 +198,9 @@ export default function AdminAppShell({ children }: { children: React.ReactNode 
         </header>
 
         {/* Content */}
-        <div style={{ flex: 1, overflowY: 'auto' }}>
-          {children}
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1 }}>{children}</div>
+          <AppFooter />
         </div>
       </div>
     </div>

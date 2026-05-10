@@ -1,203 +1,131 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { createClient } from '@/lib/supabase/client'
-import { FolderOpen } from 'lucide-react'
+'use client';
 
-interface ClientRow {
-  id: string
-  name: string
-  owner_name: string
-  owner_email: string
-  plan_name: string
-  billing_status: string
-  last_activity: string | null
-  avatar_url?: string | null
-}
+import React, { useState } from 'react';
+import { Search, ExternalLink } from 'lucide-react';
+import { ADMIN_CLIENTS, MOCK_PROJECTS } from '@/lib/demoData';
 
-function humanBilling(raw: string): { label: string; css: string } {
-  const map: Record<string, { label: string; css: string }> = {
-    active:        { label: 'Active',     css: 'bg-green-500/20 text-green-300' },
-    active_mock:   { label: 'Active',     css: 'bg-green-500/20 text-green-300' },
-    trial:         { label: 'Trial',      css: 'bg-blue-500/20 text-blue-300' },
-    past_due:      { label: 'Past Due',   css: 'bg-orange-500/20 text-orange-300' },
-    past_due_mock: { label: 'Past Due',   css: 'bg-orange-500/20 text-orange-300' },
-    canceled:      { label: 'Canceled',   css: 'bg-gray-500/20 text-gray-400' },
-    canceled_mock: { label: 'Canceled',   css: 'bg-gray-500/20 text-gray-400' },
-    inactive:      { label: 'No Billing', css: 'bg-white/8 text-white/35' },
-  }
-  return map[raw] ?? { label: raw ?? 'None', css: 'bg-white/8 text-white/35' }
-}
+const ORANGE = '#FF5C00';
+const LIME   = '#a3e635';
+const PANEL  = '#141414';
+const BORDER = 'rgba(255,255,255,0.07)';
 
-function CompanyAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string | null }) {
-  const initial = name?.[0]?.toUpperCase() ?? '?'
-  if (avatarUrl) {
-    return (
-      <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/10">
-        <Image src={avatarUrl} alt={name} width={32} height={32} className="object-cover w-full h-full" unoptimized />
-      </div>
-    )
-  }
-  return (
-    <div
-      className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center border border-white/10 text-white text-xs font-bold drop-shadow"
-      style={{ background: 'linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)' }}
-    >
-      {initial}
-    </div>
-  )
-}
+const PAYMENT_CONFIG: Record<string, { color: string; bg: string }> = {
+  'Current': { color: LIME,     bg: 'rgba(163,230,53,0.1)'  },
+  'Pending': { color: '#22d3ee',bg: 'rgba(34,211,238,0.1)'  },
+  'Overdue': { color: '#ef4444',bg: 'rgba(239,68,68,0.1)'   },
+};
+
+export const dynamic = 'force-dynamic';
 
 export default function AdminClientsPage() {
-  const router = useRouter()
-  const [clients, setClients] = useState<ClientRow[]>([])
-  const [search, setSearch] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('');
 
-  useEffect(() => { loadClients() }, [])
+  const filtered = ADMIN_CLIENTS.filter(c =>
+    !search || c.brandName.toLowerCase().includes(search.toLowerCase()) || c.contactName.toLowerCase().includes(search.toLowerCase())
+  );
 
-  async function loadClients() {
-    setLoading(true)
-    const supabase = createClient()
-    const { data: companies } = await supabase
-      .from('companies')
-      .select('id, name, owner_user_id, plan_id, billing_status')
-      .order('created_at', { ascending: false })
-
-    if (!companies) { setClients([]); setLoading(false); return }
-
-    const rows: ClientRow[] = await Promise.all(
-      companies.map(async (company) => {
-        const [{ data: profile }, { data: plan }, { data: lastLog }, { data: brief }] = await Promise.all([
-          company.owner_user_id
-            ? supabase.from('profiles').select('email, full_name, avatar_url').eq('id', company.owner_user_id).maybeSingle()
-            : Promise.resolve({ data: null }),
-          company.plan_id
-            ? supabase.from('plans').select('name').eq('id', company.plan_id).maybeSingle()
-            : Promise.resolve({ data: null }),
-          supabase.from('activity_logs').select('created_at').eq('company_id', company.id)
-            .order('created_at', { ascending: false }).limit(1).maybeSingle(),
-          supabase.from('brand_briefs').select('notes').eq('company_id', company.id).maybeSingle(),
-        ])
-
-        const ownerProfile = profile as { email?: string; full_name?: string | null; avatar_url?: string | null } | null
-        let brandLogoUrl = null
-        if (brief?.notes) {
-          try { const n = JSON.parse(brief.notes as string); brandLogoUrl = n.logo_url } catch {}
-        }
-
-        return {
-          id:             company.id,
-          name:           company.name,
-          owner_name:     ownerProfile?.full_name || 'No name saved',
-          owner_email:    ownerProfile?.email ?? 'No email',
-          plan_name:      (plan as { name?: string } | null)?.name ?? 'No Plan',
-          billing_status: company.billing_status ?? 'inactive',
-          last_activity:  lastLog?.created_at ?? null,
-          avatar_url:     brandLogoUrl || ownerProfile?.avatar_url || null,
-        }
-      })
-    )
-
-    setClients(rows)
-    setLoading(false)
-  }
-
-  const filtered = clients.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.owner_name.toLowerCase().includes(search.toLowerCase()) ||
-    c.owner_email.toLowerCase().includes(search.toLowerCase())
-  )
+  const totalSpend   = ADMIN_CLIENTS.reduce((s, c) => s + c.totalSpend, 0);
+  const activeCount  = ADMIN_CLIENTS.filter(c => c.activeProjects > 0).length;
+  const overdueCount = ADMIN_CLIENTS.filter(c => c.paymentStatus === 'Overdue').length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Clients</h1>
-          <p className="text-white/40 text-sm mt-1">{clients.length} total companies</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={loadClients} className="border border-white/10 text-white/60 px-4 py-3 rounded-lg hover:border-[#FF3B1A] hover:text-white transition text-sm">
-            Refresh
-          </button>
-          <input
-            type="text"
-            placeholder="Search company, owner, or email..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-[#FF3B1A] focus:outline-none w-72"
-          />
-        </div>
-      </div>
+    <>
+      <style>{`*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
 
-      <div className="bg-[#111] border border-white/10 rounded-xl overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center text-white/40 text-sm">Loading clients...</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr>
-                  <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left px-6 pt-5">Company</th>
-                  <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left px-4 pt-5">Owner</th>
-                  <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left px-4 pt-5">Plan</th>
-                  <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left px-4 pt-5">Billing</th>
-                  <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left px-4 pt-5">Last Activity</th>
-                  <th className="text-white/40 text-xs uppercase font-semibold pb-3 border-b border-white/5 text-left px-6 pt-5">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 && (
-                  <tr><td colSpan={6} className="py-8 text-center text-white/30">No clients found</td></tr>
-                )}
-                {filtered.map(client => {
-                  const billing = humanBilling(client.billing_status)
-                  return (
-                    <tr key={client.id} className="hover:bg-white/[0.02]">
-                      <td className="py-3 border-b border-white/5 px-6">
-                        <div className="flex items-center gap-2.5">
-                          <CompanyAvatar name={client.name} avatarUrl={client.avatar_url} />
-                          <span className="text-white font-medium">{client.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 border-b border-white/5 px-4">
-                        <p className="text-white/80 text-sm truncate">{client.owner_name}</p>
-                        <p className="text-white/40 text-xs truncate">{client.owner_email}</p>
-                      </td>
-                      <td className="py-3 border-b border-white/5 px-4">
-                        <span className="text-white/70 text-sm">{client.plan_name}</span>
-                      </td>
-                      <td className="py-3 border-b border-white/5 px-4">
-                        <span className={`text-xs px-2 py-1 rounded-full ${billing.css}`}>{billing.label}</span>
-                      </td>
-                      <td className="py-3 border-b border-white/5 text-white/40 px-4 text-xs whitespace-nowrap">
-                        {client.last_activity ? new Date(client.last_activity).toLocaleDateString() : '—'}
-                      </td>
-                      <td className="py-3 border-b border-white/5 px-6">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => router.push(`/admin/clients/${client.id}/studio`)}
-                            className="flex items-center gap-1.5 bg-[#FF3B1A] hover:bg-[#e02e10] text-white px-3 py-2 rounded-lg transition text-xs font-semibold"
-                          >
-                            <FolderOpen size={13} /> Studio Drive
-                          </button>
-                          <button
-                            onClick={() => router.push(`/admin/clients/${client.id}`)}
-                            className="border border-white/10 text-white/60 px-3 py-2 rounded-lg hover:border-white/30 hover:text-white transition text-xs"
-                          >
-                            Profile
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+      <div style={{ padding: '28px 24px 48px', maxWidth: 1100, margin: '0 auto' }}>
+
+        <div style={{ marginBottom: 24 }}>
+          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+            Client Management
+          </h1>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+            {ADMIN_CLIENTS.length} marketplace clients · ${totalSpend.toLocaleString()} total project spend
+          </p>
+        </div>
+
+        {/* Summary */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+          {[
+            { label: 'Total Clients',     value: String(ADMIN_CLIENTS.length),    color: '#22d3ee' },
+            { label: 'With Active Projects', value: String(activeCount),          color: ORANGE    },
+            { label: 'Total Spend',       value: `$${totalSpend.toLocaleString()}`, color: LIME    },
+            { label: 'Overdue Payments',  value: String(overdueCount),            color: '#ef4444' },
+          ].map(s => (
+            <div key={s.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
+              <div style={{ fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', marginBottom: 4 }}>{s.value}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Search */}
+        <div style={{ position: 'relative', maxWidth: 320, marginBottom: 20 }}>
+          <Search size={13} color="rgba(255,255,255,0.3)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..."
+            style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
+        </div>
+
+        {/* Client cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {filtered.map(client => {
+            const ps      = PAYMENT_CONFIG[client.paymentStatus];
+            const projects = MOCK_PROJECTS.filter(p => p.brandName === client.brandName);
+            return (
+              <div key={client.id} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '18px 20px' }}>
+                <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+
+                  {/* Avatar */}
+                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: `${client.color}20`, border: `2px solid ${client.color}35`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: client.color, flexShrink: 0 }}>
+                    {client.initials}
+                  </div>
+
+                  {/* Info */}
+                  <div style={{ flex: 1, minWidth: 180 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 2 }}>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{client.brandName}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: ps.color, background: ps.bg, padding: '2px 9px', borderRadius: 20, border: `1px solid ${ps.color}30` }}>
+                        {client.paymentStatus}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 8 }}>
+                      {client.contactName} · <span style={{ color: 'rgba(255,255,255,0.28)' }}>{client.contactEmail}</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                      <div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: ORANGE, lineHeight: 1 }}>{client.activeProjects}</div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Active Projects</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: LIME, lineHeight: 1 }}>${client.totalSpend.toLocaleString()}</div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Total Spend</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)', lineHeight: 1.4 }}>{client.lastActivity}</div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Last Activity</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Projects preview + CTA */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0, alignItems: 'flex-end' }}>
+                    {projects.length > 0 && (
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', textAlign: 'right' }}>
+                        {projects.slice(0, 2).map(p => (
+                          <div key={p.id} style={{ marginBottom: 2 }}>{p.icon} {p.title}</div>
+                        ))}
+                        {projects.length > 2 && <div>+{projects.length - 2} more</div>}
+                      </div>
+                    )}
+                    <button style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', background: `${ORANGE}18`, border: `1px solid ${ORANGE}35`, color: ORANGE }}>
+                      <ExternalLink size={12} strokeWidth={2} /> View Client
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  )
+    </>
+  );
 }
