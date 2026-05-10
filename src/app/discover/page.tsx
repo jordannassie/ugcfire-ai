@@ -53,10 +53,10 @@ export default function DiscoverPage() {
           ✦ Creator Network
         </div>
         <h1 style={{ fontSize: 'clamp(28px,4vw,48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
-          Discover AI UGC Creators
+          Explore AI Creators
         </h1>
-        <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
-          Browse AI-generated ad projects and creator portfolios. Find your next brand collab.
+        <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
+          Discover AI creators building portfolios of UGC-style image and video ads for paid brand campaigns.
         </p>
 
         {/* Search */}
@@ -103,7 +103,7 @@ export default function DiscoverPage() {
             <button onClick={() => setAfwOnly(a => !a)}
               style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 20, border: `1px solid ${afwOnly ? 'rgba(163,230,53,0.4)' : BORDER}`, background: afwOnly ? 'rgba(163,230,53,0.1)' : 'transparent', color: afwOnly ? LIME : 'rgba(255,255,255,0.45)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.12s' }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: afwOnly ? LIME : 'rgba(255,255,255,0.2)', boxShadow: afwOnly ? `0 0 6px ${LIME}` : 'none' }} />
-              Available for Work only
+              Open to Work only
             </button>
           )}
         </div>

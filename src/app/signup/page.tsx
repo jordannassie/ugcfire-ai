@@ -29,8 +29,8 @@ export default function SignupPage() {
 
   // Headline adapts to intent
   const leftHeadline = intent === 'creator'
-    ? 'Build your portfolio.\nGet discovered.'
-    : 'Create AI ads.\nBuild your portfolio.\nGet discovered.';
+    ? 'Build your AI ads portfolio.\nGet hired by brands.'
+    : 'Build your AI ads portfolio.\nGet hired by brands.';
 
   return (
     <div style={{ minHeight: '100vh', background: '#080808', color: '#f2f0eb', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -86,7 +86,7 @@ export default function SignupPage() {
             {/* Badge */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.25)', borderRadius: 20, padding: '5px 14px', fontSize: 11, fontWeight: 800, color: LIME, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 28 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: LIME, boxShadow: `0 0 8px ${LIME}` }} />
-              Creator Network
+              AI CREATOR NETWORK
             </div>
 
             {/* Headline */}
@@ -96,16 +96,16 @@ export default function SignupPage() {
 
             {/* Subheadline */}
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: 40, maxWidth: 420 }}>
-              Join UGCFire.ai to generate AI images and videos, publish your best work, and become visible for UGCFire agency opportunities.
+              UGCFire.ai is where AI creators build portfolios, publish UGC-style image and video ads, and turn on Open to Work for paid brand campaigns.
             </p>
 
             {/* Feature list */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { icon: '✦', color: LIME,   text: 'Generate AI UGC videos with Seedance 2.0' },
-                { icon: '✦', color: LIME,   text: 'Create images with GPT Image 2.0' },
-                { icon: '✦', color: ORANGE, text: 'Build a public portfolio on the Creator Network' },
-                { icon: '✦', color: ORANGE, text: 'Get discovered for UGCFire agency opportunities' },
+                { icon: '✦', color: LIME,   text: 'Upload AI ad work made anywhere' },
+                { icon: '✦', color: LIME,   text: 'Create video and image ads with UGCFire tools' },
+                { icon: '✦', color: ORANGE, text: 'Build a public AI creator portfolio' },
+                { icon: '✦', color: ORANGE, text: 'Turn on Open to Work for paid brand projects' },
               ].map(f => (
                 <div key={f.text} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                   <span style={{ color: f.color, fontSize: 13, fontWeight: 800, marginTop: 1, flexShrink: 0 }}>{f.icon}</span>

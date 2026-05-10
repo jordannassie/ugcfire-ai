@@ -111,9 +111,12 @@ export default function ImagePage() {
     <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }} onClick={() => setOpenSetting(null)}>
       {/* Section label */}
       {!mobile && (
-        <div style={{ paddingBottom: 14, marginBottom: 4, borderBottom: `1px solid ${BORDER}`, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Image</span>
-        </div>
+        <>
+          <div style={{ paddingBottom: 14, marginBottom: 4, borderBottom: `1px solid ${BORDER}`, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Image Ad</span>
+          </div>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 10, marginBottom: 4, lineHeight: 1.5 }}>Create portfolio-ready image ads for your AI creator profile.</p>
+        </>
       )}
 
       {/* Selected assets */}
@@ -209,7 +212,7 @@ export default function ImagePage() {
           {(['gallery', 'create'] as const).map(v => (
             <button key={v} onClick={() => setMobileView(v)}
               style={{ flex: 1, padding: '12px', fontSize: 13, fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', color: mobileView === v ? '#fff' : 'rgba(255,255,255,0.4)', borderBottom: mobileView === v ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-              {v === 'gallery' ? '🖼  My Images' : '✦  Create Image'}
+              {v === 'gallery' ? '🖼  My Images' : '✦  Create Image Ad'}
             </button>
           ))}
         </div>

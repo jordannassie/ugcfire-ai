@@ -195,7 +195,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
               {creator.available_for_work && (
                 <span title="This creator is open to UGCFire agency opportunities." style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.3)', borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 700, color: LIME }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: LIME, boxShadow: `0 0 6px ${LIME}` }} />
-                  Available for Work
+                  Open to Work
                 </span>
               )}
               {creator.featured && (
@@ -239,7 +239,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
               </Link>
               {creator.available_for_work && (
                 <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.5 }}>
-                  This creator is open to UGCFire agency opportunities.
+                  This creator is open to paid brand projects through UGCFire.
                 </p>
               )}
             </div>

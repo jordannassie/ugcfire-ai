@@ -115,14 +115,15 @@ export default function VideoPage() {
       {/* Section label */}
       {!mobile && (
         <div style={{ paddingBottom: 14, marginBottom: 4, borderBottom: `1px solid ${BORDER}`, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Video</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Video Ad</span>
         </div>
       )}
 
       {/* Headline */}
       <div style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 2 }}>Upload any image.</h2>
-        <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: LIME, lineHeight: 1.15, letterSpacing: '-0.03em' }}>Turn it into UGC.</h2>
+        <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 2 }}>Create portfolio-ready</h2>
+        <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: LIME, lineHeight: 1.15, letterSpacing: '-0.03em' }}>UGC-style video ads.</h2>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 6, lineHeight: 1.5 }}>Create video ads for your AI creator profile. Upload work made with UGCFire or any AI tool.</p>
       </div>
 
       {/* Drop zone */}
@@ -305,7 +306,7 @@ export default function VideoPage() {
           {(['history', 'create'] as const).map(v => (
             <button key={v} onClick={() => setMobileView(v)}
               style={{ flex: 1, padding: '12px', fontSize: 13, fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', color: mobileView === v ? '#fff' : 'rgba(255,255,255,0.4)', borderBottom: mobileView === v ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit' }}>
-              {v === 'history' ? '▶  My Videos' : '✦  Create Video'}
+              {v === 'history' ? '▶  My Videos' : '✦  Create Video Ad'}
             </button>
           ))}
         </div>

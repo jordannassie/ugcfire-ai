@@ -298,12 +298,12 @@ export default function ProfilePage() {
                   <div style={{ width: 13, height: 13, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2.5, left: availableForWork ? 17 : 2.5, transition: 'left 0.15s', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }} />
                 </div>
                 <span style={{ fontSize: 12, fontWeight: 700, color: availableForWork ? LIME : 'rgba(255,255,255,0.45)' }}>
-                  Available for Work
+                  Open to Work
                 </span>
               </div>
               {availableForWork && (
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', lineHeight: 1.4 }}>
-                  Let UGCFire contact me for paid agency opportunities.
+                  Let UGCFire consider me for paid brand ad projects.
                 </span>
               )}
 
@@ -328,7 +328,7 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>Featured Project</h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Highlighted at the top of your public profile.</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Showcase the AI ad you want brands to notice first.</p>
             </div>
             <button onClick={() => setFeatModal(true)}
               style={{ fontSize: 12, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 8, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -379,7 +379,7 @@ export default function ProfilePage() {
                 Portfolio
                 <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.3)', marginLeft: 6 }}>{allItems.length}</span>
               </h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Publish your best AI ads to get discovered.</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Build your AI ads portfolio so brands and UGCFire can see your style.</p>
             </div>
             <div style={{ display: 'flex', gap: 4 }}>
               {(['all', 'videos', 'images'] as const).map(t => (
@@ -396,7 +396,7 @@ export default function ProfilePage() {
               <div style={{ fontSize: 32, marginBottom: 12 }}>🔥</div>
               <p style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Ready to show your work?</p>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', maxWidth: 360, margin: '0 auto 20px', lineHeight: 1.6 }}>
-                Publish your best AI ads to build your public portfolio and get discovered for agency opportunities.
+                Build your AI ads portfolio with image ads, video ads, product concepts, and UGC-style creatives.
               </p>
               <Link href="/dashboard/video"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 22px', background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, borderRadius: 10, textDecoration: 'none' }}>
@@ -512,7 +512,7 @@ export default function ProfilePage() {
             <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <p style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0 }}>Select Featured Project</p>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>Highlighted at the top of your public profile.</p>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>Showcase the AI ad you want brands to notice first.</p>
               </div>
               <button onClick={() => setFeatModal(false)} style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                 <X size={14} color="rgba(255,255,255,0.5)" />

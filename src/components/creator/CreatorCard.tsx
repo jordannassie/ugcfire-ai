@@ -69,7 +69,7 @@ export default function CreatorCard({ creator, adminActions, onSave, onFeature, 
         {creator.available_for_work && (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.3)', borderRadius: 20, padding: '3px 10px', fontSize: 10, fontWeight: 700, color: LIME, letterSpacing: '0.05em', marginBottom: 8 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: LIME, display: 'inline-block', boxShadow: `0 0 6px ${LIME}` }} />
-            Available for Work
+            Open to Work
           </div>
         )}
 

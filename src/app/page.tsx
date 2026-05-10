@@ -36,7 +36,7 @@ const PRODUCT_IMAGES = [
 const STEPS = [
   { num: 1, title: 'Upload Image',           desc: 'Add any photo or product shot.' },
   { num: 2, title: 'Choose Motion / Style',  desc: 'Pick a preset or describe the vibe you want.' },
-  { num: 3, title: 'Generate Video',         desc: 'Preview and download your UGC video.' },
+  { num: 3, title: 'Generate Video',         desc: 'Preview, download, and publish to your creator portfolio.' },
 ];
 
 const VIDEO_CARD_DATA = [
@@ -246,20 +246,55 @@ export default function Home() {
             <Shield size={18} color={ORANGE} strokeWidth={1.5} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>No credit card</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginTop: 1 }}>Start for free. No paywall until you generate.</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginTop: 1 }}>Start building your AI creator portfolio.</div>
             </div>
+          </div>
+
+          {/* Eyebrow */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.08)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 16 }}>
+            ✦ AI CREATOR NETWORK
           </div>
 
           {/* Headline */}
           <h1 style={{ fontSize: 'clamp(30px, 4.5vw, 54px)', fontWeight: 800, color: '#fff', lineHeight: 1.08, letterSpacing: '-0.03em', marginBottom: 16, maxWidth: 620 }}>
-            Create <span style={{ color: ORANGE }}>UGC</span> videos<br />
-            before you even sign in.
+            Build your <span style={{ color: ORANGE }}>AI ads</span> portfolio.<br />
+            Get hired by brands.
           </h1>
 
-          <p style={{ fontSize: 'clamp(13px, 1.15vw, 16px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: 28, maxWidth: 460 }}>
-            Upload any image. Turn it into scroll-stopping UGC in seconds.<br />
-            Sign up <span style={{ color: ORANGE, fontWeight: 600 }}>only when you&apos;re ready</span> to generate.
+          <p style={{ fontSize: 'clamp(13px, 1.15vw, 16px)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: 20, maxWidth: 480 }}>
+            UGCFire.ai is where AI creators build portfolios, publish UGC-style image and video ads, and turn on Open to Work for paid brand campaigns.
           </p>
+
+          {/* Bullets */}
+          <ul style={{ listStyle: 'none', margin: '0 0 24px', padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[
+              { color: LIME,   text: 'Upload AI ad work made anywhere' },
+              { color: LIME,   text: 'Create images and videos with UGCFire tools' },
+              { color: ORANGE, text: 'Build a public AI creator portfolio' },
+              { color: ORANGE, text: 'Turn on Open to Work for paid brand projects' },
+            ].map(b => (
+              <li key={b.text} style={{ display: 'flex', alignItems: 'center', gap: 9, fontSize: 13, color: 'rgba(255,255,255,0.65)' }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: b.color, boxShadow: `0 0 6px ${b.color}`, flexShrink: 0 }} />
+                {b.text}
+              </li>
+            ))}
+          </ul>
+
+          {/* Hero CTAs */}
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 28 }}>
+            <Link href="/signup?intent=creator"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
+              ✦ Create Your Profile
+            </Link>
+            <Link href="/discover"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: 600, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'background 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.1)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; }}>
+              Explore Creators →
+            </Link>
+          </div>
 
           {/* Steps strip */}
           <div className="steps-strip" style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 14, padding: '18px 22px', marginBottom: 28, display: 'flex', alignItems: 'flex-start' }}>
@@ -407,9 +442,9 @@ export default function Home() {
           {/* Heading */}
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: ORANGE, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>Pricing</p>
-            <h2 style={{ fontSize: 'clamp(26px,3.5vw,40px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 12 }}>Simple pricing for UGC creation</h2>
+            <h2 style={{ fontSize: 'clamp(26px,3.5vw,40px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 12 }}>Simple pricing for AI creators</h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.4)', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
-              Start with monthly credits. Add more anytime when you need them.
+              Monthly credits to build your AI creator portfolio. Add more anytime.
             </p>
           </div>
 
@@ -432,9 +467,9 @@ export default function Home() {
           {pricingTab === 'plans' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, maxWidth: 960, margin: '0 auto' }}>
               {[
-                { name: 'Starter',  price: 29,  credits: 300,   badge: null,           desc: 'Testing AI UGC creation',        color: 'rgba(255,255,255,0.08)',   btnColor: '#1e1e1e', btnText: '#fff', border: BORDER },
-                { name: 'Creator',  price: 99,  credits: 1500,  badge: 'Most Popular', desc: 'Consistent weekly content',       color: 'rgba(163,230,53,0.06)',    btnColor: LIME,      btnText: '#0d0d0d', border: 'rgba(163,230,53,0.35)' },
-                { name: 'Pro',      price: 199, credits: 4000,  badge: null,           desc: 'Brands running more ad tests',   color: 'rgba(255,92,0,0.05)',      btnColor: ORANGE,    btnText: '#fff', border: 'rgba(255,92,0,0.25)' },
+                { name: 'Starter',  price: 29,  credits: 300,   badge: null,           desc: 'Start your AI creator portfolio', color: 'rgba(255,255,255,0.08)',   btnColor: '#1e1e1e', btnText: '#fff', border: BORDER },
+                { name: 'Creator',  price: 99,  credits: 1500,  badge: 'Most Popular', desc: 'Build and grow your portfolio',   color: 'rgba(163,230,53,0.06)',    btnColor: LIME,      btnText: '#0d0d0d', border: 'rgba(163,230,53,0.35)' },
+                { name: 'Pro',      price: 199, credits: 4000,  badge: null,           desc: 'High-volume portfolio creation',  color: 'rgba(255,92,0,0.05)',      btnColor: ORANGE,    btnText: '#fff', border: 'rgba(255,92,0,0.25)' },
               ].map(plan => (
                 <div key={plan.name} style={{ background: plan.color, border: `1px solid ${plan.border}`, borderRadius: 20, padding: '28px 26px 24px', position: 'relative',
                   boxShadow: plan.badge ? '0 0 40px rgba(163,230,53,0.08)' : 'none' }}>
@@ -529,27 +564,27 @@ export default function Home() {
           {/* Heading */}
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>
-              ✦ Creator Network
+              ✦ AI CREATOR NETWORK
             </div>
             <h2 style={{ fontSize: 'clamp(26px,3.5vw,42px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
-              Create AI ads. Build your portfolio.<br />
-              <span style={{ color: LIME }}>Get discovered.</span>
+              Build your AI ads portfolio.<br />
+              <span style={{ color: LIME }}>Get hired by brands.</span>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', maxWidth: 560, margin: '0 auto 28px', lineHeight: 1.75 }}>
-              UGCFire.ai is the AI Creator Network for UGC ads, product videos, and image-to-video creators. Publish your best work, grow your portfolio, and become visible for agency opportunities.
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.42)', maxWidth: 580, margin: '0 auto 28px', lineHeight: 1.75 }}>
+              UGCFire.ai helps AI creators showcase UGC-style image and video ads, turn on Open to Work, and get selected for paid brand campaigns through UGCFire.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/discover?tab=creators"
+              <Link href="/signup?intent=creator"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', transition: 'background 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#b6f23f'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = LIME; }}>
-                ✦ Join Creator Network
+                ✦ Create Your Profile
               </Link>
               <Link href="/discover"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: 600, fontSize: 14, padding: '11px 22px', borderRadius: 10, textDecoration: 'none', border: `1px solid ${BORDER}`, transition: 'background 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.1)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; }}>
-                Explore Creators →
+                Explore AI Creators →
               </Link>
             </div>
           </div>
@@ -572,7 +607,7 @@ export default function Home() {
                 {creator.available_for_work && (
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.25)', borderRadius: 20, padding: '2px 8px', fontSize: 9.5, fontWeight: 700, color: LIME, letterSpacing: '0.04em', marginBottom: 8 }}>
                     <span style={{ width: 5, height: 5, borderRadius: '50%', background: LIME, boxShadow: `0 0 4px ${LIME}` }} />
-                    Available
+                    Open to Work
                   </div>
                 )}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center', marginBottom: 14 }}>
@@ -604,7 +639,7 @@ export default function Home() {
             <div style={{ flex: '0 0 auto', marginRight: 8 }}>
               <Image src={LOGO_URL} alt="UGCFire.ai" width={110} height={30} style={{ objectFit: 'contain', height: 28, width: 'auto', marginBottom: 12 }} unoptimized />
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', lineHeight: 1.8, maxWidth: 220 }}>
-                UGCFire.ai helps brands generate UGC-style ads, product visuals, hooks, scripts, and ad variations faster with AI.
+                UGCFire.ai is the AI Creator Network where creators build portfolios and get hired for paid brand campaigns.
               </p>
             </div>
             {[
@@ -626,7 +661,7 @@ export default function Home() {
           </div>
           <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.16)' }}>© 2026 UGCFire.ai. All rights reserved.</span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.16)' }}>Built for brands that move fast 🔥</span>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.16)' }}>Built for AI creators. 🔥</span>
           </div>
         </div>
       </footer>

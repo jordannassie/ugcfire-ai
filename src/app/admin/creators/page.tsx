@@ -53,14 +53,14 @@ export default function AdminCreatorsPage() {
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Creator Network</h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)' }}>Discover, feature, and invite top AI UGC creators.</p>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)' }}>Manage AI creators, review portfolios, and invite creators to paid brand projects.</p>
       </div>
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 12, marginBottom: 28 }}>
         {[
           { label: 'Total Creators', value: DEMO_CREATORS.length },
-          { label: 'Available for Work', value: DEMO_CREATORS.filter(c => c.available_for_work).length, color: LIME },
+          { label: 'Open to Work', value: DEMO_CREATORS.filter(c => c.available_for_work).length, color: LIME },
           { label: 'Featured', value: featured.size, color: ORANGE },
           { label: 'Saved', value: saved.size },
         ].map(s => (
@@ -125,7 +125,7 @@ export default function AdminCreatorsPage() {
           <div style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '28px', width: '100%', maxWidth: 460 }}>
             <h2 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Invite to Project</h2>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20 }}>
-              Send a project brief to <strong style={{ color: LIME }}>{creator.display_name}</strong>
+              Invite <strong style={{ color: LIME }}>{creator.display_name}</strong> to submit ads for a paid brand campaign.
             </p>
             <textarea
               value={inviteNote}
