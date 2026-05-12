@@ -12,8 +12,8 @@ import {
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,10 +68,10 @@ export default function AdminOverviewPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: '#818cf8', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 12 }}>
             <Shield size={10} strokeWidth={2} /> Admin Command Center
           </div>
-          <h1 style={{ fontSize: 'clamp(20px, 2.5vw, 28px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>
+          <h1 style={{ fontSize: 'clamp(20px, 2.5vw, 28px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 6 }}>
             Marketplace Overview
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)', lineHeight: 1.6 }}>
             UGCFire controls quality before work reaches the client. Review applications, approve submissions, and release payments.
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function AdminOverviewPage() {
                 </div>
               </div>
               <div style={{ fontSize: 26, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', lineHeight: 1.4 }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.4 }}>{s.label}</div>
             </Link>
           ))}
         </div>
@@ -97,10 +97,10 @@ export default function AdminOverviewPage() {
             <Shield size={17} color="#818cf8" strokeWidth={1.75} />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>
               UGCFire controls quality before work reaches the client.
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6 }}>
               Every submission is reviewed by the admin team before delivery. This makes UGCFire a managed marketplace — not an open, unmoderated platform.
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function AdminOverviewPage() {
           {/* Recent Projects */}
           <div className="section-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Recent Projects</h2>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Recent Projects</h2>
               <Link href="/admin/projects" style={{ fontSize: 12, color: ORANGE, textDecoration: 'none', fontWeight: 600 }}>View all →</Link>
             </div>
             {recentProjects.map((p, i) => {
@@ -131,7 +131,7 @@ export default function AdminOverviewPage() {
                   <span style={{ fontSize: 18, flexShrink: 0 }}>{p.icon}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{p.brandName} · ${p.budget}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{p.brandName} · ${p.budget}</div>
                   </div>
                   <span style={{ fontSize: 9, fontWeight: 700, color: sc[p.status], background: `${sc[p.status]}14`, padding: '2px 8px', borderRadius: 20, border: `1px solid ${sc[p.status]}25`, flexShrink: 0 }}>{p.status}</span>
                 </Link>
@@ -142,11 +142,11 @@ export default function AdminOverviewPage() {
           {/* Pending Applications */}
           <div className="section-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Pending Applications</h2>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Pending Applications</h2>
               <Link href="/admin/applications" style={{ fontSize: 12, color: '#22d3ee', textDecoration: 'none', fontWeight: 600 }}>Review →</Link>
             </div>
             {recentApplicants.length === 0 ? (
-              <div style={{ padding: '28px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>No pending applications.</div>
+              <div style={{ padding: '28px', textAlign: 'center', fontSize: 13, color: 'var(--text-faint)' }}>No pending applications.</div>
             ) : recentApplicants.map((a, i) => {
               const proj = MOCK_PROJECTS.find(p => p.applicants.some(ap => ap.id === a.id));
               return (
@@ -155,8 +155,8 @@ export default function AdminOverviewPage() {
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                   <div style={{ width: 32, height: 32, borderRadius: '50%', background: `${a.color}20`, border: `1.5px solid ${a.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: a.color, flexShrink: 0 }}>{a.initials}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{a.name}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{proj?.title ?? 'Unknown project'}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{a.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{proj?.title ?? 'Unknown project'}</div>
                   </div>
                   <span style={{ fontSize: 9, fontWeight: 700, color: '#22d3ee', background: 'rgba(34,211,238,0.1)', padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>New</span>
                 </Link>
@@ -171,21 +171,21 @@ export default function AdminOverviewPage() {
           {/* Submissions needing review */}
           <div className="section-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Submissions to Review</h2>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Submissions to Review</h2>
               <Link href="/admin/submissions" style={{ fontSize: 12, color: LIME, textDecoration: 'none', fontWeight: 600 }}>Review →</Link>
             </div>
             {recentSubmissions.length === 0 ? (
-              <div style={{ padding: '28px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>No pending submissions.</div>
+              <div style={{ padding: '28px', textAlign: 'center', fontSize: 13, color: 'var(--text-faint)' }}>No pending submissions.</div>
             ) : recentSubmissions.map((s, i) => {
               const proj = MOCK_PROJECTS.find(p => p.submissions.some(sub => sub.id === s.id));
               return (
                 <Link key={s.id} href="/admin/submissions" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i < recentSubmissions.length - 1 ? `1px solid ${BORDER}` : undefined, textDecoration: 'none', transition: 'background 0.1s' }}
                   onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                  <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#1a1a2e,#16213e)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0, color: 'rgba(255,255,255,0.4)' }}>▶</div>
+                  <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#1a1a2e,#16213e)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0, color: 'var(--text-muted)' }}>▶</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.title}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{s.creatorName} · {proj?.title ?? ''}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{s.creatorName} · {proj?.title ?? ''}</div>
                   </div>
                   <span style={{ fontSize: 9, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.1)', padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>Pending</span>
                 </Link>
@@ -196,7 +196,7 @@ export default function AdminOverviewPage() {
           {/* Payment queue */}
           <div className="section-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
-              <h2 style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Payment Queue</h2>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Payment Queue</h2>
               <Link href="/admin/payments" style={{ fontSize: 12, color: LIME, textDecoration: 'none', fontWeight: 600 }}>Manage →</Link>
             </div>
             {paymentQueue.map((pay, i) => (
@@ -206,13 +206,51 @@ export default function AdminOverviewPage() {
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: LIME, flexShrink: 0 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pay.projectTitle}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{pay.creatorName} · ${pay.creatorPayout} payout</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{pay.creatorName} · ${pay.creatorPayout} payout</div>
                 </div>
                 <span style={{ fontSize: 12, fontWeight: 700, color: LIME, flexShrink: 0 }}>${pay.creatorPayout}</span>
               </Link>
             ))}
           </div>
 
+        </div>
+
+        {/* Workspace quick actions */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 18 }}>
+          {[
+            {
+              label:   'Post a Project',
+              sub:     'Post as UGC Fire Agency',
+              href:    '/client/post-project',
+              color:   '#22d3ee',
+              bg:      'rgba(34,211,238,0.06)',
+              border:  'rgba(34,211,238,0.18)',
+            },
+            {
+              label:   'Open Creator Studio',
+              sub:     'Switch to Creator workspace',
+              href:    '/dashboard/studio',
+              color:   '#a3e635',
+              bg:      'rgba(163,230,53,0.06)',
+              border:  'rgba(163,230,53,0.18)',
+            },
+            {
+              label:   'Browse Opportunities',
+              sub:     'See live creator opportunities',
+              href:    '/opportunities',
+              color:   '#a855f7',
+              bg:      'rgba(168,85,247,0.06)',
+              border:  'rgba(168,85,247,0.18)',
+            },
+          ].map(a => (
+            <Link key={a.label} href={a.href}
+              style={{ background: a.bg, border: `1px solid ${a.border}`, borderRadius: 14, padding: '16px 18px', textDecoration: 'none', display: 'block', transition: 'border-color 0.15s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = a.color + '50'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = a.border; }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>{a.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)', fontWeight: 500 }}>{a.sub}</div>
+            </Link>
+          ))}
         </div>
 
         {/* Platform Activity */}
@@ -229,9 +267,9 @@ export default function AdminOverviewPage() {
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: act.color, flexShrink: 0, marginTop: 5 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ fontSize: 12, fontWeight: 600, color: act.color }}>{act.message}</span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginLeft: 6 }}>{act.detail}</span>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)', marginLeft: 6 }}>{act.detail}</span>
                 </div>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0, whiteSpace: 'nowrap' }}>{act.time}</span>
+                <span style={{ fontSize: 11, color: 'var(--text-faint)', flexShrink: 0, whiteSpace: 'nowrap' }}>{act.time}</span>
               </div>
             ))}
           </div>

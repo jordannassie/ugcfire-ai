@@ -5,8 +5,8 @@ import { Upload, Image as ImageIcon, FileText, Video, Palette, StickyNote } from
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const ASSET_CATEGORIES = [
   { key: 'logos',     label: 'Logos',          icon: Palette,   count: 3, color: LIME   },
@@ -45,8 +45,8 @@ export default function ClientBrandAssetsPage() {
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 6 }}>Brand Assets</h1>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Logos, product images, brand guides, and reference materials for creators.</p>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 6 }}>Brand Assets</h1>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Logos, product images, brand guides, and reference materials for creators.</p>
           </div>
           <button style={{ display: 'flex', alignItems: 'center', gap: 7, background: ORANGE, color: '#fff', border: 'none', borderRadius: 9, padding: '10px 18px', fontSize: 13, fontWeight: 700, cursor: 'not-allowed', opacity: 0.7, fontFamily: 'inherit' }}>
             <Upload size={14} strokeWidth={2} />
@@ -63,34 +63,34 @@ export default function ClientBrandAssetsPage() {
               <div style={{ width: 36, height: 36, borderRadius: 10, background: `${c.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
                 <c.icon size={17} color={c.color} strokeWidth={1.75} />
               </div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{c.label}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{c.count} files</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{c.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{c.count} files</div>
             </div>
           ))}
         </div>
 
         {/* Upload zone */}
         <div style={{ border: '1.5px dashed rgba(255,255,255,0.12)', borderRadius: 14, padding: '28px 24px', textAlign: 'center', marginBottom: 24, background: 'rgba(255,255,255,0.01)' }}>
-          <Upload size={24} color="rgba(255,255,255,0.2)" strokeWidth={1.5} style={{ margin: '0 auto 10px' }} />
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.35)', marginBottom: 4 }}>Drag files here to upload</div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>PNG, JPG, SVG, PDF, MP4 · Upload disabled in demo</div>
+          <Upload size={24} color="var(--text-faint)" strokeWidth={1.5} style={{ margin: '0 auto 10px' }} />
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 4 }}>Drag files here to upload</div>
+          <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>PNG, JPG, SVG, PDF, MP4 · Upload disabled in demo</div>
         </div>
 
         {/* Asset list */}
-        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+        <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>
           {activeTab === 'all' ? 'All Assets' : ASSET_CATEGORIES.find(c => c.key === activeTab)?.label} ({visible.length})
         </h2>
         <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
           {visible.map((a, i) => (
             <div key={a.name} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 18px', borderBottom: i < visible.length - 1 ? `1px solid ${BORDER}` : undefined }}>
-              <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 10, fontWeight: 700, color: 'var(--text-muted)' }}>
                 {a.type}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.name}</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>{a.size}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{a.size}</div>
               </div>
-              <button style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'not-allowed', fontFamily: 'inherit', padding: '6px 10px' }}>
+              <button style={{ fontSize: 12, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'not-allowed', fontFamily: 'inherit', padding: '6px 10px' }}>
                 Download
               </button>
             </div>

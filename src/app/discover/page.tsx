@@ -9,12 +9,13 @@ import {
   DEMO_CREATORS, DEMO_PROJECTS,
   type CreatorSpecialty,
 } from '@/lib/creatorNetwork';
+import SiteFooter from '@/components/shared/SiteFooter';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const ALL_SPECIALTIES: CreatorSpecialty[] = [
   'Beauty', 'Fitness', 'Ecommerce', 'Food & Beverage', 'Tech', 'Fashion', 'Lifestyle', 'Local Business',
@@ -55,13 +56,13 @@ export default function DiscoverPage() {
         <h1 style={{ fontSize: 'clamp(28px,4vw,48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
           Explore AI Creators
         </h1>
-        <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
+        <p style={{ fontSize: 15, color: 'var(--text-muted)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
           Discover AI creators building portfolios of UGC-style image and video ads for paid brand campaigns.
         </p>
 
         {/* Search */}
         <div style={{ display: 'flex', alignItems: 'center', maxWidth: 440, margin: '0 auto', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 12, padding: '10px 14px', gap: 10 }}>
-          <Search size={16} color="rgba(255,255,255,0.3)" />
+          <Search size={16} color="var(--text-faint)" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -76,7 +77,7 @@ export default function DiscoverPage() {
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
 
           {/* View toggle */}
-          <div style={{ display: 'flex', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 3, gap: 3 }}>
+          <div style={{ display: 'flex', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 10, padding: 3, gap: 3 }}>
             {(['projects', 'creators'] as FeedView[]).map(v => (
               <button key={v} onClick={() => setView(v)}
                 style={{ padding: '6px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit',
@@ -113,7 +114,7 @@ export default function DiscoverPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 14, paddingBottom: 60 }}>
             {filteredProjects.map(p => <CreatorProjectCard key={p.id} project={p} />)}
             {filteredProjects.length === 0 && (
-              <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', color: 'rgba(255,255,255,0.25)', fontSize: 14 }}>
+              <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', color: 'var(--text-faint)', fontSize: 14 }}>
                 No projects found for this filter.
               </div>
             )}
@@ -122,13 +123,14 @@ export default function DiscoverPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 16, paddingBottom: 60 }}>
             {filteredCreators.map(c => <CreatorCard key={c.id} creator={c} />)}
             {filteredCreators.length === 0 && (
-              <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', color: 'rgba(255,255,255,0.25)', fontSize: 14 }}>
+              <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', color: 'var(--text-faint)', fontSize: 14 }}>
                 No creators match this filter.
               </div>
             )}
           </div>
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }

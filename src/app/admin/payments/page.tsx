@@ -7,8 +7,8 @@ import { ADMIN_PAYMENTS, type AdminPayment } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type PayoutAction = 'Released' | 'On Hold' | 'Refund Review';
 
@@ -64,10 +64,10 @@ export default function AdminPaymentsPage() {
       <div style={{ padding: '28px 24px 48px', maxWidth: 1300, margin: '0 auto' }}>
 
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>
             Payment & Escrow Dashboard
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>
             Manage creator payouts, escrow releases, and refund requests.
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function AdminPaymentsPage() {
                 </div>
               </div>
               <div style={{ fontSize: 24, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', marginBottom: 4 }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', lineHeight: 1.4 }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.4 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -92,26 +92,26 @@ export default function AdminPaymentsPage() {
           {/* Table header */}
           <div className="pay-row" style={{ borderBottom: `1px solid ${BORDER}` }}>
             {['Project', 'Client', 'Creator', 'Budget', 'Payout', 'UGCFire Fee', 'Escrow', 'Payout Status', 'Action'].map((h, i) => (
-              <span key={i} style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
+              <span key={i} style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
                 className={['Creator', 'Budget', 'UGCFire Fee', 'Escrow'].includes(h) ? 'hide-md' : ''}>{h}</span>
             ))}
           </div>
 
           {ADMIN_PAYMENTS.map(pay => {
             const ps  = getPayoutStatus(pay);
-            const psc = PAYOUT_CONFIG[ps] ?? { color: 'rgba(255,255,255,0.4)', bg: 'rgba(255,255,255,0.05)' };
-            const ec  = ESCROW_CONFIG[pay.escrowStatus] ?? { color: 'rgba(255,255,255,0.4)' };
+            const psc = PAYOUT_CONFIG[ps] ?? { color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.05)' };
+            const ec  = ESCROW_CONFIG[pay.escrowStatus] ?? { color: 'var(--text-muted)' };
             return (
               <div key={pay.id} className="pay-row"
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                 <div style={{ minWidth: 0 }}>
                   <Link href={`/admin/projects/${pay.projectId}`} style={{ fontSize: 13, fontWeight: 600, color: '#fff', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{pay.projectTitle}</Link>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>{pay.date}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{pay.date}</div>
                 </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pay.clientName}</div>
-                <div className="hide-md" style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pay.creatorName}</div>
-                <div className="hide-md" style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>${pay.projectBudget}</div>
+                <div style={{ fontSize: 12, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pay.clientName}</div>
+                <div className="hide-md" style={{ fontSize: 12, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pay.creatorName}</div>
+                <div className="hide-md" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>${pay.projectBudget}</div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: LIME }}>${pay.creatorPayout}</div>
                 <div className="hide-md" style={{ fontSize: 12, color: ORANGE }}>${pay.platformFee}</div>
                 <div className="hide-md">
@@ -140,7 +140,7 @@ export default function AdminPaymentsPage() {
                     </button>
                   )}
                   {(ps === 'Released' || ps === 'Refunded') && (
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)' }}>—</span>
+                    <span style={{ fontSize: 10, color: 'var(--text-faint)' }}>—</span>
                   )}
                 </div>
               </div>

@@ -132,7 +132,7 @@ export default function HoverVideoPreview({
           }}
         >
           {muted
-            ? <VolumeX size={13} color="rgba(255,255,255,0.8)" />
+            ? <VolumeX size={13} color="var(--text-faint)" />
             : <Volume2 size={13} color="#fff" />
           }
         </button>

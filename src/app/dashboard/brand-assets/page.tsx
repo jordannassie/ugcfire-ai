@@ -6,15 +6,15 @@ import { ALL_DEMO_ASSETS, PRODUCT_IMAGES, UGC_IMAGES, LS_BRAND_ASSETS, loadFromL
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const FOLDERS = [
   { label: 'Logos',       icon: Star,      assets: PRODUCT_IMAGES.slice(0, 2), color: 'rgba(255,92,0,0.15)',    border: 'rgba(255,92,0,0.25)'    },
   { label: 'Products',    icon: ImageIcon, assets: PRODUCT_IMAGES,             color: 'rgba(163,230,53,0.08)',  border: 'rgba(163,230,53,0.2)'   },
   { label: 'Creators',    icon: User,      assets: UGC_IMAGES.slice(0, 3),     color: 'rgba(99,102,241,0.1)',   border: 'rgba(99,102,241,0.25)'  },
-  { label: 'Inspiration', icon: Folder,    assets: UGC_IMAGES,                 color: 'rgba(255,255,255,0.04)', border: 'rgba(255,255,255,0.12)' },
+  { label: 'Inspiration', icon: Folder,    assets: UGC_IMAGES,                 color: 'var(--border)', border: 'var(--border-strong)' },
 ];
 
 export default function BrandAssetsPage() {
@@ -48,8 +48,8 @@ export default function BrandAssetsPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Brand Assets</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>Upload logos, products, creators, and inspiration.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>Brand Assets</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>Upload logos, products, creators, and inspiration.</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => handleFiles(e.target.files)} />
@@ -69,17 +69,17 @@ export default function BrandAssetsPage() {
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '1'; }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <folder.icon size={15} color="rgba(255,255,255,0.6)" strokeWidth={1.75} />
+                <folder.icon size={15} color="var(--text-faint)" strokeWidth={1.75} />
               </div>
-              <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{folder.label}</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{folder.label}</span>
             </div>
             <div style={{ display: 'flex', gap: 5 }}>
               {folder.assets.slice(0, 3).map((src, i) => (
                 /* eslint-disable-next-line @next/next/no-img-element */
-                <img key={i} src={src} alt="" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6, border: '1px solid rgba(255,255,255,0.08)' }} />
+                <img key={i} src={src} alt="" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border)' }} />
               ))}
               {folder.assets.length > 3 && (
-                <div style={{ width: 40, height: 40, borderRadius: 6, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 6, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>
                   +{folder.assets.length - 3}
                 </div>
               )}
@@ -90,14 +90,14 @@ export default function BrandAssetsPage() {
         {/* New folder */}
         <div style={{ background: 'rgba(255,255,255,0.02)', border: `1.5px dashed ${BORDER}`, borderRadius: 14, padding: '16px 18px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 96 }}>
           <Plus size={20} color="rgba(255,255,255,0.25)" />
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>New folder</span>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)', fontWeight: 500 }}>New folder</span>
         </div>
       </div>
 
       {/* All assets grid */}
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>All Assets</h2>
-        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{allAssets.length} items</span>
+        <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>All Assets</h2>
+        <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{allAssets.length} items</span>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(3, 1fr)' : 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8 }}>
@@ -109,7 +109,7 @@ export default function BrandAssetsPage() {
           onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.16)'; }}
         >
           <Plus size={22} color="rgba(255,255,255,0.35)" />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>Upload</span>
+          <span style={{ fontSize: 11, color: 'var(--text-faint)', fontWeight: 600 }}>Upload</span>
         </div>
 
         {allAssets.map((src, i) => {
@@ -132,13 +132,13 @@ export default function BrandAssetsPage() {
 
       {/* Selected asset preview bar */}
       {selected && (
-        <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', background: '#1a1a1a', border: `1px solid rgba(255,255,255,0.15)`, borderRadius: 14, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.5)', zIndex: 50 }}>
+        <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', background: 'var(--card-2)', border: `1px solid rgba(255,255,255,0.15)`, borderRadius: 14, padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.5)', zIndex: 50 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={selected} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover', border: `2px solid ${LIME}` }} />
-          <span style={{ fontSize: 13, color: '#fff', fontWeight: 500 }}>1 asset selected</span>
+          <span style={{ fontSize: 13, color: 'var(--text)', fontWeight: 500 }}>1 asset selected</span>
           <button style={{ background: LIME, color: '#0d0d0d', border: 'none', padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Use in creation</button>
           <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <X size={14} color="rgba(255,255,255,0.5)" />
+            <X size={14} color="var(--text-faint)" />
           </button>
         </div>
       )}

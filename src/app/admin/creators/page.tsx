@@ -7,8 +7,8 @@ import { DEMO_CREATORS, type CreatorSpecialty } from '@/lib/creatorNetwork';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const ALL_SPECIALTIES: (CreatorSpecialty | 'All')[] = [
   'All', 'Beauty', 'Fitness', 'Ecommerce', 'Food & Beverage', 'Tech', 'Fashion', 'Lifestyle', 'Local Business',
@@ -52,8 +52,8 @@ export default function AdminCreatorsPage() {
 
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Creator Network</h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)' }}>Manage AI creators, review portfolios, and invite creators to paid brand projects.</p>
+        <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>Creator Network</h1>
+        <p style={{ fontSize: 14, color: 'var(--text-faint)' }}>Manage AI creators, review portfolios, and invite creators to paid brand projects.</p>
       </div>
 
       {/* Stats */}
@@ -66,7 +66,7 @@ export default function AdminCreatorsPage() {
         ].map(s => (
           <div key={s.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: s.color || '#fff', marginBottom: 2 }}>{s.value}</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{s.label}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -74,10 +74,10 @@ export default function AdminCreatorsPage() {
       {/* Controls */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20, alignItems: 'center' }}>
         {/* Search */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '8px 12px', flex: '0 0 220px' }}>
-          <Search size={13} color="rgba(255,255,255,0.3)" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '8px 12px', flex: '0 0 220px' }}>
+          <Search size={13} color="var(--text-faint)" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search creators…"
-            style={{ background: 'none', border: 'none', outline: 'none', color: '#fff', fontSize: 13, fontFamily: 'inherit', width: '100%' }} />
+            style={{ background: 'none', border: 'none', outline: 'none', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', width: '100%' }} />
         </div>
 
         {/* Status filter */}
@@ -112,7 +112,7 @@ export default function AdminCreatorsPage() {
           />
         ))}
         {creators.length === 0 && (
-          <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', color: 'rgba(255,255,255,0.25)', fontSize: 14 }}>
+          <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', color: 'var(--text-faint)', fontSize: 14 }}>
             No creators match this filter.
           </div>
         )}
@@ -122,9 +122,9 @@ export default function AdminCreatorsPage() {
       {inviteModal && creator && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 999, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
           onClick={e => { if (e.target === e.currentTarget) setInviteModal(null); }}>
-          <div style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '28px', width: '100%', maxWidth: 460 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Invite to Project</h2>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20 }}>
+          <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 20, padding: '28px', width: '100%', maxWidth: 460 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', marginBottom: 4 }}>Invite to Project</h2>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>
               Invite <strong style={{ color: LIME }}>{creator.display_name}</strong> to submit ads for a paid brand campaign.
             </p>
             <textarea
@@ -132,11 +132,11 @@ export default function AdminCreatorsPage() {
               onChange={e => setInviteNote(e.target.value)}
               placeholder="Describe the project brief, budget, timeline…"
               rows={5}
-              style={{ width: '100%', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '12px 14px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'none', boxSizing: 'border-box', marginBottom: 16 }}
+              style={{ width: '100%', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '12px 14px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'none', boxSizing: 'border-box', marginBottom: 16 }}
             />
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
               <button onClick={() => setInviteModal(null)}
-                style={{ padding: '9px 18px', background: 'none', border: `1px solid ${BORDER}`, borderRadius: 8, color: 'rgba(255,255,255,0.45)', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ padding: '9px 18px', background: 'none', border: `1px solid ${BORDER}`, borderRadius: 8, color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
                 Cancel
               </button>
               <button onClick={() => setInviteModal(null)}

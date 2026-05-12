@@ -6,8 +6,8 @@ import { ADMIN_CLIENTS, MOCK_PROJECTS } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const PAYMENT_CONFIG: Record<string, { color: string; bg: string }> = {
   'Current': { color: LIME,     bg: 'rgba(163,230,53,0.1)'  },
@@ -35,10 +35,10 @@ export default function AdminClientsPage() {
       <div style={{ padding: '28px 24px 48px', maxWidth: 1100, margin: '0 auto' }}>
 
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>
             Client Management
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>
             {ADMIN_CLIENTS.length} marketplace clients · ${totalSpend.toLocaleString()} total project spend
           </p>
         </div>
@@ -53,16 +53,16 @@ export default function AdminClientsPage() {
           ].map(s => (
             <div key={s.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
               <div style={{ fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', marginBottom: 4 }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)' }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* Search */}
         <div style={{ position: 'relative', maxWidth: 320, marginBottom: 20 }}>
-          <Search size={13} color="rgba(255,255,255,0.3)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+          <Search size={13} color="var(--text-faint)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..."
-            style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
+            style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
         </div>
 
         {/* Client cards */}
@@ -82,26 +82,26 @@ export default function AdminClientsPage() {
                   {/* Info */}
                   <div style={{ flex: 1, minWidth: 180 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 2 }}>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{client.brandName}</span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{client.brandName}</span>
                       <span style={{ fontSize: 10, fontWeight: 700, color: ps.color, background: ps.bg, padding: '2px 9px', borderRadius: 20, border: `1px solid ${ps.color}30` }}>
                         {client.paymentStatus}
                       </span>
                     </div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 8 }}>
-                      {client.contactName} · <span style={{ color: 'rgba(255,255,255,0.28)' }}>{client.contactEmail}</span>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
+                      {client.contactName} · <span style={{ color: 'var(--text-faint)' }}>{client.contactEmail}</span>
                     </div>
                     <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
                       <div>
                         <div style={{ fontSize: 18, fontWeight: 800, color: ORANGE, lineHeight: 1 }}>{client.activeProjects}</div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Active Projects</div>
+                        <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>Active Projects</div>
                       </div>
                       <div>
                         <div style={{ fontSize: 18, fontWeight: 800, color: LIME, lineHeight: 1 }}>${client.totalSpend.toLocaleString()}</div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Total Spend</div>
+                        <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>Total Spend</div>
                       </div>
                       <div>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)', lineHeight: 1.4 }}>{client.lastActivity}</div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Last Activity</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', lineHeight: 1.4 }}>{client.lastActivity}</div>
+                        <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>Last Activity</div>
                       </div>
                     </div>
                   </div>
@@ -109,7 +109,7 @@ export default function AdminClientsPage() {
                   {/* Projects preview + CTA */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0, alignItems: 'flex-end' }}>
                     {projects.length > 0 && (
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', textAlign: 'right' }}>
+                      <div style={{ fontSize: 11, color: 'var(--text-faint)', textAlign: 'right' }}>
                         {projects.slice(0, 2).map(p => (
                           <div key={p.id} style={{ marginBottom: 2 }}>{p.icon} {p.title}</div>
                         ))}

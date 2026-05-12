@@ -6,9 +6,9 @@ import { Briefcase, Users, MessageSquare, CreditCard, Package, Shield, TrendingU
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const STATS = [
   { label: 'Active Projects',     value: '3',      icon: Briefcase,    color: ORANGE,  sub: '2 in progress'    },
@@ -53,10 +53,10 @@ export default function ClientDashboard() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,92,0,0.08)', border: '1px solid rgba(255,92,0,0.18)', borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 12 }}>
             Client Dashboard
           </div>
-          <h1 style={{ fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>
+          <h1 style={{ fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 6 }}>
             Welcome back, Demo Client
           </h1>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
+          <p style={{ fontSize: 14, color: 'var(--text-muted)' }}>
             Post projects, review creator work, and manage escrow-style payments.
           </p>
         </div>
@@ -66,19 +66,19 @@ export default function ClientDashboard() {
           {STATS.map(s => (
             <div key={s.label} className="stat-card">
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>{s.label}</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>{s.label}</span>
                 <div style={{ width: 32, height: 32, borderRadius: 9, background: `${s.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <s.icon size={15} color={s.color} strokeWidth={1.75} />
                 </div>
               </div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{s.sub}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', lineHeight: 1 }}>{s.value}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 4 }}>{s.sub}</div>
             </div>
           ))}
         </div>
 
         {/* Actions */}
-        <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 14 }}>Quick Actions</h2>
+        <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>Quick Actions</h2>
         <div className="actions-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 36 }}>
           {ACTIONS.map(a => (
             <Link key={a.label} href={a.href} className="action-card" style={{ border: `1px solid ${a.border}`, background: a.bg }}>
@@ -86,8 +86,8 @@ export default function ClientDashboard() {
                 <a.icon size={18} color={a.color} strokeWidth={1.75} />
               </div>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{a.label}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{a.desc}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>{a.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{a.desc}</div>
               </div>
               <div style={{ fontSize: 12, color: a.color, fontWeight: 600, marginTop: 'auto' }}>Open →</div>
             </Link>
@@ -96,20 +96,20 @@ export default function ClientDashboard() {
 
         {/* Recent projects */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>Recent Projects</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)' }}>Recent Projects</h2>
           <Link href="/client/projects" style={{ fontSize: 12, color: ORANGE, textDecoration: 'none', fontWeight: 600 }}>View all →</Link>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {RECENT_PROJECTS.map(p => (
             <div key={p.title} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
               <div style={{ flex: 1, minWidth: 160 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{p.title}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{p.creators} creator{p.creators !== 1 ? 's' : ''} · Due in {p.due}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>{p.title}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{p.creators} creator{p.creators !== 1 ? 's' : ''} · Due in {p.due}</div>
               </div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${p.statusColor}14`, border: `1px solid ${p.statusColor}30`, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, color: p.statusColor, flexShrink: 0 }}>
                 {p.status}
               </div>
-              <Link href="/client/projects" style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>View →</Link>
+              <Link href="/client/projects" style={{ fontSize: 12, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>View →</Link>
             </div>
           ))}
         </div>

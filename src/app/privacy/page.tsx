@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SiteFooter from '@/components/shared/SiteFooter';
 
 export const metadata: Metadata = {
   title: "Privacy Policy — UGCFire",
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
+    <>
     <main style={{
       background: "#080808",
       minHeight: "100vh",
@@ -75,5 +77,7 @@ export default function PrivacyPage() {
         </div>
       </div>
     </main>
+    <SiteFooter />
+    </>
   );
 }

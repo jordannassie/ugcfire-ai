@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SiteFooter from '@/components/shared/SiteFooter';
 
 export const metadata: Metadata = {
   title: "Terms of Service — UGCFire",
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
+    <>
     <main style={{
       background: "#080808",
       minHeight: "100vh",
@@ -83,5 +85,7 @@ export default function TermsPage() {
         </div>
       </div>
     </main>
+    <SiteFooter />
+    </>
   );
 }

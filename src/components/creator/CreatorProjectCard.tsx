@@ -6,8 +6,8 @@ import { Volume2, VolumeX } from 'lucide-react';
 import { CreatorProject } from '@/lib/creatorNetwork';
 
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.08)';
+const PANEL  = 'var(--card)';
+const BORDER = 'var(--border)';
 
 interface Props {
   project: CreatorProject;
@@ -76,13 +76,13 @@ export default function CreatorProjectCard({ project, showCreator = true }: Prop
 
         {/* Top-right: type pill + mute button */}
         <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5 }}>
-          <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', borderRadius: 8, padding: '3px 8px', fontSize: 10, fontWeight: 700, color: '#fff' }}>
+          <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', borderRadius: 8, padding: '3px 8px', fontSize: 10, fontWeight: 700, color: 'var(--text)' }}>
             {project.media_type === 'video' ? 'Video' : 'Image'}
           </span>
           {project.media_type === 'video' && (
             <button onClick={toggleMute}
               style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              {muted ? <VolumeX size={12} color="rgba(255,255,255,0.75)" /> : <Volume2 size={12} color="#fff" />}
+              {muted ? <VolumeX size={12} color="var(--text-faint)" /> : <Volume2 size={12} color="#fff" />}
             </button>
           )}
         </div>
@@ -90,7 +90,7 @@ export default function CreatorProjectCard({ project, showCreator = true }: Prop
         {/* Bottom stats + heart */}
         <div style={{ position: 'absolute', bottom: 8, left: 10, right: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: 10 }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 3 }}>
+            <span style={{ fontSize: 11, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 3 }}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               {project.views >= 1000 ? `${(project.views / 1000).toFixed(1)}k` : project.views}
             </span>
@@ -108,7 +108,7 @@ export default function CreatorProjectCard({ project, showCreator = true }: Prop
 
       {/* Footer */}
       <div style={{ padding: '12px 14px' }}>
-        <div style={{ fontWeight: 700, fontSize: 13, color: '#fff', marginBottom: 4, lineHeight: 1.3 }}>{project.title}</div>
+        <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text)', marginBottom: 4, lineHeight: 1.3 }}>{project.title}</div>
         {showCreator && (
           <Link href={`/creators/${project.creator_username}`} style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', marginBottom: 8 }}>
             {project.creator_avatar ? (
@@ -119,12 +119,12 @@ export default function CreatorProjectCard({ project, showCreator = true }: Prop
                 <span style={{ fontSize: 9, fontWeight: 800, color: '#0d0d0d' }}>{project.creator_name[0]}</span>
               </div>
             )}
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>@{project.creator_username}</span>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>@{project.creator_username}</span>
           </Link>
         )}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
           {project.tags.slice(0, 3).map(t => (
-            <span key={t} style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: 6 }}>#{t}</span>
+            <span key={t} style={{ fontSize: 9.5, color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: 6 }}>#{t}</span>
           ))}
         </div>
       </div>

@@ -7,8 +7,8 @@ import { ADMIN_DISPUTES, type AdminDispute } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type Resolution = 'Open' | 'In Review' | 'Resolved' | 'Escalated';
 
@@ -58,10 +58,10 @@ export default function AdminDisputesPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, color: '#ef4444', marginBottom: 12 }}>
             <AlertTriangle size={10} strokeWidth={2.5} /> {counts.Open + counts['In Review']} active disputes
           </div>
-          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>
             Disputes & Resolution Queue
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>
             ${totalAtRisk} at risk across open and in-review disputes
           </p>
         </div>
@@ -85,7 +85,7 @@ export default function AdminDisputesPage() {
         {/* Dispute cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {filtered.length === 0 ? (
-            <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '48px', textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>
+            <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '48px', textAlign: 'center', fontSize: 14, color: 'var(--text-faint)' }}>
               No disputes in this category.
             </div>
           ) : filtered.map(d => {
@@ -108,7 +108,7 @@ export default function AdminDisputesPage() {
                     <Link href={`/admin/projects/${d.projectId}`} style={{ fontSize: 15, fontWeight: 700, color: '#fff', textDecoration: 'none', display: 'block', marginBottom: 4 }}>
                       {d.projectTitle}
                     </Link>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
                       Client: <span style={{ color: ORANGE, fontWeight: 600 }}>{d.clientName}</span>
                       {' · '}
                       Creator: <span style={{ color: LIME, fontWeight: 600 }}>{d.creatorName}</span>
@@ -116,13 +116,13 @@ export default function AdminDisputesPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                       <DollarSign size={12} color="#ef4444" strokeWidth={2} />
                       <span style={{ fontSize: 13, fontWeight: 700, color: '#ef4444' }}>${d.amountAtRisk}</span>
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>at risk</span>
+                      <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>at risk</span>
                     </div>
                     <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '10px 12px' }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Last Message</div>
-                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, fontStyle: 'italic' }}>&ldquo;{d.lastMessage}&rdquo;</p>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Last Message</div>
+                      <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6, fontStyle: 'italic' }}>&ldquo;{d.lastMessage}&rdquo;</p>
                     </div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 6 }}>Opened {d.createdAt}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 6 }}>Opened {d.createdAt}</div>
                   </div>
 
                   {/* Actions */}

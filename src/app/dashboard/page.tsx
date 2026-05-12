@@ -9,8 +9,8 @@ import {
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const QUICK_CARDS = [
   { label: 'Studio',        sub: 'Generate AI images and videos',         href: '/dashboard/studio',        icon: Clapperboard,   color: ORANGE  },
@@ -37,11 +37,11 @@ export default function DashboardHome() {
           <div style={{ display: 'inline-block', background: `${LIME}12`, border: `1px solid ${LIME}28`, borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>
             Creator Dashboard
           </div>
-          <h1 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.2, marginBottom: 12 }}>
+          <h1 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.04em', lineHeight: 1.2, marginBottom: 12 }}>
             Create AI ads in Studio,<br />
             <span style={{ color: ORANGE }}>build your profile,</span> and get paid.
           </h1>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginBottom: 24, maxWidth: 520 }}>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24, maxWidth: 520 }}>
             Studio is where you generate AI images and videos. Your profile is your portfolio — it proves your skill to brands. Opportunities get you paid.
           </p>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -51,7 +51,7 @@ export default function DashboardHome() {
             <Link href="/opportunities" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: `${LIME}14`, border: `1px solid ${LIME}35`, color: LIME, borderRadius: 10, padding: '12px 22px', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
               View Opportunities
             </Link>
-            <Link href="/dashboard/profile" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.7)', borderRadius: 10, padding: '12px 22px', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/dashboard/profile" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'var(--text)', borderRadius: 10, padding: '12px 22px', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
               Edit Profile
             </Link>
           </div>
@@ -65,10 +65,10 @@ export default function DashboardHome() {
                 <card.icon size={18} color={card.color} strokeWidth={1.75} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{card.label}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.sub}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{card.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-faint)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.sub}</div>
               </div>
-              <ArrowRight size={14} color="rgba(255,255,255,0.2)" strokeWidth={1.75} />
+              <ArrowRight size={14} color="var(--text-faint)" strokeWidth={1.75} />
             </Link>
           ))}
         </div>

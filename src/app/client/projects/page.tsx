@@ -7,11 +7,11 @@ import { MOCK_PROJECTS, type ProjectStatus } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const STATUS_META: Record<ProjectStatus, { color: string; bg: string }> = {
-  'Posted':           { color: 'rgba(255,255,255,0.45)', bg: 'rgba(255,255,255,0.06)'  },
+  'Posted':           { color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.06)'  },
   'Creators Invited': { color: '#22d3ee',                bg: 'rgba(34,211,238,0.08)'   },
   'In Progress':      { color: LIME,                     bg: 'rgba(163,230,53,0.08)'   },
   'Submitted':        { color: ORANGE,                   bg: 'rgba(255,92,0,0.08)'     },
@@ -42,10 +42,10 @@ export default function ClientProjectsPage() {
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 4 }}>Projects</h1>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{MOCK_PROJECTS.length} total projects</p>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 4 }}>Projects</h1>
+            <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>{MOCK_PROJECTS.length} total projects</p>
           </div>
-          <Link href="/client/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 13, padding: '10px 18px', borderRadius: 9, textDecoration: 'none' }}>
+          <Link href="/client/post-project" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: ORANGE, color: 'var(--text)', fontWeight: 700, fontSize: 13, padding: '10px 18px', borderRadius: 9, textDecoration: 'none' }}>
             + Post New Project
           </Link>
         </div>
@@ -69,10 +69,10 @@ export default function ClientProjectsPage() {
                   <div style={{ fontSize: 24, flexShrink: 0, marginTop: 2 }}>{p.icon}</div>
                   <div style={{ flex: 1, minWidth: 180 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 6 }}>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{p.title}</span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{p.title}</span>
                       <span style={{ fontSize: 10, fontWeight: 700, background: meta.bg, color: meta.color, padding: '2px 10px', borderRadius: 20, border: `1px solid ${meta.color}30` }}>{p.status}</span>
                     </div>
-                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: 'var(--text-muted)' }}>
                       <span style={{ color: p.brandColor, fontWeight: 600 }}>{p.brandName}</span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Users size={11} strokeWidth={2} />{p.applicants.length} applicants</span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={11} strokeWidth={2} />Due: {p.deadline}</span>

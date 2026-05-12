@@ -6,11 +6,12 @@ import { use } from 'react';
 import { ChevronRight, Heart, Eye, Play, Volume2, VolumeX } from 'lucide-react';
 import PublicHeader from '@/components/public/PublicHeader';
 import { DEMO_CREATORS, DEMO_PROJECTS, SPECIALTY_COLORS, SPECIALTY_TEXT } from '@/lib/creatorNetwork';
+import SiteFooter from '@/components/shared/SiteFooter';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const BG     = '#0d0d0d';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const BORDER = 'var(--border)';
 
 // ─── MediaCard — used for both featured hero and portfolio grid ───────────────
 function MediaCard({ project, featured = false }: {
@@ -79,12 +80,12 @@ function MediaCard({ project, featured = false }: {
       <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
         {project.media_type === 'video' && (
           <>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', borderRadius: 20, padding: '3px 9px', fontSize: 10, fontWeight: 700, color: '#fff' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', borderRadius: 20, padding: '3px 9px', fontSize: 10, fontWeight: 700, color: 'var(--text)' }}>
               <Play size={8} fill="#fff" /> VIDEO
             </span>
             <button onClick={toggleMute}
               style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              {muted ? <VolumeX size={13} color="rgba(255,255,255,0.8)" /> : <Volume2 size={13} color="#fff" />}
+              {muted ? <VolumeX size={13} color="var(--text-faint)" /> : <Volume2 size={13} color="#fff" />}
             </button>
           </>
         )}
@@ -93,11 +94,11 @@ function MediaCard({ project, featured = false }: {
       {/* Bottom overlay */}
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(0deg, rgba(0,0,0,0.78) 0%, transparent 100%)', padding: featured ? '44px 16px 16px' : '28px 12px 10px' }}>
         {featured && (
-          <p style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8, letterSpacing: '-0.01em', lineHeight: 1.3 }}>{project.title}</p>
+          <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 8, letterSpacing: '-0.01em', lineHeight: 1.3 }}>{project.title}</p>
         )}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--text)' }}>
               <Eye size={11} /> {project.views >= 1000 ? `${(project.views / 1000).toFixed(1)}k` : project.views}
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: liked ? '#f87171' : 'rgba(255,255,255,0.7)' }}>
@@ -126,7 +127,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
     return (
       <div style={{ minHeight: '100vh', background: BG, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
         <div style={{ fontSize: 48 }}>🔍</div>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>Creator not found</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Creator not found</h1>
         <Link href="/discover" style={{ color: LIME, textDecoration: 'none', fontSize: 14 }}>← Back to Discover</Link>
       </div>
     );
@@ -155,13 +156,13 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
       {/* Breadcrumb */}
       <div style={{ marginTop: 60, padding: '10px 28px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: `1px solid ${BORDER}` }}>
         <Link href="/discover"
-          style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}
+          style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}
           onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.4)'; }}>
           Discover
         </Link>
-        <ChevronRight size={12} color="rgba(255,255,255,0.2)" />
-        <span style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{creator.display_name}</span>
+        <ChevronRight size={12} color="var(--text-faint)" />
+        <span style={{ fontSize: 13, color: 'var(--text)', fontWeight: 600 }}>{creator.display_name}</span>
       </div>
 
       <div style={{ maxWidth: 1140, margin: '0 auto', padding: '52px 28px 80px' }}>
@@ -187,8 +188,8 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
               )}
             </div>
 
-            <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4, lineHeight: 1.1 }}>{creator.display_name}</h1>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>@{creator.username}</p>
+            <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4, lineHeight: 1.1 }}>{creator.display_name}</h1>
+            <p style={{ fontSize: 14, color: 'var(--text-faint)', marginBottom: 14 }}>@{creator.username}</p>
 
             {/* Pills */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
@@ -214,7 +215,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
 
             {/* Bio */}
             {creator.bio && (
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: 24 }}>{creator.bio}</p>
+              <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: 24 }}>{creator.bio}</p>
             )}
 
             {/* Stats */}
@@ -225,8 +226,8 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
                 { label: 'Since',     value: new Date(creator.joined_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) },
               ].map(s => (
                 <div key={s.label}>
-                  <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{s.value}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 3 }}>{s.label}</div>
+                  <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 3 }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -238,7 +239,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
                 Follow
               </Link>
               {creator.available_for_work && (
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.5 }}>
+                <p style={{ fontSize: 11, color: 'var(--text-faint)', textAlign: 'center', lineHeight: 1.5 }}>
                   This creator is open to paid brand projects through UGCFire.
                 </p>
               )}
@@ -254,9 +255,9 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
               </div>
             ) : (
               <div className="featured-wrap" style={{ width: '100%', maxWidth: 420, height: 520, border: `1px dashed rgba(255,255,255,0.12)`, borderRadius: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, background: 'rgba(255,255,255,0.02)' }}>
-                <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>＋</div>
-                <p style={{ fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.35)' }}>Add Featured Project</p>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>Choose one of your projects to highlight it</p>
+                <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>＋</div>
+                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-faint)' }}>Add Featured Project</p>
+                <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>Choose one of your projects to highlight it</p>
               </div>
             )}
           </div>
@@ -265,9 +266,9 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
         {/* ── PORTFOLIO GRID ─────────────────────────────────────────────── */}
         {projects.length > 0 && (
           <div style={{ marginBottom: 80 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 24, margin: '0 0 24px' }}>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 24, margin: '0 0 24px' }}>
               Portfolio
-              <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.25)', marginLeft: 8 }}>{projects.length}</span>
+              <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-faint)', marginLeft: 8 }}>{projects.length}</span>
             </h2>
 
             <div className="port-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
@@ -277,7 +278,7 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
                   <div style={{ height: 280, borderRadius: 14, overflow: 'hidden' }}>
                     <MediaCard project={p} />
                   </div>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 500, lineHeight: 1.4, paddingLeft: 2 }}>{p.title}</p>
+                  <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500, lineHeight: 1.4, paddingLeft: 2 }}>{p.title}</p>
                 </div>
               ))}
             </div>
@@ -286,10 +287,11 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ usern
 
         {projects.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 0', borderTop: `1px solid ${BORDER}` }}>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.25)' }}>No published projects yet.</p>
+            <p style={{ fontSize: 15, color: 'var(--text-faint)' }}>No published projects yet.</p>
           </div>
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }

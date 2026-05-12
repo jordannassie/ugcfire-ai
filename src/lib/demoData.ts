@@ -32,9 +32,9 @@ export function getDemoUserName(): string {
 }
 
 const ROLE_META: Record<DemoRole, { email: string; company: string; name: string }> = {
-  creator: { email: 'creator@ugcfire.ai', company: 'Independent Creator', name: 'Demo Creator' },
-  client:  { email: 'demo@ugcfire.ai',    company: 'Demo Brand',           name: 'Demo Client'  },
-  admin:   { email: 'admin@ugcfire.ai',   company: 'UGCFire Admin',        name: 'UGCFire Admin'},
+  creator: { email: 'creator@ugcfire.ai', company: 'Independent Creator', name: 'Jordan Creator'   },
+  client:  { email: 'agency@ugcfire.ai',  company: 'UGC Fire Agency',     name: 'UGC Fire Agency'  },
+  admin:   { email: 'admin@ugcfire.ai',   company: 'UGCFire',             name: 'UGCFire Admin'    },
 }
 
 export function enterDemoMode(role: DemoRole) {

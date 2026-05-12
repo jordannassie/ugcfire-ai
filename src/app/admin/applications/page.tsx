@@ -7,8 +7,8 @@ import { MOCK_PROJECTS } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type ReviewStatus = 'New' | 'Shortlisted' | 'Invited' | 'Declined';
 
@@ -76,10 +76,10 @@ export default function AdminApplicationsPage() {
       <div style={{ padding: '28px 24px 48px', maxWidth: 1100, margin: '0 auto' }}>
 
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>
             Application Review Queue
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>
             {counts.New} new applications waiting for review
           </p>
         </div>
@@ -87,9 +87,9 @@ export default function AdminApplicationsPage() {
         {/* Filters */}
         <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: 300 }}>
-            <Search size={13} color="rgba(255,255,255,0.3)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+            <Search size={13} color="var(--text-faint)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search creator or project..."
-              style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
+              style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
             {(['All', 'New', 'Shortlisted', 'Invited', 'Declined'] as const).map(f => {
@@ -110,7 +110,7 @@ export default function AdminApplicationsPage() {
         {/* Application cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {filtered.length === 0 ? (
-            <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '48px', textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>
+            <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '48px', textAlign: 'center', fontSize: 14, color: 'var(--text-faint)' }}>
               No applications match your filters.
             </div>
           ) : filtered.map(app => {
@@ -128,23 +128,23 @@ export default function AdminApplicationsPage() {
                   {/* Content */}
                   <div style={{ flex: 1, minWidth: 200 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{app.creatorName}</span>
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{app.role}</span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{app.creatorName}</span>
+                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{app.role}</span>
                       <span style={{ fontSize: 10, fontWeight: 700, color: sc.color, background: sc.bg, border: `1px solid ${sc.border}`, padding: '2px 9px', borderRadius: 20 }}>{st}</span>
                     </div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 8 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
                       Applied to: <Link href={`/admin/projects/${app.projectId}`} style={{ color: ORANGE, textDecoration: 'none', fontWeight: 600 }}>{app.projectTitle}</Link>
-                      <span style={{ marginLeft: 6, color: 'rgba(255,255,255,0.3)' }}>· {app.brandName}</span>
+                      <span style={{ marginLeft: 6, color: 'var(--text-faint)' }}>· {app.brandName}</span>
                     </div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
                       {app.skills.map(sk => (
-                        <span key={sk} style={{ fontSize: 10, background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.5)', borderRadius: 6, padding: '2px 8px' }}>{sk}</span>
+                        <span key={sk} style={{ fontSize: 10, background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, color: 'var(--text-muted)', borderRadius: 6, padding: '2px 8px' }}>{sk}</span>
                       ))}
                       <span style={{ fontSize: 10, background: 'rgba(163,230,53,0.07)', border: '1px solid rgba(163,230,53,0.2)', color: LIME, borderRadius: 6, padding: '2px 8px' }}>
                         {app.portfolioCount} portfolio pieces
                       </span>
                     </div>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, fontStyle: 'italic' }}>
+                    <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6, fontStyle: 'italic' }}>
                       &ldquo;{app.message}&rdquo;
                     </p>
                   </div>

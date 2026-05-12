@@ -7,13 +7,13 @@ import { MOCK_PROJECTS } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type AppStatus = 'Applied' | 'Shortlisted' | 'Invited' | 'Declined' | 'Completed';
 
 const STATUS_META: Record<AppStatus, { color: string; bg: string }> = {
-  'Applied':     { color: 'rgba(255,255,255,0.5)', bg: 'rgba(255,255,255,0.07)' },
+  'Applied':     { color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.07)' },
   'Shortlisted': { color: '#22d3ee',               bg: 'rgba(34,211,238,0.1)'   },
   'Invited':     { color: LIME,                    bg: 'rgba(163,230,53,0.1)'   },
   'Declined':    { color: '#ef4444',               bg: 'rgba(239,68,68,0.08)'   },
@@ -72,8 +72,8 @@ export default function ApplicationsPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.08)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, color: LIME, marginBottom: 10 }}>
             Your Applications
           </div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 4 }}>Applications</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Projects you&apos;ve applied to and your application status.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 4 }}>Applications</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Projects you&apos;ve applied to and your application status.</p>
         </div>
 
         {/* Tabs */}
@@ -87,9 +87,9 @@ export default function ApplicationsPage() {
 
         {visible.length === 0 ? (
           <div style={{ textAlign: 'center', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '48px 24px' }}>
-            <div style={{ fontSize: 32, marginBottom: 12, color: 'rgba(255,255,255,0.15)' }}>—</div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 6 }}>No applications yet</div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20 }}>Browse open opportunities and apply to brand projects.</div>
+            <div style={{ fontSize: 32, marginBottom: 12, color: 'var(--text-faint)' }}>—</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>No applications yet</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>Browse open opportunities and apply to brand projects.</div>
             <Link href="/opportunities" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 13, padding: '10px 20px', borderRadius: 9, textDecoration: 'none' }}>
               Browse Opportunities
             </Link>
@@ -108,10 +108,10 @@ export default function ApplicationsPage() {
                     </div>
                     <div style={{ flex: 1, minWidth: 160 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 5 }}>
-                        <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{app.projectTitle}</span>
+                        <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{app.projectTitle}</span>
                         <span style={{ fontSize: 10, fontWeight: 700, background: meta.bg, color: meta.color, padding: '2px 10px', borderRadius: 20, border: `1px solid ${meta.color}30` }}>{app.status}</span>
                       </div>
-                      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+                      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 12, color: 'var(--text-muted)' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Briefcase size={11} strokeWidth={2} />{app.brandName}</span>
                         {project && (
                           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -133,7 +133,7 @@ export default function ApplicationsPage() {
                         </Link>
                       )}
                       <Link href={`/opportunities/${app.projectId}`}
-                        style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.6)', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}>
+                        style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'var(--text)', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}>
                         <ExternalLink size={11} strokeWidth={2} />
                         View
                       </Link>

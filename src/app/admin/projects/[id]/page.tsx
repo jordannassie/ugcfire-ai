@@ -8,8 +8,8 @@ import { MOCK_PROJECTS } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type AdminTab = 'overview' | 'applicants' | 'submissions' | 'payments' | 'notes';
 
@@ -36,7 +36,7 @@ export default function AdminProjectDetailPage() {
     return (
       <div style={{ padding: '64px 24px', textAlign: 'center' }}>
         <div style={{ fontSize: 36, marginBottom: 14 }}>🔍</div>
-        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8 }}>Project not found</h2>
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', marginBottom: 8 }}>Project not found</h2>
         <Link href="/admin" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>← Back to Admin</Link>
       </div>
     );
@@ -58,12 +58,12 @@ export default function AdminProjectDetailPage() {
         .tab-btn-active { color: #fff; border-bottom-color: #6366f1; }
         .action-btn { border: 1px solid ${BORDER}; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.12s; display: flex; align-items: center; gap: 5px; }
         .action-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
-        .field-input { width: 100%; background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 9px; padding: 10px 13px; font-size: 13px; color: #fff; outline: none; font-family: inherit; resize: vertical; transition: border-color 0.15s; }
+        .field-input { width: 100%; background: var(--input-bg); border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; font-size: 13px; color: var(--text); outline: none; font-family: inherit; resize: vertical; transition: border-color 0.15s; }
         .field-input:focus { border-color: rgba(99,102,241,0.4); }
       `}</style>
 
       <div style={{ padding: '20px 24px 8px', maxWidth: 1000, margin: '0 auto' }}>
-        <Link href="/admin" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
+        <Link href="/admin" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>
           <ArrowLeft size={13} strokeWidth={2} /> Admin
         </Link>
       </div>
@@ -82,12 +82,12 @@ export default function AdminProjectDetailPage() {
             <div style={{ fontSize: 28, flexShrink: 0 }}>{project.icon}</div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 5 }}>
-                <h1 style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{project.title}</h1>
+                <h1 style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em' }}>{project.title}</h1>
                 <span style={{ fontSize: 10, fontWeight: 700, color: statusColor[project.status], background: `${statusColor[project.status]}18`, padding: '2px 10px', borderRadius: 20, border: `1px solid ${statusColor[project.status]}30` }}>
                   {project.status}
                 </span>
               </div>
-              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: 'var(--text-muted)' }}>
                 <span>Client: <span style={{ color: project.brandColor, fontWeight: 700 }}>{project.brandName}</span></span>
                 <span>{project.category}</span>
                 <span style={{ color: LIME, fontWeight: 600 }}>${project.budget}</span>
@@ -135,14 +135,14 @@ export default function AdminProjectDetailPage() {
                 { label: 'Escrow',       value: project.escrowStatus, color: project.escrowStatus === 'Released' ? LIME : '#22d3ee' },
               ].map(c => (
                 <div key={c.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 13, padding: '15px' }}>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 4 }}>{c.label}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 4 }}>{c.label}</div>
                   <div style={{ fontSize: 18, fontWeight: 800, color: c.color }}>{c.value}</div>
                 </div>
               ))}
             </div>
             <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '18px 20px' }}>
-              <h3 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 10 }}>Brief</h3>
-              <pre style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.9, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'inherit' }}>{project.brief}</pre>
+              <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>Brief</h3>
+              <pre style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.9, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'inherit' }}>{project.brief}</pre>
             </div>
           </div>
         )}
@@ -151,7 +151,7 @@ export default function AdminProjectDetailPage() {
         {tab === 'applicants' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {project.applicants.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255,255,255,0.35)', fontSize: 13 }}>No applicants yet.</div>
+              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-faint)', fontSize: 13 }}>No applicants yet.</div>
             ) : project.applicants.map(a => {
               const cur = applicantStates[a.id] ?? a.status;
               return (
@@ -160,8 +160,8 @@ export default function AdminProjectDetailPage() {
                     {a.initials}
                   </div>
                   <div style={{ flex: 1, minWidth: 140 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{a.name} <span style={{ fontWeight: 400, color: 'rgba(255,255,255,0.4)', fontSize: 11 }}>· {a.role}</span></div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 6, lineHeight: 1.5 }}>{a.message}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{a.name} <span style={{ fontWeight: 400, color: 'var(--text-muted)', fontSize: 11 }}>· {a.role}</span></div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6, lineHeight: 1.5 }}>{a.message}</div>
                     <span style={{ fontSize: 10, fontWeight: 700, color: cur === 'Shortlisted' ? '#22d3ee' : cur === 'Invited' ? LIME : cur === 'Declined' ? '#ef4444' : 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: 20 }}>{cur}</span>
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
@@ -182,22 +182,22 @@ export default function AdminProjectDetailPage() {
         {tab === 'submissions' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {project.submissions.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255,255,255,0.35)', fontSize: 13 }}>No submissions yet.</div>
+              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-faint)', fontSize: 13 }}>No submissions yet.</div>
             ) : project.submissions.map(s => {
               const cur = submissionStates[s.id] ?? s.status;
               const sc = cur === 'Approved' ? LIME : cur === 'Revision Requested' ? ORANGE : 'rgba(255,255,255,0.45)';
               return (
                 <div key={s.id} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 13, padding: '16px 18px', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                  <div style={{ width: 80, height: 60, background: 'linear-gradient(135deg,#1a1a2e,#16213e)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0, color: 'rgba(255,255,255,0.3)' }}>▶</div>
+                  <div style={{ width: 80, height: 60, background: 'linear-gradient(135deg,#1a1a2e,#16213e)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0, color: 'var(--text-faint)' }}>▶</div>
                   <div style={{ flex: 1, minWidth: 140 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{s.title}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{s.title}</span>
                       <span style={{ fontSize: 10, fontWeight: 700, color: sc, background: `${sc}14`, padding: '2px 8px', borderRadius: 20 }}>{cur}</span>
                     </div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>
                       <span style={{ color: s.creatorColor, fontWeight: 600 }}>{s.creatorName}</span> · {s.submittedAt}
                     </div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{s.notes}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{s.notes}</div>
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'flex-start' }}>
                     <button className="action-btn" onClick={() => setSubmission(p => ({ ...p, [s.id]: 'Approved' }))} style={{ color: cur === 'Approved' ? LIME : undefined }}>
@@ -224,7 +224,7 @@ export default function AdminProjectDetailPage() {
                 { label: 'Escrow Status',  value: project.escrowStatus,          color: project.escrowStatus === 'Released' ? LIME : '#22d3ee' },
               ].map(c => (
                 <div key={c.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 13, padding: '15px' }}>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 4 }}>{c.label}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 4 }}>{c.label}</div>
                   <div style={{ fontSize: 18, fontWeight: 800, color: c.color }}>{c.value}</div>
                 </div>
               ))}
@@ -247,7 +247,7 @@ export default function AdminProjectDetailPage() {
         {tab === 'notes' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '20px' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <StickyNote size={15} color="#6366f1" strokeWidth={1.75} />
                 Quality Notes
               </h3>
@@ -261,9 +261,9 @@ export default function AdminProjectDetailPage() {
               </div>
             </div>
             <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '18px 20px' }}>
-              <h3 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 10 }}>Project Timeline</h3>
+              <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>Project Timeline</h3>
               {[
-                { event: 'Project posted',       date: 'May 1',  color: 'rgba(255,255,255,0.35)' },
+                { event: 'Project posted',       date: 'May 1',  color: 'var(--text-faint)' },
                 { event: 'Creators invited',     date: 'May 3',  color: '#22d3ee'                },
                 { event: 'Work started',         date: 'May 5',  color: LIME                     },
                 { event: 'Submission received',  date: 'May 9',  color: ORANGE                   },
@@ -271,8 +271,8 @@ export default function AdminProjectDetailPage() {
               ].map((ev, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: ev.color, flexShrink: 0 }} />
-                  <span style={{ flex: 1, fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{ev.event}</span>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>{ev.date}</span>
+                  <span style={{ flex: 1, fontSize: 13, color: 'var(--text)' }}>{ev.event}</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{ev.date}</span>
                 </div>
               ))}
             </div>

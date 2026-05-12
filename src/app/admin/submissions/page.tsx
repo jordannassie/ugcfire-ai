@@ -7,8 +7,8 @@ import { MOCK_PROJECTS, type MockSubmission } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type AdminSubStatus = 'Pending' | 'Approved' | 'Revision Requested' | 'Rejected';
 
@@ -69,10 +69,10 @@ export default function AdminSubmissionsPage() {
       <div style={{ padding: '28px 24px 48px', maxWidth: 1100, margin: '0 auto' }}>
 
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h1 style={{ fontSize: 'clamp(18px,2.5vw,24px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>
             Submission Review Queue
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>
             {counts.Pending} submissions waiting for admin review before client delivery
           </p>
         </div>
@@ -80,9 +80,9 @@ export default function AdminSubmissionsPage() {
         {/* Filters */}
         <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: 300 }}>
-            <Search size={13} color="rgba(255,255,255,0.3)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+            <Search size={13} color="var(--text-faint)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search submissions..."
-              style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
+              style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {(['All', 'Pending', 'Approved', 'Revision Requested', 'Rejected'] as const).map(f => {
@@ -103,7 +103,7 @@ export default function AdminSubmissionsPage() {
         {/* Submission cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {filtered.length === 0 ? (
-            <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '48px', textAlign: 'center', fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>
+            <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '48px', textAlign: 'center', fontSize: 14, color: 'var(--text-faint)' }}>
               No submissions match your filters.
             </div>
           ) : filtered.map(sub => {
@@ -122,21 +122,21 @@ export default function AdminSubmissionsPage() {
                   {/* Info */}
                   <div style={{ flex: 1, minWidth: 200 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{sub.title}</span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{sub.title}</span>
                       <span style={{ fontSize: 10, fontWeight: 700, color: sc.color, background: sc.bg, border: `1px solid ${sc.border}`, padding: '2px 9px', borderRadius: 20 }}>{st}</span>
                     </div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>
-                      By <span style={{ color: '#fff', fontWeight: 600 }}>{sub.creatorName}</span>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>
+                      By <span style={{ color: 'var(--text)', fontWeight: 600 }}>{sub.creatorName}</span>
                       {' · '}
                       <Link href={`/admin/projects/${sub.projectId}`} style={{ color: ORANGE, textDecoration: 'none', fontWeight: 600 }}>{sub.projectTitle}</Link>
-                      <span style={{ color: 'rgba(255,255,255,0.3)', marginLeft: 4 }}>· {sub.brandName}</span>
+                      <span style={{ color: 'var(--text-faint)', marginLeft: 4 }}>· {sub.brandName}</span>
                     </div>
                     {sub.notes && (
-                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, fontStyle: 'italic', marginBottom: 6 }}>
+                      <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6, fontStyle: 'italic', marginBottom: 6 }}>
                         &ldquo;{sub.notes}&rdquo;
                       </p>
                     )}
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>Submitted {sub.submittedAt}</span>
+                    <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>Submitted {sub.submittedAt}</span>
                   </div>
 
                   {/* Actions */}

@@ -5,10 +5,11 @@ import { Search } from 'lucide-react';
 import CreatorCard from '@/components/creator/CreatorCard';
 import PublicHeader from '@/components/public/PublicHeader';
 import { DEMO_CREATORS, type CreatorSpecialty } from '@/lib/creatorNetwork';
+import SiteFooter from '@/components/shared/SiteFooter';
 
 const LIME   = '#a3e635';
-const BG     = '#0d0d0d';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const BORDER = 'var(--border)';
 
 const ALL_SPECIALTIES: CreatorSpecialty[] = [
   'Beauty', 'Fitness', 'Ecommerce', 'Food & Beverage', 'Tech', 'Fashion', 'Lifestyle', 'Local Business',
@@ -35,10 +36,10 @@ export default function CreatorsPage() {
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '4px 14px', fontSize: 11, fontWeight: 700, color: LIME, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>
           Creator Network
         </div>
-        <h1 style={{ fontSize: 'clamp(28px,4vw,48px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
+        <h1 style={{ fontSize: 'clamp(28px,4vw,48px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 14 }}>
           Browse AI Creators
         </h1>
-        <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', maxWidth: 540, margin: '0 auto', lineHeight: 1.7 }}>
+        <p style={{ fontSize: 15, color: 'var(--text-muted)', maxWidth: 540, margin: '0 auto', lineHeight: 1.7 }}>
           Vetted AI creators producing UGC-style image and video ads for brand campaigns.
         </p>
       </div>
@@ -47,8 +48,8 @@ export default function CreatorsPage() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}>
           {/* Search */}
-          <div style={{ flex: 1, minWidth: 200, maxWidth: 340, background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
-            <Search size={13} color="rgba(255,255,255,0.3)" />
+          <div style={{ flex: 1, minWidth: 200, maxWidth: 340, background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
+            <Search size={13} color="var(--text-faint)" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search creators..."
               style={{ background: 'none', border: 'none', outline: 'none', fontSize: 13, color: '#fff', width: '100%', fontFamily: 'inherit' }} />
@@ -72,7 +73,7 @@ export default function CreatorsPage() {
         </div>
 
         {/* Results count */}
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginBottom: 18, fontWeight: 500 }}>
+        <p style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 18, fontWeight: 500 }}>
           {filtered.length} creator{filtered.length !== 1 ? 's' : ''}
         </p>
 
@@ -84,11 +85,12 @@ export default function CreatorsPage() {
         </div>
 
         {filtered.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '60px 24px', color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>
+          <div style={{ textAlign: 'center', padding: '60px 24px', color: 'var(--text-faint)', fontSize: 14 }}>
             No creators match your filters.
           </div>
         )}
       </div>
+      <SiteFooter />
     </div>
   );
 }

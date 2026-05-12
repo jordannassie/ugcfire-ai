@@ -7,9 +7,9 @@ import { MOCK_PROJECTS } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const PANEL2 = '#111111';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const PANEL2 = 'var(--card-2)';
+const BORDER = 'var(--border)';
 
 const CONVERSATIONS = [
   { id: 1, name: 'GlowCo Beauty',  projectId: 'proj-1', last: 'Great work on the first draft!',         time: '5m ago',  unread: 1, initials: 'GC', color: '#f472b6' },
@@ -73,7 +73,7 @@ export default function CreatorMessagesPage() {
         {/* ── 1. CONVERSATION LIST ─────────────────────────────────────────── */}
         <aside style={{ width: 240, borderRight: `1px solid ${BORDER}`, background: PANEL2, display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto' }}>
           <div style={{ padding: '14px 14px 10px', borderBottom: `1px solid ${BORDER}` }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Messages</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>Messages</span>
           </div>
           {CONVERSATIONS.map(conv => (
             <button key={conv.id} onClick={() => setSelected(conv)}
@@ -84,9 +84,9 @@ export default function CreatorMessagesPage() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
                   <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.name}</span>
-                  <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', flexShrink: 0, marginLeft: 4 }}>{conv.time}</span>
+                  <span style={{ fontSize: 10, color: 'var(--text-faint)', flexShrink: 0, marginLeft: 4 }}>{conv.time}</span>
                 </div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.last}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.last}</div>
               </div>
               {conv.unread > 0 && (
                 <span style={{ width: 16, height: 16, borderRadius: '50%', background: ORANGE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 800, color: '#fff', flexShrink: 0, marginTop: 2 }}>{conv.unread}</span>
@@ -104,11 +104,11 @@ export default function CreatorMessagesPage() {
               {selected.initials}
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{selected.name}</div>
-              {project && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)' }}>{project.title}</div>}
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{selected.name}</div>
+              {project && <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{project.title}</div>}
             </div>
             <button onClick={() => setRightOpen(v => !v)}
-              style={{ fontSize: 11, fontWeight: 600, padding: '5px 10px', borderRadius: 7, background: rightOpen ? 'rgba(255,255,255,0.07)' : 'transparent', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
+              style={{ fontSize: 11, fontWeight: 600, padding: '5px 10px', borderRadius: 7, background: rightOpen ? 'rgba(255,255,255,0.07)' : 'transparent', border: `1px solid ${BORDER}`, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
               Project <ChevronRight size={11} strokeWidth={2} style={{ transform: rightOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
             </button>
           </div>
@@ -122,11 +122,11 @@ export default function CreatorMessagesPage() {
                     padding: '9px 13px', borderRadius: msg.from === 'creator' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
                     background: msg.from === 'creator' ? ORANGE : PANEL,
                     border: msg.from === 'creator' ? 'none' : `1px solid ${BORDER}`,
-                    fontSize: 13, color: '#fff', lineHeight: 1.55,
+                    fontSize: 13, color: 'var(--text)', lineHeight: 1.55,
                   }}>
                     {msg.text}
                   </div>
-                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginTop: 3, textAlign: msg.from === 'creator' ? 'right' : 'left', paddingInline: 4 }}>{msg.time}</div>
+                  <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 3, textAlign: msg.from === 'creator' ? 'right' : 'left', paddingInline: 4 }}>{msg.time}</div>
                 </div>
               </div>
             ))}
@@ -137,7 +137,7 @@ export default function CreatorMessagesPage() {
             <input value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
               placeholder="Type a message..."
-              style={{ flex: 1, background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
+              style={{ flex: 1, background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
             <button onClick={sendMessage}
               style={{ width: 38, height: 38, borderRadius: 10, background: ORANGE, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Send size={14} color="#fff" strokeWidth={2} />
@@ -148,11 +148,11 @@ export default function CreatorMessagesPage() {
         {/* ── 3. PROJECT CONTEXT PANEL ─────────────────────────────────────── */}
         {rightOpen && project && (
           <aside className="context-panel" style={{ width: 220, borderLeft: `1px solid ${BORDER}`, background: PANEL2, overflowY: 'auto', flexShrink: 0, padding: '16px 14px' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Project</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Project</div>
 
             {/* Project name */}
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4, lineHeight: 1.4 }}>{project.title}</div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 14 }}>{project.brandName}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 4, lineHeight: 1.4 }}>{project.title}</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14 }}>{project.brandName}</div>
 
             {/* Status */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
@@ -169,9 +169,9 @@ export default function CreatorMessagesPage() {
               { icon: CheckCircle,label: 'Deliverables', value: `${project.deliverables.length} items` },
             ].map(d => (
               <div key={d.label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 9 }}>
-                <d.icon size={12} color="rgba(255,255,255,0.3)" strokeWidth={1.75} />
+                <d.icon size={12} color="var(--text-faint)" strokeWidth={1.75} />
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{d.label}</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{d.label}</div>
                   <div style={{ fontSize: 12, fontWeight: 600, color: (d as { color?: string }).color ?? 'rgba(255,255,255,0.7)' }}>{d.value}</div>
                 </div>
               </div>

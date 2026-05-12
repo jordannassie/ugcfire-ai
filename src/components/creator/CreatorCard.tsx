@@ -6,8 +6,8 @@ import { CreatorProfile, SPECIALTY_COLORS, SPECIALTY_TEXT } from '@/lib/creatorN
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.08)';
+const PANEL  = 'var(--card)';
+const BORDER = 'var(--border)';
 
 interface Props {
   creator: CreatorProfile;
@@ -63,8 +63,8 @@ export default function CreatorCard({ creator, adminActions, onSave, onFeature, 
           )}
         </div>
 
-        <div style={{ fontWeight: 800, fontSize: 15, color: '#fff', marginBottom: 2, textAlign: 'center' }}>{creator.display_name}</div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 8 }}>@{creator.username}</div>
+        <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--text)', marginBottom: 2, textAlign: 'center' }}>{creator.display_name}</div>
+        <div style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 8 }}>@{creator.username}</div>
 
         {creator.available_for_work && (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.3)', borderRadius: 20, padding: '3px 10px', fontSize: 10, fontWeight: 700, color: LIME, letterSpacing: '0.05em', marginBottom: 8 }}>
@@ -73,7 +73,7 @@ export default function CreatorCard({ creator, adminActions, onSave, onFeature, 
           </div>
         )}
 
-        <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.65, textAlign: 'center', marginBottom: 12, maxWidth: 200 }}>
+        <p style={{ fontSize: 12.5, color: 'var(--text-muted)', lineHeight: 1.65, textAlign: 'center', marginBottom: 12, maxWidth: 200 }}>
           {creator.bio.length > 80 ? creator.bio.slice(0, 80) + '…' : creator.bio}
         </p>
 
@@ -87,13 +87,13 @@ export default function CreatorCard({ creator, adminActions, onSave, onFeature, 
         {/* Stats */}
         <div style={{ display: 'flex', gap: 20, marginBottom: 16 }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{creator.projects_count}</div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Projects</div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)' }}>{creator.projects_count}</div>
+            <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>Projects</div>
           </div>
           <div style={{ width: 1, background: 'rgba(255,255,255,0.07)' }} />
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{creator.followers >= 1000 ? `${(creator.followers / 1000).toFixed(1)}k` : creator.followers}</div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>Followers</div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--text)' }}>{creator.followers >= 1000 ? `${(creator.followers / 1000).toFixed(1)}k` : creator.followers}</div>
+            <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>Followers</div>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function CreatorCard({ creator, adminActions, onSave, onFeature, 
         {adminActions && (
           <div style={{ display: 'flex', gap: 6 }}>
             <button onClick={() => onSave?.(creator.id)}
-              style={{ flex: 1, padding: '7px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.6)', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ flex: 1, padding: '7px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 11, fontWeight: 600, color: 'var(--text)', cursor: 'pointer', fontFamily: 'inherit' }}>
               Save
             </button>
             <button onClick={() => onFeature?.(creator.id)}

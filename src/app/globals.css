@@ -1,9 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Bebas+Neue&display=swap');
 @import "tailwindcss";
 
-:root {
+/* ─── Theme Tokens ──────────────────────────────────────────────────────────
+   Inline-style components reference these via var(--token).
+   The data-theme attribute is set synchronously before React hydration
+   by a script tag in the <head> to prevent flash.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="dark"] {
   --background: #040405;
   --foreground: #ffffff;
+
+  --bg:           #0d0d0d;
+  --bg-soft:      #111111;
+  --card:         #141414;
+  --card-2:       #1a1a1a;
+  --border:       rgba(255,255,255,0.07);
+  --border-strong:rgba(255,255,255,0.12);
+  --text:         #f2f0eb;
+  --text-muted:   rgba(255,255,255,0.45);
+  --text-faint:   rgba(255,255,255,0.25);
+  --input-bg:     #1a1a1a;
+  --nav-bg:       #0d0d0d;
+  --sidebar-bg:   #0a0a0a;
+  --shadow:       0 8px 32px rgba(0,0,0,0.6);
+  --shadow-lg:    0 16px 48px rgba(0,0,0,0.7);
+}
+
+[data-theme="light"] {
+  --background: #f6f5f3;
+  --foreground: #111111;
+
+  --bg:           #f6f5f3;
+  --bg-soft:      #ffffff;
+  --card:         #ffffff;
+  --card-2:       #f2f1ef;
+  --border:       rgba(0,0,0,0.08);
+  --border-strong:rgba(0,0,0,0.14);
+  --text:         #111111;
+  --text-muted:   rgba(0,0,0,0.55);
+  --text-faint:   rgba(0,0,0,0.35);
+  --input-bg:     #eeecea;
+  --nav-bg:       #ffffff;
+  --sidebar-bg:   #f9f8f6;
+  --shadow:       0 8px 32px rgba(0,0,0,0.10);
+  --shadow-lg:    0 16px 48px rgba(0,0,0,0.14);
+
+  color-scheme: light;
 }
 
 * {
@@ -19,7 +63,7 @@ body {
   font-feature-settings: "cv03" 1, "ss01" 1;
 }
 
-/* ─── Dark Scrollbars (global) ───────────────────────────────────────────── */
+/* ─── Scrollbars ─────────────────────────────────────────────────────────── */
 * {
   scrollbar-width: thin;
   scrollbar-color: #2a2a2a #070707;
@@ -28,6 +72,14 @@ body {
 ::-webkit-scrollbar-track { background: #070707; }
 ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+[data-theme="light"] { scrollbar-color: #c4c4be #f0efed; }
+[data-theme="light"] ::-webkit-scrollbar-track { background: #f0efed; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #c4c4be; }
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #a0a09a; }
+
+/* ─── Body follows theme ────────────────────────────────────────────────────*/
+html, body { background: var(--bg); color: var(--text); }
 
 /* ─── Dashboard Light Mode ────────────────────────────────────────────────── */
 
@@ -134,9 +186,11 @@ body {
 
 /* ── BLACK/WHITE OVERLAY TINTS ── */
 /* Dark overlays used in modals / backdrops become light-friendly */
+[data-theme="light"] .bg-black\/50  { background-color: rgba(0,0,0,0.25) !important; }
 [data-theme="light"] .bg-black\/60  { background-color: rgba(0,0,0,0.30) !important; }
 [data-theme="light"] .bg-black\/65  { background-color: rgba(0,0,0,0.32) !important; }
 [data-theme="light"] .bg-black\/70  { background-color: rgba(0,0,0,0.35) !important; }
+[data-theme="light"] .bg-black\/80  { background-color: rgba(0,0,0,0.40) !important; }
 
 /* ── DRAG / DROP BORDERS ── */
 [data-theme="light"] .border-dashed.border-white\/10 { border-color: #d1d5db !important; }
@@ -150,12 +204,122 @@ body {
 
 /* Studio preview panel — status control bar (light mode) */
 [data-theme="light"] .studio-status-bar {
-  background-color: #fff7ed !important; /* orange-50 */
-  border-color:     #fdba74 !important; /* orange-300 */
+  background-color: #fff7ed !important;
+  border-color:     #fdba74 !important;
 }
 [data-theme="light"] .studio-status-bar .studio-status-divider {
   background-color: #fdba74 !important;
 }
 [data-theme="light"] .studio-status-bar .studio-media-type {
-  color: #9a3412 !important; /* orange-800, readable on light bg */
+  color: #9a3412 !important;
 }
+
+/* ─── --app-* token aliases ─────────────────────────────────────────────────
+   Mapped to the existing --bg / --card / --border set.                        */
+:root,
+[data-theme="dark"] {
+  --app-bg:            var(--bg);
+  --app-bg-soft:       var(--bg-soft);
+  --app-surface:       var(--card);
+  --app-surface-2:     var(--card-2);
+  --app-card:          var(--card);
+  --app-card-hover:    var(--card-2);
+  --app-border:        var(--border);
+  --app-border-strong: var(--border-strong);
+  --app-text:          var(--text);
+  --app-text-muted:    var(--text-muted);
+  --app-text-soft:     var(--text-faint);
+  --app-input:         var(--input-bg);
+  --app-input-border:  var(--border-strong);
+  --app-overlay:       rgba(0,0,0,0.72);
+  --accent-orange:     #FF5C00;
+  --accent-lime:       #a3e635;
+}
+[data-theme="light"] {
+  --app-bg:            var(--bg);
+  --app-bg-soft:       var(--bg-soft);
+  --app-surface:       var(--card);
+  --app-surface-2:     var(--card-2);
+  --app-card:          var(--card);
+  --app-card-hover:    #efefed;
+  --app-border:        var(--border);
+  --app-border-strong: var(--border-strong);
+  --app-text:          var(--text);
+  --app-text-muted:    var(--text-muted);
+  --app-text-soft:     var(--text-faint);
+  --app-input:         var(--input-bg);
+  --app-input-border:  var(--border-strong);
+  --app-overlay:       rgba(0,0,0,0.40);
+  --accent-orange:     #FF5C00;
+  --accent-lime:       #65a30d;
+}
+
+/* ─── Utility classes ────────────────────────────────────────────────────────
+   Use these in className= instead of hardcoded Tailwind dark colours.         */
+.bg-app        { background: var(--app-bg); }
+.bg-app-soft   { background: var(--app-bg-soft); }
+.bg-surface    { background: var(--app-surface); }
+.bg-surface-2  { background: var(--app-surface-2); }
+.bg-card       { background: var(--app-card); }
+.border-app    { border-color: var(--app-border); }
+.border-app-strong { border-color: var(--app-border-strong); }
+.text-app      { color: var(--app-text); }
+.text-muted-app { color: var(--app-text-muted); }
+.text-soft-app { color: var(--app-text-soft); }
+.input-app     {
+  background: var(--app-input);
+  color: var(--app-text);
+  border-color: var(--app-input-border);
+}
+.panel-app     { background: var(--sidebar-bg); }
+
+/* ─── Component-class overrides for <style>-tag injected classes ─────────────
+   These classes are defined inside TSX <style> blocks with hardcoded dark
+   values; globals.css is the only place we can flip them for light mode.      */
+
+/* Studio / Dashboard panels */
+[data-theme="light"] .right-panel   { background: var(--card-2) !important; border-left-color: var(--border) !important; }
+[data-theme="light"] .left-panel    { border-right-color: var(--border) !important; }
+
+/* Field labels (rgba white → dark muted) */
+[data-theme="light"] .field-label   { color: rgba(0,0,0,0.45) !important; }
+
+/* Generation cards */
+[data-theme="light"] .gen-card      { background: var(--card) !important; border-color: var(--border) !important; }
+[data-theme="light"] .gen-card:hover { background: var(--card-2) !important; border-color: var(--border-strong) !important; }
+
+/* Action buttons in Studio right panel */
+[data-theme="light"] .action-btn {
+  background:   rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.10) !important;
+  color:        var(--text-muted) !important;
+}
+[data-theme="light"] .action-btn:hover {
+  background:   rgba(0,0,0,0.08) !important;
+  border-color: rgba(0,0,0,0.16) !important;
+  color:        var(--text) !important;
+}
+
+/* Segment / pill nav buttons */
+[data-theme="light"] .seg-btn       { color: var(--text-muted) !important; }
+[data-theme="light"] .seg-btn.active { color: var(--text) !important; }
+[data-theme="light"] .pill-btn      { color: var(--text-muted) !important; }
+[data-theme="light"] .pill-btn.active { background: var(--card) !important; color: var(--text) !important; }
+
+/* Post-project field inputs */
+[data-theme="light"] .field-input {
+  background:    #ffffff !important;
+  border-color:  #d1d5db !important;
+  color:         #111827 !important;
+}
+[data-theme="light"] .field-input::placeholder { color: #9ca3af !important; }
+[data-theme="light"] .field-input:focus { border-color: #65a30d !important; }
+
+/* Messages context panel labels */
+[data-theme="light"] .context-label { color: var(--text-faint) !important; }
+
+/* ─── Additional Tailwind dark-bg overrides (belt+suspenders) ──────────────── */
+[data-theme="light"] .bg-zinc-900   { background-color: #f8fafc !important; }
+[data-theme="light"] .bg-zinc-950   { background-color: #f1f5f9 !important; }
+[data-theme="light"] .bg-neutral-900 { background-color: #f8fafc !important; }
+[data-theme="light"] .bg-neutral-950 { background-color: #f1f5f9 !important; }

@@ -5,7 +5,7 @@ import { Search, MessageCircle, ChevronRight } from 'lucide-react';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const BORDER = 'rgba(255,255,255,0.08)';
+const BORDER = 'var(--border)';
 
 const STATUS_COLORS = {
   Open:     { bg: 'rgba(255,92,0,0.12)',    text: ORANGE    },
@@ -61,13 +61,13 @@ export default function AdminSupportPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Support</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{counts.Open} open tickets need attention.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>Support</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>{counts.Open} open tickets need attention.</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <div style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 9, display: 'flex', alignItems: 'center', padding: '7px 12px', gap: 8 }}>
-            <Search size={13} color="rgba(255,255,255,0.3)" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tickets…" style={{ background: 'none', border: 'none', outline: 'none', fontSize: 13, color: 'rgba(255,255,255,0.55)', width: 180, fontFamily: 'inherit' }} />
+          <div style={{ background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 9, display: 'flex', alignItems: 'center', padding: '7px 12px', gap: 8 }}>
+            <Search size={13} color="var(--text-faint)" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tickets…" style={{ background: 'none', border: 'none', outline: 'none', fontSize: 13, color: 'var(--text-muted)', width: 180, fontFamily: 'inherit' }} />
           </div>
         </div>
       </div>
@@ -78,18 +78,18 @@ export default function AdminSupportPage() {
           <button key={t} onClick={() => setTab(t)}
             style={{ padding: '10px 16px', fontSize: 13, fontWeight: tab === t ? 700 : 500, background: 'none', border: 'none', cursor: 'pointer', color: tab === t ? '#fff' : 'rgba(255,255,255,0.4)', borderBottom: tab === t ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 7 }}>
             {t}
-            <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.08)', borderRadius: 10, padding: '1px 7px', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{counts[t]}</span>
+            <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.08)', borderRadius: 10, padding: '1px 7px', color: 'var(--text-muted)', fontWeight: 500 }}>{counts[t]}</span>
           </button>
         ))}
       </div>
 
       {/* Ticket list */}
-      <div style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
 
         {/* Header */}
         <div style={{ display: 'grid', gridTemplateColumns: '80px 1.8fr 2.5fr 80px 90px 80px 60px', padding: '10px 18px', borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.02)' }}>
           {['ID', 'User', 'Subject', 'Status', 'Priority', 'Created', ''].map(h => (
-            <span key={h} style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+            <span key={h} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
           ))}
         </div>
 
@@ -99,31 +99,31 @@ export default function AdminSupportPage() {
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.02)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}>
 
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}>{ticket.id}</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-faint)', fontFamily: 'monospace' }}>{ticket.id}</span>
 
             <div>
-              <p style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{ticket.user}</p>
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.32)' }}>{ticket.email}</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{ticket.user}</p>
+              <p style={{ fontSize: 11, color: 'var(--text-faint)' }}>{ticket.email}</p>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <MessageCircle size={13} color="rgba(255,255,255,0.25)" strokeWidth={1.5} />
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ticket.subject}</span>
+              <span style={{ fontSize: 13, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ticket.subject}</span>
             </div>
 
             <Badge label={ticket.status} colors={STATUS_COLORS[ticket.status as keyof typeof STATUS_COLORS]} />
             <Badge label={ticket.priority} colors={PRIORITY_COLORS[ticket.priority as keyof typeof PRIORITY_COLORS]} />
 
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{ticket.time}</span>
+            <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{ticket.time}</span>
 
-            <button style={{ background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.6)', padding: '5px 10px', borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2, fontFamily: 'inherit' }}>
+            <button style={{ background: 'var(--card-2)', border: `1px solid rgba(255,255,255,0.1)`, color: 'var(--text)', padding: '5px 10px', borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2, fontFamily: 'inherit' }}>
               View <ChevronRight size={11} />
             </button>
           </div>
         ))}
 
         {filtered.length === 0 && (
-          <div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-faint)', fontSize: 13 }}>
             No tickets match your filter.
           </div>
         )}

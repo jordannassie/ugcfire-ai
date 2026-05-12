@@ -5,12 +5,13 @@ import { Plus, ChevronDown } from 'lucide-react';
 import CommunityPostCard from '@/components/community/CommunityPostCard';
 import PublicHeader from '@/components/public/PublicHeader';
 import { DEMO_POSTS, STATUS_COLORS, type CommunityPost } from '@/lib/creatorNetwork';
+import SiteFooter from '@/components/shared/SiteFooter';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type Cat = CommunityPost['category'] | 'All';
 
@@ -67,8 +68,8 @@ export default function CommunityPage() {
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
             <div>
-              <h1 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 6 }}>Feature Board</h1>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>Vote on features, suggest ideas, and track what we&apos;re building.</p>
+              <h1 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 6 }}>Feature Board</h1>
+              <p style={{ fontSize: 14, color: 'var(--text-muted)' }}>Vote on features, suggest ideas, and track what we&apos;re building.</p>
             </div>
             <button onClick={() => setComposing(c => !c)}
               style={{ display: 'flex', alignItems: 'center', gap: 6, background: LIME, color: '#0d0d0d', border: 'none', borderRadius: 10, padding: '10px 18px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
@@ -84,30 +85,30 @@ export default function CommunityPage() {
             <div style={{ display: 'flex', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
               <div style={{ position: 'relative' }}>
                 <select value={newCat} onChange={e => setNewCat(e.target.value as CommunityPost['category'])}
-                  style={{ appearance: 'none', background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '7px 30px 7px 12px', color: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
+                  style={{ appearance: 'none', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '7px 30px 7px 12px', color: 'var(--text)', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
                   {(['Feature Request', 'Idea', 'Bug Report', 'General'] as CommunityPost['category'][]).map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
-                <ChevronDown size={12} color="rgba(255,255,255,0.4)" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                <ChevronDown size={12} color="var(--text-faint)" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
               </div>
             </div>
             <input
               value={newTitle}
               onChange={e => setNewTitle(e.target.value)}
               placeholder="Title (e.g. Add music sync for generated videos)"
-              style={{ width: '100%', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px', color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 10, boxSizing: 'border-box' }}
+              style={{ width: '100%', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px', color: 'var(--text)', fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 10, boxSizing: 'border-box' }}
             />
             <textarea
               value={newBody}
               onChange={e => setNewBody(e.target.value)}
               placeholder="Describe your idea or feature request…"
               rows={3}
-              style={{ width: '100%', background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'none', marginBottom: 14, boxSizing: 'border-box' }}
+              style={{ width: '100%', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'none', marginBottom: 14, boxSizing: 'border-box' }}
             />
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
               <button onClick={() => setComposing(false)}
-                style={{ padding: '8px 16px', background: 'none', border: `1px solid ${BORDER}`, borderRadius: 8, color: 'rgba(255,255,255,0.45)', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ padding: '8px 16px', background: 'none', border: `1px solid ${BORDER}`, borderRadius: 8, color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
                 Cancel
               </button>
               <button onClick={submitPost} disabled={!newTitle.trim()}
@@ -152,12 +153,13 @@ export default function CommunityPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {filtered.map(p => <CommunityPostCard key={p.id} post={p} />)}
           {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '48px 0', color: 'rgba(255,255,255,0.25)', fontSize: 14 }}>
+            <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-faint)', fontSize: 14 }}>
               No posts match this filter.
             </div>
           )}
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

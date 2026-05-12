@@ -16,9 +16,9 @@ import type { CreatorSpecialty } from '@/lib/creatorNetwork';
 
 // ─── Tokens ──────────────────────────────────────────────────────────────────
 const LIME   = '#a3e635';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.08)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 // ─── localStorage keys ───────────────────────────────────────────────────────
 const LS_PUBLISHED = 'ugcfire_portfolio_published';
@@ -130,7 +130,7 @@ function PortCard({ item, published, featured, onTogglePublish, onSetFeatured }:
 
       {/* Actions */}
       <div style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 5 }}>
-        <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 2 }}>
+        <p style={{ fontSize: 10, color: 'var(--text-faint)', marginBottom: 2 }}>
           {new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         </p>
         <button onClick={onTogglePublish}
@@ -282,13 +282,13 @@ export default function ProfilePage() {
           {/* Identity */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 3, flexWrap: 'wrap' }}>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', margin: 0 }}>{displayName}</h1>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', margin: 0 }}>{displayName}</h1>
               <button onClick={openEdit}
-                style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '4px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '4px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, color: 'var(--text-muted)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 <Edit2 size={12} /> Edit
               </button>
             </div>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>@{username}</p>
+            <p style={{ fontSize: 13, color: 'var(--text-faint)', marginBottom: 10 }}>@{username}</p>
 
             {/* AFW toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
@@ -302,7 +302,7 @@ export default function ProfilePage() {
                 </span>
               </div>
               {availableForWork && (
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', lineHeight: 1.4 }}>
+                <span style={{ fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.4 }}>
                   Let UGCFire consider me for paid brand ad projects.
                 </span>
               )}
@@ -316,7 +316,7 @@ export default function ProfilePage() {
 
           {/* View public profile */}
           <Link href={`/creators/${username}`} target="_blank"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 16px', background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, borderRadius: 10, fontSize: 13, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 16px', background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, borderRadius: 10, fontSize: 13, color: 'var(--text)', textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>
             <Globe size={13} />
             View Public Profile
             <ExternalLink size={11} />
@@ -328,7 +328,7 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <div>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>Featured Project</h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Showcase the AI ad you want brands to notice first.</p>
+              <p style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 2 }}>Showcase the AI ad you want brands to notice first.</p>
             </div>
             <button onClick={() => setFeatModal(true)}
               style={{ fontSize: 12, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.1)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 8, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -338,7 +338,7 @@ export default function ProfilePage() {
 
           {featuredItem ? (
             <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '16px', background: PANEL, border: `1px solid rgba(255,215,0,0.2)`, borderRadius: 16 }}>
-              <div style={{ width: 72, height: 72, borderRadius: 10, overflow: 'hidden', flexShrink: 0, background: '#1a1a1a' }}>
+              <div style={{ width: 72, height: 72, borderRadius: 10, overflow: 'hidden', flexShrink: 0, background: 'var(--card-2)' }}>
                 {featuredItem.kind === 'video'
                   ? <video src={featuredItem.videoSrc} muted playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   : <img src={featuredItem.imageSrc} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -349,14 +349,14 @@ export default function ProfilePage() {
                   {featuredItem.kind === 'video' ? <Film size={12} color="#FF5C00" /> : <ImageIcon size={12} color={LIME} />}
                   <span style={{ fontSize: 10, fontWeight: 700, color: '#ffd700', background: 'rgba(255,215,0,0.1)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: 20, padding: '1px 8px' }}>★ Featured</span>
                 </div>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                   {featuredItem.prompt}
                 </p>
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 4 }}>{formatGenDate(featuredItem.createdAt)}</p>
+                <p style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 4 }}>{formatGenDate(featuredItem.createdAt)}</p>
               </div>
               <button onClick={() => { setFeatured(''); saveFeatured(''); }}
                 style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-                <X size={12} color="rgba(255,255,255,0.4)" />
+                <X size={12} color="var(--text-faint)" />
               </button>
             </div>
           ) : (
@@ -365,8 +365,8 @@ export default function ProfilePage() {
               <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px dashed rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Star size={18} color="rgba(255,255,255,0.25)" />
               </div>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>Add Featured Project</p>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>Choose one of your projects to highlight it</p>
+              <p style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 600 }}>Add Featured Project</p>
+              <p style={{ fontSize: 12, color: 'var(--text-faint)' }}>Choose one of your projects to highlight it</p>
             </button>
           )}
         </div>
@@ -377,9 +377,9 @@ export default function ProfilePage() {
             <div>
               <h2 style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>
                 Your Work
-                <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.3)', marginLeft: 6 }}>{allItems.length}</span>
+                <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-faint)', marginLeft: 6 }}>{allItems.length}</span>
               </h2>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>Add your best AI ads to your profile. Your profile is your portfolio.</p>
+              <p style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 2 }}>Add your best AI ads to your profile. Your profile is your portfolio.</p>
             </div>
             <div style={{ display: 'flex', gap: 4 }}>
               {(['all', 'videos', 'images'] as const).map(t => (
@@ -394,8 +394,8 @@ export default function ProfilePage() {
           {filteredItems.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '56px 20px', borderRadius: 16, border: `1px dashed rgba(255,255,255,0.08)` }}>
               <div style={{ fontSize: 32, marginBottom: 12 }}>+</div>
-              <p style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: 6 }}>Ready to show your work?</p>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', maxWidth: 360, margin: '0 auto 20px', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 16, fontWeight: 800, color: 'var(--text)', marginBottom: 6 }}>Ready to show your work?</p>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', maxWidth: 360, margin: '0 auto 20px', lineHeight: 1.6 }}>
                 Showcase your best AI ads so brands and UGCFire can see your style. Your profile is your portfolio.
               </p>
               <Link href="/dashboard/studio"
@@ -424,12 +424,12 @@ export default function ProfilePage() {
       {editOpen && (
         <>
           <div onClick={() => setEditOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 300, backdropFilter: 'blur(6px)' }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, width: 'min(520px, 92vw)', maxHeight: '85vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', zIndex: 310, boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}>
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--card-2)', border: '1px solid var(--border-strong)', borderRadius: 20, width: 'min(520px, 92vw)', maxHeight: '85vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', zIndex: 310, boxShadow: 'var(--shadow-lg)' }}>
             {/* Header */}
-            <div style={{ padding: '20px 22px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ padding: '20px 22px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <p style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0 }}>Edit Profile</p>
               <button onClick={() => setEditOpen(false)} style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <X size={14} color="rgba(255,255,255,0.5)" />
+                <X size={14} color="var(--text-faint)" />
               </button>
             </div>
 
@@ -445,39 +445,39 @@ export default function ProfilePage() {
                   }
                 </div>
                 <button onClick={() => avatarInputRef.current?.click()}
-                  style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  style={{ fontSize: 13, color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <Camera size={13} /> Change photo
                 </button>
               </div>
 
               {/* Display name */}
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', display: 'block', marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Display Name</label>
+                <label style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block', marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Display Name</label>
                 <input value={editName} onChange={e => setEditName(e.target.value)}
-                  style={{ width: '100%', background: '#111', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '9px 12px', color: '#fff', fontSize: 13, outline: 'none' }} />
+                  style={{ width: '100%', background: '#111', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '9px 12px', color: 'var(--text)', fontSize: 13, outline: 'none' }} />
               </div>
 
               {/* Username */}
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', display: 'block', marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Username</label>
+                <label style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block', marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Username</label>
                 <div style={{ display: 'flex', alignItems: 'center', background: '#111', border: `1px solid ${BORDER}`, borderRadius: 9, overflow: 'hidden' }}>
-                  <span style={{ padding: '9px 10px', fontSize: 12, color: 'rgba(255,255,255,0.25)', borderRight: `1px solid ${BORDER}`, flexShrink: 0 }}>@</span>
+                  <span style={{ padding: '9px 10px', fontSize: 12, color: 'var(--text-faint)', borderRight: `1px solid ${BORDER}`, flexShrink: 0 }}>@</span>
                   <input value={editUsername} onChange={e => setEditUsername(e.target.value.replace(/[^a-z0-9_]/g, ''))}
-                    style={{ flex: 1, background: 'none', border: 'none', outline: 'none', padding: '9px 12px', color: '#fff', fontSize: 13 }} />
+                    style={{ flex: 1, background: 'none', border: 'none', outline: 'none', padding: '9px 12px', color: 'var(--text)', fontSize: 13 }} />
                 </div>
               </div>
 
               {/* Bio */}
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', display: 'block', marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Bio</label>
+                <label style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block', marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Bio</label>
                 <textarea value={editBio} onChange={e => setEditBio(e.target.value)} rows={3}
                   placeholder="I create UGC-style ads for DTC brands using AI..."
-                  style={{ width: '100%', background: '#111', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '9px 12px', color: '#fff', fontSize: 13, outline: 'none', resize: 'none' }} />
+                  style={{ width: '100%', background: '#111', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '9px 12px', color: 'var(--text)', fontSize: 13, outline: 'none', resize: 'none' }} />
               </div>
 
               {/* Specialties */}
               <div>
-                <label style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', display: 'block', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Specialties <span style={{ color: 'rgba(255,255,255,0.2)', textTransform: 'none', letterSpacing: 0 }}>(up to 4)</span></label>
+                <label style={{ fontSize: 11, color: 'var(--text-muted)', display: 'block', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Specialties <span style={{ color: 'var(--text-faint)', textTransform: 'none', letterSpacing: 0 }}>(up to 4)</span></label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {ALL_SPECIALTIES.map(s => {
                     const active = editSpecs.includes(s);
@@ -494,7 +494,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Footer */}
-            <div style={{ padding: '14px 22px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            <div style={{ padding: '14px 22px', borderTop: '1px solid var(--border)' }}>
               <button onClick={saveEdit}
                 style={{ width: '100%', background: editSaved ? 'rgba(163,230,53,0.12)' : LIME, color: editSaved ? LIME : '#0d0d0d', border: editSaved ? `1px solid rgba(163,230,53,0.3)` : 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.15s' }}>
                 {editSaved ? <><Check size={14} /> Saved!</> : 'Save Profile'}
@@ -508,14 +508,14 @@ export default function ProfilePage() {
       {featModal && (
         <>
           <div onClick={() => setFeatModal(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 300, backdropFilter: 'blur(6px)' }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, width: 'min(640px, 92vw)', maxHeight: '80vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', zIndex: 310, boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}>
-            <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--card-2)', border: '1px solid var(--border-strong)', borderRadius: 20, width: 'min(640px, 92vw)', maxHeight: '80vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', zIndex: 310, boxShadow: 'var(--shadow-lg)' }}>
+            <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <p style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: 0 }}>Select Featured Project</p>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>Showcase the AI ad you want brands to notice first.</p>
+                <p style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 2 }}>Showcase the AI ad you want brands to notice first.</p>
               </div>
               <button onClick={() => setFeatModal(false)} style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <X size={14} color="rgba(255,255,255,0.5)" />
+                <X size={14} color="var(--text-faint)" />
               </button>
             </div>
             <div style={{ overflowY: 'auto', padding: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 10 }}>

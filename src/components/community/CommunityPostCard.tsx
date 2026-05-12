@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { CommunityPost, STATUS_COLORS } from '@/lib/creatorNetwork';
 
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.08)';
+const PANEL  = 'var(--card)';
+const BORDER = 'var(--border)';
 const LIME   = '#a3e635';
 
 const CAT_COLORS: Record<CommunityPost['category'], { bg: string; text: string }> = {
@@ -51,8 +51,8 @@ export default function CommunityPostCard({ post }: Props) {
           )}
         </div>
 
-        <h3 style={{ fontSize: 14.5, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}>{post.title}</h3>
-        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', lineHeight: 1.65, marginBottom: 10 }}>
+        <h3 style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--text)', marginBottom: 6, lineHeight: 1.3 }}>{post.title}</h3>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.65, marginBottom: 10 }}>
           {post.body.length > 140 ? post.body.slice(0, 140) + '…' : post.body}
         </p>
 
@@ -65,12 +65,12 @@ export default function CommunityPostCard({ post }: Props) {
               <span style={{ fontSize: 9, fontWeight: 800, color: '#0d0d0d' }}>{post.author_name[0]}</span>
             </div>
           )}
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>@{post.author_name}</span>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>·</span>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>@{post.author_name}</span>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>·</span>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>
             {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
           </span>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', gap: 3 }}>
+          <span style={{ fontSize: 12, color: 'var(--text-faint)', display: 'flex', alignItems: 'center', gap: 3 }}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
             {post.comment_count}
           </span>

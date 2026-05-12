@@ -6,7 +6,7 @@ import { ALL_DEMO_ASSETS, PRODUCT_IMAGES, UGC_IMAGES } from '@/lib/demoAssets';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const BORDER = 'rgba(255,255,255,0.08)';
+const BORDER = 'var(--border)';
 
 type AssetType = 'All' | 'Logo' | 'Product' | 'Creator' | 'Inspiration';
 
@@ -42,8 +42,8 @@ export default function AdminAssetsPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Assets</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{ALL_DEMO_ASSETS.length} total platform assets.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>Assets</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>{ALL_DEMO_ASSETS.length} total platform assets.</p>
         </div>
         <button style={{ background: LIME, color: '#0d0d0d', border: 'none', padding: '8px 18px', borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, fontFamily: 'inherit' }}>
           <Upload size={13} strokeWidth={2.5} />
@@ -62,7 +62,7 @@ export default function AdminAssetsPage() {
               style={{
                 padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: active ? 700 : 500,
                 cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5,
-                background: active ? (colors?.bg ?? 'rgba(255,255,255,0.1)') : '#141414',
+                background: active ? (colors?.bg ?? 'rgba(255,255,255,0.1)') : 'var(--card)',
                 border: `1px solid ${active ? (colors?.text ?? 'rgba(255,255,255,0.3)') + '66' : BORDER}`,
                 color: active ? (colors?.text ?? '#fff') : 'rgba(255,255,255,0.5)',
                 transition: 'all 0.12s',
@@ -82,7 +82,7 @@ export default function AdminAssetsPage() {
         {shown.map((asset, i) => {
           const c = TYPE_COLORS[asset.type];
           return (
-            <div key={i} style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 12, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.12s', position: 'relative' }}
+            <div key={i} style={{ background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 12, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.12s', position: 'relative' }}
               onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.2)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = BORDER; }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}

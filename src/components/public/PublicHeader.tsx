@@ -10,8 +10,8 @@ import { isDemoMode, getDemoRole, getDemoUserName } from '@/lib/demoData';
 const LOGO_URL = 'https://bzzioeupoubgwvkgvmne.supabase.co/storage/v1/object/public/UGCFIRE%20AI/logo/UGCfirelog.png';
 const LIME     = '#a3e635';
 const ORANGE   = '#FF5C00';
-const BG       = '#0d0d0d';
-const BORDER   = 'rgba(255,255,255,0.07)';
+const BG       = 'var(--nav-bg)';
+const BORDER   = 'var(--border)';
 
 // ─── Nav definition ────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -97,8 +97,8 @@ export default function PublicHeader({ activePage }: Props) {
             onClick={() => setMenuOpen(o => !o)}
             style={{ width: 36, height: 36, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginRight: 4 }}>
             {menuOpen
-              ? <X size={20} color="rgba(255,255,255,0.7)" />
-              : <Menu size={20} color="rgba(255,255,255,0.7)" />}
+              ? <X size={20} color="var(--text-faint)" />
+              : <Menu size={20} color="var(--text-faint)" />}
           </button>
         )}
 
@@ -118,7 +118,7 @@ export default function PublicHeader({ activePage }: Props) {
                 href={item.href}
                 className="ph-nav-link"
                 style={{
-                  color: active ? '#fff' : undefined,
+                  color: active ? 'var(--text)' : undefined,
                   fontWeight: active ? 700 : undefined,
                   borderBottom: active ? `2px solid ${color}` : undefined,
                 }}
@@ -139,25 +139,25 @@ export default function PublicHeader({ activePage }: Props) {
                 {demoLabel}
               </div>
               <a href="/login"
-                style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 600, textDecoration: 'none', padding: '6px 14px', background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, borderRadius: 8, whiteSpace: 'nowrap', transition: 'background 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.1)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.06)'; }}
+                style={{ color: 'var(--text-muted)', fontSize: 13, fontWeight: 600, textDecoration: 'none', padding: '6px 14px', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 8, whiteSpace: 'nowrap', transition: 'background 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--card)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--card-2)'; }}
               >Switch Demo</a>
             </>
           ) : (
             <>
               <a href="/login"
-                style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13.5, fontWeight: 500, textDecoration: 'none', padding: '7px 12px', transition: 'color 0.15s', whiteSpace: 'nowrap', display: mobile ? 'none' : undefined }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.5)'; }}
+                style={{ color: 'var(--text-muted)', fontSize: 13.5, fontWeight: 500, textDecoration: 'none', padding: '7px 12px', transition: 'color 0.15s', whiteSpace: 'nowrap', display: mobile ? 'none' : undefined }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-muted)'; }}
               >Login</a>
               <a href="/signup"
-                style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, textDecoration: 'none', padding: '7px 16px', background: 'rgba(255,255,255,0.07)', border: `1px solid ${BORDER}`, borderRadius: 8, transition: 'background 0.15s', whiteSpace: 'nowrap', display: mobile ? 'none' : undefined }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.12)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.07)'; }}
+                style={{ color: 'var(--text)', fontSize: 13.5, fontWeight: 600, textDecoration: 'none', padding: '7px 16px', background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 8, transition: 'background 0.15s', whiteSpace: 'nowrap', display: mobile ? 'none' : undefined }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--card)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'var(--card-2)'; }}
               >Start Creating</a>
-              <a href="/hire"
-                style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, textDecoration: 'none', padding: '7px 18px', background: ORANGE, borderRadius: 8, transition: 'background 0.15s', whiteSpace: 'nowrap' }}
+              <a href="/signup?role=company"
+                style={{ color: 'var(--text)', fontSize: 13.5, fontWeight: 700, textDecoration: 'none', padding: '7px 18px', background: ORANGE, borderRadius: 8, transition: 'background 0.15s', whiteSpace: 'nowrap' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#e65200'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = ORANGE; }}
               >Post a Project</a>
@@ -175,9 +175,9 @@ export default function PublicHeader({ activePage }: Props) {
           />
           <div style={{
             position: 'fixed', top: 60, left: 0, right: 0, zIndex: 195,
-            background: '#111', borderBottom: `1px solid ${BORDER}`,
+            background: 'var(--card)', borderBottom: `1px solid ${BORDER}`,
             padding: '12px 16px 18px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            boxShadow: 'var(--shadow)',
             fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
           }}>
             {NAV_ITEMS.map(item => {
@@ -195,7 +195,7 @@ export default function PublicHeader({ activePage }: Props) {
                     textDecoration: 'none',
                     fontSize: 15,
                     fontWeight: active ? 700 : 400,
-                    color: active ? '#fff' : 'rgba(255,255,255,0.55)',
+                    color: active ? 'var(--text)' : 'var(--text-muted)',
                     background: active ? `${color}15` : 'transparent',
                     marginBottom: 2,
                   }}>
@@ -208,11 +208,11 @@ export default function PublicHeader({ activePage }: Props) {
               );
             })}
 
-            <div style={{ height: 1, background: BORDER, margin: '10px 0' }} />
+            <div style={{ height: 1, background: `var(--border)`, margin: '10px 0' }} />
             <div style={{ display: 'flex', gap: 8 }}>
-              <a href="/login" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: 9, border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.65)', fontSize: 14, fontWeight: 500, textDecoration: 'none', background: 'none' }}>Login</a>
-              <a href="/signup" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: 9, background: 'rgba(255,255,255,0.07)', border: `1px solid ${BORDER}`, color: '#fff', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Start Creating</a>
-              <a href="/hire" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: 9, background: ORANGE, color: '#fff', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>Post a Project</a>
+              <a href="/login" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: 9, border: `1px solid ${BORDER}`, color: 'var(--text-muted)', fontSize: 14, fontWeight: 500, textDecoration: 'none', background: 'none' }}>Login</a>
+              <a href="/signup" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: 9, background: 'var(--card-2)', border: `1px solid ${BORDER}`, color: 'var(--text)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Start Creating</a>
+              <a href="/signup?role=company" style={{ flex: 1, textAlign: 'center', padding: '10px', borderRadius: 9, background: ORANGE, color: 'var(--text)', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>Post a Project</a>
             </div>
           </div>
         </>

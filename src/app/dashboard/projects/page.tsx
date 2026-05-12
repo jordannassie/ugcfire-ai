@@ -7,13 +7,13 @@ import { MOCK_PROJECTS } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 type CreatorStatus = 'Invited' | 'In Progress' | 'Submitted' | 'Approved' | 'Paid';
 
 const STATUS_META: Record<string, { color: string }> = {
-  'Posted':           { color: 'rgba(255,255,255,0.35)'  },
+  'Posted':           { color: 'var(--text-faint)'  },
   'Creators Invited': { color: '#22d3ee'                 },
   'In Progress':      { color: LIME                      },
   'Submitted':        { color: ORANGE                    },
@@ -43,23 +43,23 @@ export default function CreatorProjectsPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.08)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, color: LIME, marginBottom: 10 }}>
             Your Projects
           </div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 4 }}>Projects</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Brand campaigns you&apos;ve been invited to or are actively working on.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 4 }}>Projects</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Brand campaigns you&apos;ve been invited to or are actively working on.</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
           {CREATOR_PROJECTS.map(p => {
-            const meta = STATUS_META[p.status] ?? { color: 'rgba(255,255,255,0.35)' };
+            const meta = STATUS_META[p.status] ?? { color: 'var(--text-faint)' };
             return (
               <div key={p.id} className="proj-card">
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 24, flexShrink: 0, marginTop: 2 }}>{p.icon}</span>
                   <div style={{ flex: 1, minWidth: 180 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 6 }}>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#fff' }}>{p.title}</span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{p.title}</span>
                       <span style={{ fontSize: 10, fontWeight: 700, color: meta.color, background: `${meta.color}14`, padding: '2px 10px', borderRadius: 20, border: `1px solid ${meta.color}30` }}>{p.status}</span>
                     </div>
-                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: 'var(--text-muted)' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Briefcase size={11} strokeWidth={2} /><span style={{ color: p.brandColor, fontWeight: 600 }}>{p.brandName}</span></span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><DollarSign size={11} strokeWidth={2} color={LIME} /><span style={{ color: LIME, fontWeight: 600 }}>${p.creatorPayMin}–${p.creatorPayMax}</span></span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={11} strokeWidth={2} />Due: {p.deadline}</span>
@@ -83,8 +83,8 @@ export default function CreatorProjectsPage() {
         </div>
 
         <div style={{ textAlign: 'center', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '32px 20px' }}>
-          <h3 style={{ fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Find more paid projects</h3>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20, lineHeight: 1.7 }}>Browse open opportunities and apply to brand campaigns.</p>
+          <h3 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Find more paid projects</h3>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20, lineHeight: 1.7 }}>Browse open opportunities and apply to brand campaigns.</p>
           <Link href="/opportunities" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: LIME, color: '#0d0d0d', fontWeight: 700, fontSize: 13, padding: '10px 20px', borderRadius: 9, textDecoration: 'none' }}>
             View Opportunities →
           </Link>

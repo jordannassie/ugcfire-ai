@@ -6,8 +6,8 @@ import { DollarSign, TrendingUp, Clock, CheckCircle, Briefcase } from 'lucide-re
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const STATS = [
   { label: 'Total Earned',       value: '$1,095', icon: DollarSign,  color: LIME,   sub: 'All time'         },
@@ -41,8 +41,8 @@ export default function EarningsPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(163,230,53,0.08)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 700, color: LIME, marginBottom: 10 }}>
             Creator Earnings
           </div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 4 }}>Earnings</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Track your income from brand projects, escrow balances, and payouts.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 4 }}>Earnings</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Track your income from brand projects, escrow balances, and payouts.</p>
         </div>
 
         {/* Stats */}
@@ -50,13 +50,13 @@ export default function EarningsPage() {
           {STATS.map(s => (
             <div key={s.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>{s.label}</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>{s.label}</span>
                 <div style={{ width: 30, height: 30, borderRadius: 8, background: `${s.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <s.icon size={13} color={s.color} strokeWidth={1.75} />
                 </div>
               </div>
               <div style={{ fontSize: 26, fontWeight: 800, color: s.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>{s.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)' }}>{s.sub}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{s.sub}</div>
             </div>
           ))}
         </div>
@@ -65,28 +65,28 @@ export default function EarningsPage() {
         <div style={{ background: 'rgba(163,230,53,0.05)', border: '1px solid rgba(163,230,53,0.18)', borderRadius: 12, padding: '14px 18px', display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 28 }}>
           <DollarSign size={15} color={LIME} strokeWidth={1.75} style={{ marginTop: 1, flexShrink: 0 }} />
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Payouts via Stripe Connect</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>Payouts via Stripe Connect</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6 }}>
               When a client approves your submission, funds are released from escrow. Stripe Connect will be wired in a future step.
             </div>
           </div>
         </div>
 
         {/* Transaction table */}
-        <h2 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 14 }}>Payment History</h2>
+        <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>Payment History</h2>
         <div style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
           <div style={{ padding: '12px 20px', borderBottom: `1px solid ${BORDER}`, display: 'grid', gridTemplateColumns: '1fr 120px 90px 100px 70px', gap: 12 }}>
             {['Project', 'Client', 'Amount', 'Status', 'Date'].map(h => (
-              <span key={h} style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+              <span key={h} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
             ))}
           </div>
           {PAYMENTS.map((p, i) => (
             <div key={p.id} style={{ padding: '14px 20px', borderBottom: i < PAYMENTS.length - 1 ? `1px solid ${BORDER}` : undefined, display: 'grid', gridTemplateColumns: '1fr 120px 90px 100px 70px', gap: 12, alignItems: 'center' }}>
               <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.project}</div>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{p.client}</span>
+              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{p.client}</span>
               <span style={{ fontSize: 14, fontWeight: 700, color: LIME }}>{p.amount}</span>
               <span style={{ fontSize: 11, fontWeight: 700, color: p.color, background: `${p.color}14`, padding: '3px 10px', borderRadius: 20, border: `1px solid ${p.color}25`, display: 'inline-block' }}>{p.status}</span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{p.date}</span>
+              <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{p.date}</span>
             </div>
           ))}
         </div>

@@ -7,7 +7,7 @@ import { UGC_VIDEOS, PRODUCT_IMAGES, UGC_IMAGES } from '@/lib/demoAssets';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const BORDER = 'rgba(255,255,255,0.08)';
+const BORDER = 'var(--border)';
 
 const DEMO_USERS = ['@sarah_j', '@mike_creates', '@outdoor_life', '@ryan_p', '@emma_ux', '@j_kim', '@t_smith'];
 const MODELS     = ['UGC Fire 2.0', 'Nano Banana 2', 'Seedance 2.0', 'UGC Fire 1.0'];
@@ -51,8 +51,8 @@ export default function AdminGenerationsPage() {
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Generations</h1>
-        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{DEMO_GENS.length} total generations across all users.</p>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>Generations</h1>
+        <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>{DEMO_GENS.length} total generations across all users.</p>
       </div>
 
       {/* Tabs */}
@@ -64,7 +64,7 @@ export default function AdminGenerationsPage() {
             <button key={t} onClick={() => setTab(key)}
               style={{ padding: '10px 18px', fontSize: 13, fontWeight: tab === key ? 700 : 500, background: 'none', border: 'none', cursor: 'pointer', color: tab === key ? '#fff' : 'rgba(255,255,255,0.4)', borderBottom: tab === key ? `2px solid ${ORANGE}` : '2px solid transparent', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 7 }}>
               {t}
-              <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.08)', borderRadius: 10, padding: '1px 7px', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{count}</span>
+              <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.08)', borderRadius: 10, padding: '1px 7px', color: 'var(--text-muted)', fontWeight: 500 }}>{count}</span>
             </button>
           );
         })}
@@ -73,7 +73,7 @@ export default function AdminGenerationsPage() {
       {/* Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
         {filtered.map(g => (
-          <div key={g.id} style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.12s' }}
+          <div key={g.id} style={{ background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.12s' }}
             onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.2)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = BORDER; }}>
 
@@ -106,10 +106,10 @@ export default function AdminGenerationsPage() {
             {/* Footer */}
             <div style={{ padding: '10px 12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)' }}>{g.user}</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)' }}>{g.user}</span>
                 <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: STATUS_COLORS[g.status]?.bg, color: STATUS_COLORS[g.status]?.text }}>{g.status}</span>
               </div>
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>{g.model} · {g.created}</p>
+              <p style={{ fontSize: 11, color: 'var(--text-faint)' }}>{g.model} · {g.created}</p>
             </div>
           </div>
         ))}

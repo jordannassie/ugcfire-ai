@@ -5,7 +5,7 @@ import { Search, ChevronRight } from 'lucide-react';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const BORDER = 'rgba(255,255,255,0.08)';
+const BORDER = 'var(--border)';
 
 const PLAN_COLORS: Record<string, { bg: string; text: string }> = {
   Pro:        { bg: 'rgba(163,230,53,0.12)',  text: LIME   },
@@ -58,8 +58,8 @@ export default function AdminUsersPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>Users</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{DEMO_USERS.length.toLocaleString()} total users on the platform.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>Users</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>{DEMO_USERS.length.toLocaleString()} total users on the platform.</p>
         </div>
         <button style={{ background: LIME, color: '#0d0d0d', border: 'none', padding: '8px 18px', borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
           + Invite User
@@ -67,18 +67,18 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Search */}
-      <div style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 10, display: 'flex', alignItems: 'center', padding: '8px 14px', gap: 9, marginBottom: 16, maxWidth: 380 }}>
-        <Search size={13} color="rgba(255,255,255,0.3)" />
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users…" style={{ background: 'none', border: 'none', outline: 'none', fontSize: 13, color: 'rgba(255,255,255,0.6)', width: '100%', fontFamily: 'inherit' }} />
+      <div style={{ background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 10, display: 'flex', alignItems: 'center', padding: '8px 14px', gap: 9, marginBottom: 16, maxWidth: 380 }}>
+        <Search size={13} color="var(--text-faint)" />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users…" style={{ background: 'none', border: 'none', outline: 'none', fontSize: 13, color: 'var(--text)', width: '100%', fontFamily: 'inherit' }} />
       </div>
 
       {/* Table */}
-      <div style={{ background: '#141414', border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--card)', border: `1px solid ${BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
 
         {/* Table head */}
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 2.5fr 1fr 1fr 1.2fr 80px', padding: '10px 18px', borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.02)' }}>
           {['Name', 'Email', 'Plan', 'Status', 'Joined', ''].map(h => (
-            <span key={h} style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+            <span key={h} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
           ))}
         </div>
 
@@ -93,25 +93,25 @@ export default function AdminUsersPage() {
               <div style={{ width: 30, height: 30, borderRadius: '50%', background: u.color + '2a', border: `1px solid ${u.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <span style={{ fontSize: 12, fontWeight: 700, color: u.color }}>{u.name[0]}</span>
               </div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>{u.name}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{u.name}</span>
             </div>
             {/* Email */}
-            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>{u.email}</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{u.email}</span>
             {/* Plan */}
             <Badge label={u.plan} colors={PLAN_COLORS[u.plan] ?? PLAN_COLORS.Free} />
             {/* Status */}
             <Badge label={u.status} colors={STATUS_COLORS[u.status] ?? STATUS_COLORS.Inactive} />
             {/* Joined */}
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{u.joined}</span>
+            <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{u.joined}</span>
             {/* Action */}
-            <button style={{ background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.6)', padding: '5px 12px', borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
+            <button style={{ background: 'var(--card-2)', border: `1px solid rgba(255,255,255,0.1)`, color: 'var(--text)', padding: '5px 12px', borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
               View <ChevronRight size={11} />
             </button>
           </div>
         ))}
 
         {filtered.length === 0 && (
-          <div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-faint)', fontSize: 13 }}>
             No users match your search.
           </div>
         )}

@@ -11,9 +11,9 @@ import AssetPickerModal from '@/components/dashboard/AssetPickerModal';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const MODEL_OPTIONS = ['Nano Banana 2', 'Nano Banana 1', 'Seedance 2.0'];
 const RATIO_OPTIONS = ['3:4', '1:1', '16:9', '9:16'];
@@ -78,15 +78,15 @@ export default function ImagePage() {
     return (
       <div style={{ position: 'relative' }}>
         <div onClick={e => { e.stopPropagation(); setOpenSetting(open ? null : settingKey); }}
-          style={{ display: 'flex', alignItems: 'center', padding: '10px 0', cursor: 'pointer', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-          <Icon size={13} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', flex: 1 }}>{label}</span>
-          <span style={{ fontSize: 13, color: '#fff', fontWeight: 500 }}>{value}</span>
+          style={{ display: 'flex', alignItems: 'center', padding: '10px 0', cursor: 'pointer', gap: 10, borderBottom: '1px solid var(--border)' }}>
+          <Icon size={13} color="var(--text-faint)" strokeWidth={1.5} />
+          <span style={{ fontSize: 13, color: 'var(--text-muted)', flex: 1 }}>{label}</span>
+          <span style={{ fontSize: 13, color: 'var(--text)', fontWeight: 500 }}>{value}</span>
           {settingKey === 'model' && <span style={{ fontSize: 9, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.15)', padding: '1px 5px', borderRadius: 4 }}>NEW</span>}
           <ChevronDown size={13} color="rgba(255,255,255,0.25)" />
         </div>
         {open && (
-          <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 'calc(100% + 2px)', background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 10, overflow: 'hidden', zIndex: 30, minWidth: 160, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+          <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 'calc(100% + 2px)', background: 'var(--card-2)', border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 10, overflow: 'hidden', zIndex: 30, minWidth: 160, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
             {options.map(opt => (
               <div key={String(opt)} onClick={() => {
                 if (settingKey === 'model') setModel(String(opt));
@@ -115,15 +115,15 @@ export default function ImagePage() {
           <div style={{ paddingBottom: 14, marginBottom: 4, borderBottom: `1px solid ${BORDER}`, marginLeft: -16, marginRight: -16, paddingLeft: 16 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Create Image Ad</span>
           </div>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 10, marginBottom: 4, lineHeight: 1.5 }}>Create portfolio-ready image ads for your AI creator profile.</p>
+          <p style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 10, marginBottom: 4, lineHeight: 1.5 }}>Create portfolio-ready image ads for your AI creator profile.</p>
         </>
       )}
 
       {/* Selected assets */}
       <div style={{ marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)' }}>Selected assets</span>
-          {selectedAssets.length > 0 && <button onClick={() => setSelectedAssets([])} style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>Clear</button>}
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>Selected assets</span>
+          {selectedAssets.length > 0 && <button onClick={() => setSelectedAssets([])} style={{ fontSize: 11, color: 'var(--text-faint)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>Clear</button>}
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {selectedAssets.map((src, i) => (
@@ -132,26 +132,26 @@ export default function ImagePage() {
               <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               <button onClick={e => { e.stopPropagation(); setSelectedAssets(prev => prev.filter((_, j) => j !== i)); }}
                 style={{ position: 'absolute', top: -4, right: -4, width: 14, height: 14, borderRadius: '50%', background: '#0d0d0d', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}>
-                <X size={8} color="rgba(255,255,255,0.6)" />
+                <X size={8} color="var(--text-faint)" />
               </button>
             </div>
           ))}
           <button onClick={e => { e.stopPropagation(); setAssetsOpen(true); }}
             style={{ width: 52, height: 52, borderRadius: 8, border: '1.5px dashed rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-            <span style={{ fontSize: 20, color: 'rgba(255,255,255,0.35)', lineHeight: 1 }}>+</span>
+            <span style={{ fontSize: 20, color: 'var(--text-faint)', lineHeight: 1 }}>+</span>
           </button>
         </div>
       </div>
 
       {/* Prompt */}
       <div style={{ marginBottom: 14 }}>
-        <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)', marginBottom: 7 }}>Prompt</p>
-        <div style={{ background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10 }}>
+        <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 7 }}>Prompt</p>
+        <div style={{ background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 10 }}>
           <textarea value={prompt} onChange={e => setPrompt(e.target.value)} maxLength={1000} rows={4}
             onClick={e => e.stopPropagation()}
-            style={{ width: '100%', background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 1.65, padding: '10px 12px', resize: 'none', fontFamily: 'inherit', display: 'block' }} />
-          <div style={{ padding: '5px 10px 8px', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'right' }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>{prompt.length} / 1000</span>
+            style={{ width: '100%', background: 'none', border: 'none', outline: 'none', color: 'var(--text)', fontSize: 12, lineHeight: 1.65, padding: '10px 12px', resize: 'none', fontFamily: 'inherit', display: 'block' }} />
+          <div style={{ padding: '5px 10px 8px', borderTop: '1px solid var(--border)', textAlign: 'right' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{prompt.length} / 1000</span>
           </div>
         </div>
       </div>
@@ -176,7 +176,7 @@ export default function ImagePage() {
     <div style={{ flex: 1, overflowY: 'auto', padding: mobile ? '12px' : '20px' }}>
       {!mobile && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, padding: '0 4px' }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>History</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>History</span>
           <div style={{ display: 'flex', gap: 4 }}>
             <button onClick={() => setGridView(true)} style={{ width: 28, height: 28, borderRadius: 6, background: gridView ? '#222' : 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Grid size={13} color={gridView ? '#fff' : 'rgba(255,255,255,0.35)'} />
@@ -198,7 +198,7 @@ export default function ImagePage() {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60%', gap: 10 }}>
-          <p style={{ fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.35)' }}>No images generated yet.</p>
+          <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-faint)' }}>No images generated yet.</p>
         </div>
       )}
     </div>
@@ -223,7 +223,7 @@ export default function ImagePage() {
         ) : (
           <>
             <div style={{ padding: '12px 14px 6px', flexShrink: 0 }}>
-              <p style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>Recent Images</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Recent Images</p>
             </div>
             {GalleryPanel}
           </>
@@ -245,7 +245,7 @@ export default function ImagePage() {
       </aside>
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', borderBottom: `1px solid ${BORDER}`, flexShrink: 0 }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>History</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>History</span>
           <div style={{ display: 'flex', gap: 4 }}>
             <button onClick={() => setGridView(true)} style={{ width: 28, height: 28, borderRadius: 6, background: gridView ? '#222' : 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Grid size={13} color={gridView ? '#fff' : 'rgba(255,255,255,0.35)'} />

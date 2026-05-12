@@ -7,8 +7,8 @@ import { MOCK_PROJECTS, type ProjectStatus } from '@/lib/demoData';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const ALL_STATUSES: ('All' | ProjectStatus)[] = ['All', 'Posted', 'Creators Invited', 'In Progress', 'Submitted', 'Approved', 'Completed'];
 
@@ -45,18 +45,18 @@ export default function AdminProjectsPage() {
       <div style={{ padding: '28px 24px 48px', maxWidth: 1200, margin: '0 auto' }}>
 
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 'clamp(18px, 2.5vw, 24px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', marginBottom: 4 }}>
+          <h1 style={{ fontSize: 'clamp(18px, 2.5vw, 24px)', fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.03em', marginBottom: 4 }}>
             All Projects
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{MOCK_PROJECTS.length} projects in the marketplace</p>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>{MOCK_PROJECTS.length} projects in the marketplace</p>
         </div>
 
         {/* Filters */}
         <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ position: 'relative', flex: '1 1 220px', maxWidth: 320 }}>
-            <Search size={13} color="rgba(255,255,255,0.3)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+            <Search size={13} color="var(--text-faint)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..."
-              style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
+              style={{ width: '100%', background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px 9px 32px', color: 'var(--text)', fontSize: 13, fontFamily: 'inherit', outline: 'none' }} />
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {ALL_STATUSES.map(s => (
@@ -73,13 +73,13 @@ export default function AdminProjectsPage() {
           {/* Header */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 100px 80px 70px 60px 60px 110px', gap: 12, padding: '10px 18px', borderBottom: `1px solid ${BORDER}` }}>
             {['Project', 'Client / Brand', 'Status', 'Budget', 'Creator Pay', 'Apps', 'Subs', ''].map((h, i) => (
-              <span key={i} style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
+              <span key={i} style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.06em' }}
                 className={['Apps', 'Subs', 'Creator Pay', 'Budget', 'Status'].includes(h) ? 'hide-sm' : ''}>{h}</span>
             ))}
           </div>
 
           {filtered.length === 0 ? (
-            <div style={{ padding: '48px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>No projects match your filters.</div>
+            <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-faint)', fontSize: 13 }}>No projects match your filters.</div>
           ) : filtered.map(p => {
             const sc = STATUS_COLORS[p.status] ?? 'rgba(255,255,255,0.4)';
             return (
@@ -90,20 +90,20 @@ export default function AdminProjectsPage() {
                   <span style={{ fontSize: 20, flexShrink: 0 }}>{p.icon}</span>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{p.category} · {p.deadline}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{p.category} · {p.deadline}</div>
                   </div>
                 </div>
                 <div className="hide-sm" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: `${p.brandColor}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8, fontWeight: 800, color: p.brandColor, flexShrink: 0 }}>{p.brandInitials}</div>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.brandName}</span>
+                  <span style={{ fontSize: 12, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.brandName}</span>
                 </div>
                 <div className="hide-sm">
                   <span style={{ fontSize: 10, fontWeight: 700, color: sc, background: `${sc}12`, padding: '3px 9px', borderRadius: 20, border: `1px solid ${sc}25` }}>{p.status}</span>
                 </div>
-                <div className="hide-sm" style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>${p.budget}</div>
+                <div className="hide-sm" style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>${p.budget}</div>
                 <div className="hide-sm" style={{ fontSize: 12, color: LIME }}>${p.creatorPayMin}–${p.creatorPayMax}</div>
-                <div className="hide-sm" style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>{p.applicants.length}</div>
-                <div className="hide-sm" style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>{p.submissions.length}</div>
+                <div className="hide-sm" style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>{p.applicants.length}</div>
+                <div className="hide-sm" style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 600 }}>{p.submissions.length}</div>
                 <Link href={`/admin/projects/${p.id}`} onClick={e => e.stopPropagation()}
                   style={{ fontSize: 11, fontWeight: 700, background: `${ORANGE}18`, border: `1px solid ${ORANGE}30`, color: ORANGE, borderRadius: 8, padding: '6px 12px', textDecoration: 'none', textAlign: 'center', whiteSpace: 'nowrap' }}>
                   Manage →
@@ -122,7 +122,7 @@ export default function AdminProjectsPage() {
           ].map(s => (
             <div key={s.label} style={{ background: PANEL, border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 16px' }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: LIME }}>{s.value}</div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{s.label}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>{s.label}</div>
             </div>
           ))}
         </div>

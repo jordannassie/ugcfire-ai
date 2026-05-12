@@ -16,9 +16,9 @@ import HoverVideoPreview from '@/components/shared/HoverVideoPreview';
 
 const LIME   = '#a3e635';
 const ORANGE = '#FF5C00';
-const BG     = '#0d0d0d';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const BG = 'var(--bg)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const SETTINGS_CFG = [
   { icon: Cpu,       label: 'Model',        key: 'model'       as const, options: ['UGC Fire 2.0', 'UGC Fire 1.0', 'Seedance 2.0'],     badge: 'NEW' },
@@ -121,9 +121,9 @@ export default function VideoPage() {
 
       {/* Headline */}
       <div style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: '#fff', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 2 }}>Create portfolio-ready</h2>
+        <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: 'var(--text)', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: 2 }}>Create portfolio-ready</h2>
         <h2 style={{ fontSize: mobile ? 20 : 22, fontWeight: 800, color: LIME, lineHeight: 1.15, letterSpacing: '-0.03em' }}>UGC-style video ads.</h2>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 6, lineHeight: 1.5 }}>Create video ads for your AI creator profile. Upload work made with UGCFire or any AI tool.</p>
+        <p style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: 6, lineHeight: 1.5 }}>Create video ads for your AI creator profile. Upload work made with UGCFire or any AI tool.</p>
       </div>
 
       {/* Drop zone */}
@@ -142,10 +142,10 @@ export default function VideoPage() {
             <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 8px' }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
-            <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)', marginBottom: 2 }}>Drag &amp; drop any image</p>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginBottom: 8 }}>JPG, PNG, WEBP up to 10MB</p>
+            <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 2 }}>Drag &amp; drop any image</p>
+            <p style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 8 }}>JPG, PNG, WEBP up to 10MB</p>
             <button onClick={e => { e.stopPropagation(); fileRef.current?.click(); }}
-              style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.65)', padding: '5px 14px', borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ background: 'var(--card-2)', border: `1px solid ${BORDER}`, color: 'var(--text)', padding: '5px 14px', borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
               Browse
             </button>
           </>
@@ -154,7 +154,7 @@ export default function VideoPage() {
 
       {/* Reference images */}
       <div style={{ marginBottom: 14 }}>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', marginBottom: 7 }}>Reference images (optional)</p>
+        <p style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 7 }}>Reference images (optional)</p>
         <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap' }}>
           {refImages.slice(0, 3).map((src, i) => (
             <div key={i} style={{ width: 46, height: 46, borderRadius: 8, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
@@ -162,26 +162,26 @@ export default function VideoPage() {
               <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <button onClick={e => { e.stopPropagation(); setRefImages(prev => prev.filter((_, j) => j !== i)); }}
                 style={{ position: 'absolute', top: -4, right: -4, width: 14, height: 14, borderRadius: '50%', background: '#0d0d0d', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}>
-                <X size={8} color="rgba(255,255,255,0.6)" />
+                <X size={8} color="var(--text-faint)" />
               </button>
             </div>
           ))}
           <button onClick={e => { e.stopPropagation(); setAssetsOpen(true); }}
             style={{ width: 46, height: 46, borderRadius: 8, border: '1.5px dashed rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.02)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-            <Plus size={16} color="rgba(255,255,255,0.4)" />
+            <Plus size={16} color="var(--text-faint)" />
           </button>
         </div>
       </div>
 
       {/* Prompt */}
       <div style={{ marginBottom: 14 }}>
-        <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)', marginBottom: 7 }}>Prompt</p>
-        <div style={{ background: '#1a1a1a', border: `1px solid ${BORDER}`, borderRadius: 10 }}>
+        <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 7 }}>Prompt</p>
+        <div style={{ background: 'var(--card-2)', border: `1px solid ${BORDER}`, borderRadius: 10 }}>
           <textarea value={prompt} onChange={e => setPrompt(e.target.value)} maxLength={1000} rows={4} placeholder="Describe the video you want to create…"
             onClick={e => e.stopPropagation()}
-            style={{ width: '100%', background: 'none', border: 'none', outline: 'none', color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 1.65, padding: '10px 12px', resize: 'none', fontFamily: 'inherit', display: 'block' }} />
-          <div style={{ padding: '5px 10px 8px', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'right' }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>{prompt.length} / 1000</span>
+            style={{ width: '100%', background: 'none', border: 'none', outline: 'none', color: 'var(--text)', fontSize: 12, lineHeight: 1.65, padding: '10px 12px', resize: 'none', fontFamily: 'inherit', display: 'block' }} />
+          <div style={{ padding: '5px 10px 8px', borderTop: '1px solid var(--border)', textAlign: 'right' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{prompt.length} / 1000</span>
           </div>
         </div>
       </div>
@@ -191,15 +191,15 @@ export default function VideoPage() {
         {SETTINGS_CFG.map(row => (
           <div key={row.key} style={{ position: 'relative' }}>
             <div onClick={e => { e.stopPropagation(); setOpenSetting(openSetting === row.key ? null : row.key); }}
-              style={{ display: 'flex', alignItems: 'center', padding: '10px 0', cursor: 'pointer', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <row.icon size={13} color="rgba(255,255,255,0.3)" strokeWidth={1.5} />
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', flex: 1 }}>{row.label}</span>
-              <span style={{ fontSize: 13, color: '#fff', fontWeight: 500 }}>{settings[row.key]}</span>
+              style={{ display: 'flex', alignItems: 'center', padding: '10px 0', cursor: 'pointer', gap: 10, borderBottom: '1px solid var(--border)' }}>
+              <row.icon size={13} color="var(--text-faint)" strokeWidth={1.5} />
+              <span style={{ fontSize: 13, color: 'var(--text-muted)', flex: 1 }}>{row.label}</span>
+              <span style={{ fontSize: 13, color: 'var(--text)', fontWeight: 500 }}>{settings[row.key]}</span>
               {row.badge && <span style={{ fontSize: 9, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.15)', padding: '1px 5px', borderRadius: 4 }}>{row.badge}</span>}
               <ChevronDown size={13} color="rgba(255,255,255,0.25)" />
             </div>
             {openSetting === row.key && (
-              <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 'calc(100% + 2px)', background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 10, overflow: 'hidden', zIndex: 30, minWidth: 160, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+              <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 'calc(100% + 2px)', background: 'var(--card-2)', border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 10, overflow: 'hidden', zIndex: 30, minWidth: 160, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
                 {row.options.map(opt => (
                   <div key={opt} onClick={() => setSetting(row.key, opt)}
                     style={{ padding: '10px 14px', fontSize: 13, color: settings[row.key] === opt ? ORANGE : 'rgba(255,255,255,0.6)', cursor: 'pointer', fontFamily: 'inherit' }}
@@ -219,7 +219,7 @@ export default function VideoPage() {
         style={{ width: '100%', background: generating ? '#7aaa28' : LIME, color: '#0d0d0d', border: 'none', borderRadius: 10, padding: '13px', fontSize: 15, fontWeight: 800, cursor: generating ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', marginBottom: 8, letterSpacing: '-0.01em', transition: 'background 0.15s' }}>
         {generating ? <><Sparkles size={16} strokeWidth={2} />Generating…</> : 'Generate Video'}
       </button>
-      <p style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.22)', marginBottom: 8 }}>1 generation ≈ 1 credit</p>
+      <p style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-faint)', marginBottom: 8 }}>1 generation ≈ 1 credit</p>
     </div>
   );
 
@@ -240,7 +240,7 @@ export default function VideoPage() {
                       <Play size={14} color="#fff" fill="#fff" />
                     </div>
                   </div>
-                  <div style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.6)', borderRadius: 5, padding: '2px 7px', fontSize: 11, color: '#fff', fontWeight: 600 }}>
+                  <div style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.6)', borderRadius: 5, padding: '2px 7px', fontSize: 11, color: 'var(--text)', fontWeight: 600 }}>
                     0:{g.duration.replace('s', '').padStart(2, '0')}
                   </div>
                 </div>
@@ -251,8 +251,8 @@ export default function VideoPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60%', gap: 10 }}>
           <MessageCircle size={32} color="rgba(255,255,255,0.18)" strokeWidth={1.5} />
-          <p style={{ fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.35)' }}>Your videos will appear here.</p>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.22)' }}>Generate your first video to get started.</p>
+          <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-faint)' }}>Your videos will appear here.</p>
+          <p style={{ fontSize: 13, color: 'var(--text-faint)' }}>Generate your first video to get started.</p>
         </div>
       )}
     </div>
@@ -270,25 +270,25 @@ export default function VideoPage() {
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
               <span style={{ fontSize: 12, fontWeight: 600, color: '#22c55e' }}>Completed</span>
             </div>
-            <button onClick={() => setSheetOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 20 }}>✕</button>
+            <button onClick={() => setSheetOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 20 }}>✕</button>
           </div>
           <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 14, border: `1px solid ${BORDER}` }}>
             <HoverVideoPreview src={selected.videoSrc} autoPlay loop style={{ height: 200 }} />
           </div>
-          <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>UGC Fire 2.0</p>
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 14 }}>{formatGenDate(selected.createdAt)}</p>
+          <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>UGC Fire 2.0</p>
+          <p style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 14 }}>{formatGenDate(selected.createdAt)}</p>
           {[
             { label: 'Model',        value: selected.model       },
             { label: 'Duration',     value: selected.duration    },
             { label: 'Aspect Ratio', value: selected.aspectRatio },
             { label: 'Resolution',   value: selected.resolution  },
           ].map(row => (
-            <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{row.label}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{row.value}</span>
+            <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+              <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{row.label}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{row.value}</span>
             </div>
           ))}
-          <button style={{ width: '100%', background: '#1a1a1a', border: `1px solid ${BORDER}`, color: '#fff', padding: '12px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', marginTop: 16 }}>
+          <button style={{ width: '100%', background: 'var(--card-2)', border: `1px solid ${BORDER}`, color: '#fff', padding: '12px', borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', marginTop: 16 }}>
             <Download size={14} />
             Download
           </button>
@@ -318,7 +318,7 @@ export default function VideoPage() {
         ) : (
           <>
             <div style={{ padding: '14px 16px 8px', flexShrink: 0 }}>
-              <p style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>Recent Generations</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Recent Generations</p>
             </div>
             {HistoryPanel}
           </>
@@ -345,10 +345,10 @@ export default function VideoPage() {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         <div style={{ padding: '20px 24px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, borderBottom: `1px solid ${BORDER}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Clock size={14} color="rgba(255,255,255,0.4)" />
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>Recent Generations</span>
+            <Clock size={14} color="var(--text-faint)" />
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Recent Generations</span>
           </div>
-          <button style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'inherit' }}>
+          <button style={{ fontSize: 13, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'inherit' }}>
             View all <ChevronRight size={13} />
           </button>
         </div>
@@ -363,36 +363,36 @@ export default function VideoPage() {
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block', boxShadow: '0 0 6px rgba(34,197,94,0.6)' }} />
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#22c55e' }}>Completed</span>
               </div>
-              <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', fontSize: 16 }}>···</button>
+              <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-faint)', fontSize: 16 }}>···</button>
             </div>
             <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 14, border: `1px solid ${BORDER}` }}>
               <HoverVideoPreview src={selected.videoSrc} autoPlay loop style={{ height: 180 }} />
             </div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>UGC Fire 2.0</p>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.32)', marginBottom: 16 }}>{formatGenDate(selected.createdAt)}</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 3 }}>UGC Fire 2.0</p>
+            <p style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 16 }}>{formatGenDate(selected.createdAt)}</p>
             {[
               { label: 'Model',        value: selected.model,        badge: true  },
               { label: 'Duration',     value: selected.duration,     badge: false },
               { label: 'Aspect Ratio', value: selected.aspectRatio,  badge: false },
               { label: 'Resolution',   value: selected.resolution,   badge: false },
             ].map(row => (
-              <div key={row.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{row.label}</span>
+              <div key={row.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+                <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>{row.label}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{row.value}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{row.value}</span>
                   {row.badge && <span style={{ fontSize: 9, fontWeight: 700, color: LIME, background: 'rgba(163,230,53,0.15)', padding: '1px 5px', borderRadius: 4 }}>NEW</span>}
                 </div>
               </div>
             ))}
             <div style={{ marginTop: 14, marginBottom: 14 }}>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', marginBottom: 6 }}>Prompt</p>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65 }}>
+              <p style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 6 }}>Prompt</p>
+              <p style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.65 }}>
                 {selected.prompt.length > 120 ? selected.prompt.slice(0, 120) + '…' : selected.prompt}
               </p>
             </div>
             {selected.referenceImages.length > 0 && (
               <div style={{ marginBottom: 16 }}>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', marginBottom: 8 }}>Reference Images</p>
+                <p style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 8 }}>Reference Images</p>
                 <div style={{ display: 'flex', gap: 6 }}>
                   {selected.referenceImages.slice(0, 3).map((src, i) => (
                     <div key={i} style={{ width: 44, height: 44, borderRadius: 8, overflow: 'hidden', flexShrink: 0 }}>
@@ -403,13 +403,13 @@ export default function VideoPage() {
                 </div>
               </div>
             )}
-            <button style={{ width: '100%', background: '#1a1a1a', border: `1px solid ${BORDER}`, color: '#fff', padding: '10px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', marginBottom: 12 }}>
+            <button style={{ width: '100%', background: 'var(--card-2)', border: `1px solid ${BORDER}`, color: '#fff', padding: '10px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'inherit', marginBottom: 12 }}>
               <Download size={14} />
               Download
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <MessageCircle size={12} color="rgba(255,255,255,0.25)" />
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>Need help? </span>
+              <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>Need help? </span>
               <a href="#" style={{ fontSize: 11, color: ORANGE, textDecoration: 'none', fontWeight: 600 }}>Join our Discord</a>
             </div>
           </div>

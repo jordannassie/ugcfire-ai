@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 
 const ORANGE = '#FF5C00';
 const LIME   = '#a3e635';
-const PANEL  = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
+const PANEL = 'var(--card)';
+const BORDER = 'var(--border)';
 
 const CREATORS = [
   { id: 1, name: 'Alex Rivera',  role: 'AI Ad Creator',      skills: ['UGC Video', 'Product Ads', 'Social Content'], portfolio: 24, available: true,  initials: 'AR', color: LIME   },
@@ -34,8 +34,8 @@ export default function ClientCreatorsPage() {
       <div style={{ padding: '28px 24px 64px', maxWidth: 1000, margin: '0 auto' }}>
 
         <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', marginBottom: 6 }}>Browse AI Creators</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Find and invite AI creators to apply to your projects.</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: 6 }}>Browse AI Creators</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Find and invite AI creators to apply to your projects.</p>
         </div>
 
         <div className="creators-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -51,7 +51,7 @@ export default function ClientCreatorsPage() {
                 </div>
               </div>
 
-              <div style={{ fontWeight: 800, fontSize: 15, color: '#fff', marginBottom: 3 }}>{c.name}</div>
+              <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--text)', marginBottom: 3 }}>{c.name}</div>
               <div style={{ fontSize: 12, color: ORANGE, fontWeight: 600, marginBottom: 8 }}>{c.role}</div>
 
               {c.available && (
@@ -63,11 +63,11 @@ export default function ClientCreatorsPage() {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center', marginBottom: 10 }}>
                 {c.skills.map(s => (
-                  <span key={s} style={{ fontSize: 10, fontWeight: 600, background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)', padding: '2px 8px', borderRadius: 20 }}>{s}</span>
+                  <span key={s} style={{ fontSize: 10, fontWeight: 600, background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)', padding: '2px 8px', borderRadius: 20 }}>{s}</span>
                 ))}
               </div>
 
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginBottom: 14 }}>{c.portfolio} portfolio pieces</div>
+              <div style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 14 }}>{c.portfolio} portfolio pieces</div>
 
               <button
                 onClick={() => setInvited(prev => invited.includes(c.id) ? prev.filter(i => i !== c.id) : [...prev, c.id])}
@@ -85,7 +85,7 @@ export default function ClientCreatorsPage() {
         {invited.length > 0 && (
           <div style={{ marginTop: 24, background: 'rgba(163,230,53,0.06)', border: '1px solid rgba(163,230,53,0.2)', borderRadius: 14, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 13, color: LIME, fontWeight: 600 }}>{invited.length} creator{invited.length > 1 ? 's' : ''} invited (demo)</span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>Invitations are demo-only. Real invites will be sent when Supabase is connected.</span>
+            <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>Invitations are demo-only. Real invites will be sent when Supabase is connected.</span>
           </div>
         )}
 
